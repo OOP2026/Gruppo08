@@ -9,4 +9,8 @@ public class LezioneRepository {
 	public List<Lezione> getLezioni() {
 		return lezioni;
 	}
+
+	public void addLezione(Lezione l) {
+		lezioni.add(l);
+	}
 }

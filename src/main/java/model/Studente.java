@@ -20,4 +20,14 @@ public class Studente extends Utente {
 	public List<Insegnamento> insegnamentiSeguiti() {
 		return insegnamentiSeguiti;
 	}
+
+	@Override
+	public boolean puoRichiedereSpostamento() {
+		return false;
+	}
+
+	@Override
+	public boolean puoModificareOrario() {
+		return false;
+	}
 }

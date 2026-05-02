@@ -7,6 +7,10 @@ public abstract class Utente {
 	private String email;
 	private String pswd;
 
+	public abstract boolean puoRichiedereSpostamento();
+
+	public abstract boolean puoModificareOrario();
+
 	Utente(String nome, String cognome, String login, String email, String pswd) {
 		this.nome = nome;
 		this.cognome = cognome;

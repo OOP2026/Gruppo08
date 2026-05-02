@@ -11,15 +11,12 @@ public class ServizioUtenti {
 	public Studente studenteLogin(String identifier, String pswd) throws SecurityException {
 		Studente s;
 		try {
-			if(identifier.contains("@"))
-			{
-				s =  studRepo.findByMail(identifier);
-			}
-			else {
+			if (identifier.contains("@")) {
+				s = studRepo.findByMail(identifier);
+			} else {
 				s = studRepo.findByLogin(identifier);
 			}
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			throw new SecurityException("login/pswd incorrect");
 		}
 		if (s.checkPswd(pswd))
@@ -30,13 +27,12 @@ public class ServizioUtenti {
 	public Docente docenteLogin(String identifier, String pswd) throws SecurityException {
 		Docente doc;
 		try {
-			if(identifier.contains("@"))
+			if (identifier.contains("@"))
 				doc = docRepo.findByEmail(identifier);
 			else {
 				doc = docRepo.findByLogin(identifier);
 			}
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			throw new SecurityException("login/pswd incorrect");
 		}
 		if (doc.checkPswd(pswd))
@@ -47,13 +43,12 @@ public class ServizioUtenti {
 	public Coordinatore coordinatoreLogin(String identifier, String pswd) throws SecurityException {
 		Coordinatore c;
 		try {
-			if(identifier.contains("@"))
+			if (identifier.contains("@"))
 				c = coordinatoreRepo.findByMail(identifier);
 			else {
 				c = coordinatoreRepo.findByLogin(identifier);
 			}
-		}
-		catch (NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			throw new SecurityException("login/pswd incorrect");
 		}
 		if (c.checkPswd(pswd))
@@ -78,8 +73,7 @@ public class ServizioUtenti {
 	}
 
 	public void registerCoordinatore(String nome, String cognome, String login, String email, String pswd) {
-		if (coordinatoreRepo != null && coordinatoreRepo.getCoordinatori().isEmpty())
-		{
+		if (coordinatoreRepo != null && coordinatoreRepo.getCoordinatori().isEmpty()) {
 			Coordinatore c = new Coordinatore(nome, cognome, login, email, pswd);
 			coordinatoreRepo.addCoordinatore(c);
 			return;
