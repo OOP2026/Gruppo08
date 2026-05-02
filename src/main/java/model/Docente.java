@@ -1,4 +1,4 @@
-package com.progetto.esamepoo;
+package model;
 
 public class Docente extends Utente {
 	Docente(String nome, String cognome, String login, String email, String pswd) {

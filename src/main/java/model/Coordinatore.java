@@ -1,4 +1,4 @@
-package com.progetto.esamepoo;
+package model;
 
 public class Coordinatore extends Docente {
 

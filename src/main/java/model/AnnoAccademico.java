@@ -1,4 +1,4 @@
-package com.progetto.esamepoo;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,5 +17,9 @@ public class AnnoAccademico {
 
 	public List<Insegnamento> getInsegnamenti() {
 		return insegnamenti;
+	}
+
+	public void addInsegnamento(Insegnamento insegnamento) {
+		insegnamenti.add(insegnamento);
 	}
 }
