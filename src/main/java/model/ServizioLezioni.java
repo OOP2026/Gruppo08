@@ -16,6 +16,8 @@ public class ServizioLezioni {
 	 * - confermaSpostamento: prende un Coordinatore e cambia lo StatoSpostamento
 	 */
 
+	public
+
 	// NOTE: ServizioLezioni dipende strettamente da ServizioUniversita, WIP
 
 }
