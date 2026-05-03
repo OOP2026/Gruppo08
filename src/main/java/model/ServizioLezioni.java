@@ -2,6 +2,7 @@ package model;
 
 public class ServizioLezioni {
 	private LezioneRepository lezioneRepo = new LezioneRepository();
+	private AulaRepository aulaRepo = new AulaRepository();
 
 	/*
 	 * TODO:
@@ -16,7 +17,7 @@ public class ServizioLezioni {
 	 * - confermaSpostamento: prende un Coordinatore e cambia lo StatoSpostamento
 	 */
 
-	public
+	// WIP: public void creaLezione(LocalDateTime oraInizio, LocalDateTime oraFine, char lettera, int numero,)
 
 	// NOTE: ServizioLezioni dipende strettamente da ServizioUniversita, WIP
 
