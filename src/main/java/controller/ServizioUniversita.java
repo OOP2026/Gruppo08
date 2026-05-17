@@ -1,12 +1,12 @@
-package model;
+package controller;
+
+import model.*;
 
 public class ServizioUniversita {
 	private MateriaRepository materiaRepo = new MateriaRepository();
 	private InsegnamentoRepository insegnamentoRepo = new InsegnamentoRepository();
 	private AnnoAccademicoRepository annoAccademicoRepo = new AnnoAccademicoRepository();
 	private AulaRepository aulaRepo = new AulaRepository();
-
-	// TODO: Metodi di query per estrarre oggetti
 
 	public Materia makeMateria(String nome) {
 		Materia m = new Materia(nome);

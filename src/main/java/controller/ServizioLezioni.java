@@ -1,4 +1,8 @@
-package model;
+package controller;
+
+import java.time.LocalDateTime;
+
+import model.*;
 
 public class ServizioLezioni {
 	private LezioneRepository lezioneRepo = new LezioneRepository();
@@ -17,8 +21,11 @@ public class ServizioLezioni {
 	 * - confermaSpostamento: prende un Coordinatore e cambia lo StatoSpostamento
 	 */
 
-	// WIP: public void creaLezione(LocalDateTime oraInizio, LocalDateTime oraFine, char lettera, int numero,)
-
 	// NOTE: ServizioLezioni dipende strettamente da ServizioUniversita, WIP
+	public Lezione makeLezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
+		Lezione l = new Lezione(aula, insegnamento, oraInizio, oraFine);
+		lezioneRepo.addLezione(l);
+		return l;
+	}
 
 }

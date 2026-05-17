@@ -1,12 +1,27 @@
 package model;
 
 import java.time.DayOfWeek;
+import java.util.HashMap;
 
-// OrarioLezioni e' indipendente da Lezione, serve come riferimento agli studenti e deve essere schematizzato dal coordinatore in maniera manuale e non automatica 
+// TODO: Trasforma in OrarioLezione e creare OrarioLezioneRepository?
 public class OrarioLezioni {
-	private DayOfWeek giornoSett;
 	private AnnoAccademico anno;
-	// TODO: la soluzione migliore secondo me sarebbe una hash table che mappa
-	// giornoSett a insegnamento.
+	private HashMap<DayOfWeek, Insegnamento> orari = new HashMap<>();
+
+	public OrarioLezioni(AnnoAccademico anno) {
+		this.anno = anno;
+	}
+
+	public void addOrario(DayOfWeek day, Insegnamento insegnamento) {
+		orari.put(day, insegnamento);
+	}
+
+	public HashMap<DayOfWeek, Insegnamento> getOrari() {
+		return orari;
+	}
+
+	public AnnoAccademico getAnno() {
+		return anno;
+	}
 
 }

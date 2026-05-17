@@ -1,4 +1,6 @@
-package model;
+package controller;
+
+import model.*;
 
 import java.util.NoSuchElementException;
 

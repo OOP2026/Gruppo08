@@ -8,7 +8,7 @@ public class Studente extends Utente {
 	private int matricola;
 	private List<Insegnamento> insegnamentiSeguiti = new ArrayList<>();
 
-	Studente(String nome, String cognome, String login, String email, String pswd) {
+	public Studente(String nome, String cognome, String login, String email, String pswd) {
 		super(nome, cognome, login, email, pswd);
 		matricola = counter++;
 	}
