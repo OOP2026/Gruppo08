@@ -1,5 +1,8 @@
 package controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+
 import model.*;
 
 public class Controller {
@@ -27,6 +30,8 @@ public class Controller {
 		return false;
 	}
 
+	// TODO: si potrebbe rendere il login piu' modulare eliminando il formato
+	// ruoloLogin per usare esclusivamente isRuolo
 	public void studenteLogin(String identifier, String pswd) throws SecurityException {
 		session = sUtenti.studenteLogin(identifier, pswd);
 		return;
@@ -63,28 +68,57 @@ public class Controller {
 	 * Operazioni del coordinatore *
 	 *******************************
 	 */
-	public void makeInsegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
+
+	/*
+	 **********************
+	 * Infrastruttura Uni *
+	 **********************
+	 */
+	public boolean makeInsegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
 		if (!isCoordinatore(session))
-			return;
+			return false;
 		sUni.makeInsegnamento(materia, numeroCfu, annoDiCorso);
+		return true;
 	}
 
-	public void makeAnnoAccademico(int anno) {
+	public boolean makeAnnoAccademico(int anno) {
 		if (!isCoordinatore(session))
-			return;
+			return false;
 		sUni.makeAnnoAccademico(anno);
+		return true;
 	}
 
-	public void makeAnnoAccademico(int anno, Insegnamento... insegnamenti) {
+	public boolean makeAnnoAccademico(int anno, Insegnamento... insegnamenti) {
 		if (!isCoordinatore(session))
-			return;
+			return false;
 		sUni.makeAnnoAccademico(anno, insegnamenti);
+		return true;
 	}
 
-	public void makeAula(char lettera, int numero, int capacita) {
+	public boolean makeAula(char lettera, int numero, int capacita) {
 		if (!isCoordinatore(session))
-			return;
+			return false;
 		sUni.makeAula(lettera, numero, capacita);
+		return true;
 	}
 
+	/*
+	 **********************
+	 * Operazioni Lezioni *
+	 **********************
+	 */
+
+	public boolean makeLezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
+		if (!isCoordinatore(session))
+			return false;
+		sLezioni.makeLezione(aula, insegnamento, oraInizio, oraFine);
+		return true;
+	}
+
+	public boolean makeOrarioLezione(AnnoAccademico anno, DayOfWeek giornoSett, Insegnamento insegnamento) {
+		if (!isCoordinatore(session))
+			return false;
+		sLezioni.makeOrarioLezione(anno, giornoSett, insegnamento);
+		return true;
+	}
 }
