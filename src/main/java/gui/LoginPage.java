@@ -31,6 +31,7 @@ public class LoginPage extends JFrame {
             String role = (String) roleComboBox.getSelectedItem();
             String login = loginTextField.getText();
             String pswd = pswdField.getText();
+            boolean success = true;
 
             if (role.equals("Studente"))
             {
@@ -39,6 +40,7 @@ public class LoginPage extends JFrame {
                 }
                 catch (SecurityException se) {
                     JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                    success = false;
                 }
             } else if (role.equals("Docente")) {
                 try {
@@ -46,6 +48,7 @@ public class LoginPage extends JFrame {
                 }
                 catch (SecurityException se) {
                     JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                    success = false;
                 }
             } else if (role.equals("Coordinatore")) {
                 try {
@@ -53,11 +56,14 @@ public class LoginPage extends JFrame {
                 }
                 catch (SecurityException se) {
                     JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                    success = false;
                 }
             } else {
                 JOptionPane.showMessageDialog(basePanel, "Ruolo non valido");
+                success = false;
             }
-
+            if(success)
+                JOptionPane.showMessageDialog(basePanel, "Login Success");
         });
         regButton.addActionListener(new ActionListener() {
             @Override

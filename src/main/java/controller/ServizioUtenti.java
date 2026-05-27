@@ -61,6 +61,8 @@ public class ServizioUtenti {
 	public void registerStudente(String nome, String cognome, String login, String email, String pswd) {
 		if (studRepo.checkEmail(email) || studRepo.checkLogin(login))
 			throw new SecurityException("email/login already in use");
+		if(nome.trim().isEmpty() || cognome.trim().isEmpty() || login.trim().isEmpty() || email.trim().isEmpty() || pswd.trim().isEmpty())
+			throw new SecurityException("Riempire tutti i campi!");
 
 		Studente s = new Studente(nome, cognome, login, email, pswd);
 		studRepo.addStudente(s);
