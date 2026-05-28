@@ -33,38 +33,40 @@ public class LoginPage extends JFrame {
             String pswd = pswdField.getText();
             boolean success = true;
 
-            if (role.equals("Studente"))
+            switch(role)
             {
-                try {
-                    controller.studenteLogin(login, pswd);
-                }
-                catch (SecurityException se) {
-                    JOptionPane.showMessageDialog(basePanel, se.getMessage());
-                    success = false;
-                }
-            } else if (role.equals("Docente")) {
-                try {
-                    controller.docenteLogin(login, pswd);
-                }
-                catch (SecurityException se) {
-                    JOptionPane.showMessageDialog(basePanel, se.getMessage());
-                    success = false;
-                }
-            } else if (role.equals("Coordinatore")) {
-                try {
-                    controller.coordinatoreLogin(login, pswd);
-                }
-                catch (SecurityException se) {
-                    JOptionPane.showMessageDialog(basePanel, se.getMessage());
-                    success = false;
-                }
-            } else {
-                JOptionPane.showMessageDialog(basePanel, "Ruolo non valido");
-                success = false;
+                case "Studente":
+                    try {
+                        controller.studenteLogin(login, pswd);
+                    }
+                    catch (SecurityException se) {
+                        JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                        success = false;
+                    }
+                    break;
+                case "Docente":
+                    try {
+                        controller.docenteLogin(login, pswd);
+                    }
+                    catch (SecurityException se) {
+                        JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                        success = false;
+                    }
+                    break
+                case "coordinatore":
+                    try {
+                        controller.coordinatoreLogin(login, pswd);
+                    }
+                    catch (SecurityException se) {
+                        JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                        success = false;
+                    }
+                    break;
             }
             if(success)
                 JOptionPane.showMessageDialog(basePanel, "Login Success");
         });
+
         regButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,6 +74,6 @@ public class LoginPage extends JFrame {
                 frame.setVisible(false);
             }
         });
-    }
+    };
 }
 
