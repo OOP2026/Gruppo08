@@ -24,7 +24,7 @@ public class ServizioLezioni {
 		return l;
 	}
 
-	public OrarioLezione makeOrarioLezione(AnnoAccademico anno, DayOfWeek giornoSett, Insegnamento insegnamento) {
+	public OrarioLezione makeOrarioLezione(AnnoAccademico anno, String giornoSett, Insegnamento insegnamento) {
 		OrarioLezione o = new OrarioLezione(anno, giornoSett, insegnamento);
 		orarioRepo.addOrarioLezione(o);
 		return o;

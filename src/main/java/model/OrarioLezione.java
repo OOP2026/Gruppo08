@@ -1,7 +1,5 @@
 package model;
 
-import java.time.DayOfWeek;
-
 /*
  * NOTE:
  * OrarioLezione come dovrebbe segnare l'orario 24h della lezione? 
@@ -10,10 +8,10 @@ import java.time.DayOfWeek;
 
 public class OrarioLezione {
 	private AnnoAccademico anno;
-	private DayOfWeek giornoSett;
+	private String giornoSett;
 	private Insegnamento insegnamento;
 
-	public OrarioLezione(AnnoAccademico anno, DayOfWeek giornoSett, Insegnamento insegnamento) {
+	public OrarioLezione(AnnoAccademico anno, String giornoSett, Insegnamento insegnamento) {
 		this.anno = anno;
 		this.giornoSett = giornoSett;
 		this.insegnamento = insegnamento;
@@ -27,7 +25,7 @@ public class OrarioLezione {
 		return anno;
 	}
 
-	public DayOfWeek getGiornoSett() {
+	public String getGiornoSett() {
 		return giornoSett;
 	}
 

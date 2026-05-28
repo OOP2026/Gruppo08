@@ -115,7 +115,7 @@ public class Controller {
 		return true;
 	}
 
-	public boolean makeOrarioLezione(AnnoAccademico anno, DayOfWeek giornoSett, Insegnamento insegnamento) {
+	public boolean makeOrarioLezione(AnnoAccademico anno, String giornoSett, Insegnamento insegnamento) {
 		if (!isCoordinatore())
 			return false;
 		sLezioni.makeOrarioLezione(anno, giornoSett, insegnamento);
