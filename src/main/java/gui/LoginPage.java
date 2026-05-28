@@ -1,21 +1,15 @@
 package gui;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import controller.Controller;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 public class LoginPage extends JFrame {
     private static JFrame frame;
     private JPanel basePanel;
-    private JLabel logLable;
+    private JLabel logLabel;
     private JPanel inputsPanel;
     private JComboBox roleComboBox;
     private JTextField loginTextField;
@@ -56,7 +50,7 @@ public class LoginPage extends JFrame {
                         success = false;
                     }
                     break;
-                case "coordinatore":
+                case "Coordinatore":
                     try {
                         controller.coordinatoreLogin(login, pswd);
                     } catch (SecurityException se) {
@@ -79,6 +73,10 @@ public class LoginPage extends JFrame {
                 frame.setVisible(false);
             }
         });
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 
     ;
