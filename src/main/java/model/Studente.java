@@ -13,10 +13,6 @@ public class Studente extends Utente {
 		matricola = counter++;
 	}
 
-	public int getMatricola() {
-		return matricola;
-	}
-
 	public List<Insegnamento> insegnamentiSeguiti() {
 		return insegnamentiSeguiti;
 	}
@@ -29,5 +25,10 @@ public class Studente extends Utente {
 	@Override
 	public boolean puoModificareOrario() {
 		return false;
+	}
+
+	@Override
+	public Integer getMatricola() {
+		return matricola;
 	}
 }

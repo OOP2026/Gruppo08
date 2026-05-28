@@ -2,17 +2,15 @@ package gui;
 
 import controller.Controller;
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.StyleContext;
-import java.awt.*;
-import java.util.Locale;
 
 
 public class HomePage {
     private static JFrame frame;
     private JPanel basePanel;
     private JTable orarioTable;
+    private JLabel wLabel;
+    private JLabel mLable;
     private DefaultTableModel orarioTableModel;
 
     public HomePage(JFrame callerFrame, Controller controller) {
@@ -22,6 +20,12 @@ public class HomePage {
         frame.pack();
         frame.setVisible(true);
         initializeTable();
+        wLabel.setText("Benvenuto, " + controller.getSession().getNome());
+        if (controller.isStudente())
+        {
+            mLable.setVisible(true);
+            mLable.setText("Matricola: " + controller.getSession().getMatricola().toString());
+        }
     }
 
     private void initializeTable() {
