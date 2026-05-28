@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: relazione con orarioLezione al posto di insegnamentiSeguiti
+
 public class Studente extends Utente {
 	private static int counter = 0;
 	private int matricola;

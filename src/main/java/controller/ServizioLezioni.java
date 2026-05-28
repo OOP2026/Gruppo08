@@ -1,6 +1,5 @@
 package controller;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 import model.*;
@@ -11,11 +10,10 @@ public class ServizioLezioni {
 
 	/*
 	 * TODO:
-	 * - getOrario: deve essere chiamabile da tutti gli utenti e restituisce la hash
-	 * table.
 	 * - richiediSpostamento: interagisce con Docente e OrarioLezioni e crea uno
 	 * spostamento temporaneo per una determinata settimana della lezione
-	 * - confermaSpostamento: prende un Coordinatore e cambia lo StatoSpostamento
+	 * - rispondiSpostamento: cambia lo StatoSpostamento di una richiesta e modifica
+	 * l'orario di una lezione
 	 */
 
 	public Lezione makeLezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
