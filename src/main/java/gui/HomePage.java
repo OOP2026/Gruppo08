@@ -4,13 +4,14 @@ import controller.Controller;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-
 public class HomePage {
     private static JFrame frame;
     private JPanel basePanel;
     private JTable orarioTable;
     private JLabel wLabel;
-    private JLabel mLable;
+    private JLabel mLabel;
+    private JButton spostamentoButton;
+    private JButton manageButton;
     private DefaultTableModel orarioTableModel;
 
     public HomePage(JFrame callerFrame, Controller controller) {
@@ -23,8 +24,8 @@ public class HomePage {
         wLabel.setText("Benvenuto, " + controller.getSession().getNome());
         if (controller.isStudente())
         {
-            mLable.setVisible(true);
-            mLable.setText("Matricola: " + controller.getSession().getMatricola().toString());
+            mLabel.setVisible(true);
+            mLabel.setText("Matricola: " + controller.getSession().getMatricola().toString());
         }
     }
 

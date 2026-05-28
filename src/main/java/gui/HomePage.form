@@ -34,7 +34,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="2e13b" class="javax.swing.JLabel" binding="mLable">
+          <component id="2e13b" class="javax.swing.JLabel" binding="mLabel">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -60,6 +60,25 @@
           </component>
         </children>
       </scrollpane>
+      <grid id="d2001" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="f6b17" class="javax.swing.JButton" binding="spostamentoButton">
+            <constraints/>
+            <properties>
+              <text value="Richiedi Spostamento"/>
+            </properties>
+          </component>
+          <component id="24b20" class="javax.swing.JButton" binding="manageButton">
+            <constraints/>
+            <properties>
+              <text value="Gestisci Richieste"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
