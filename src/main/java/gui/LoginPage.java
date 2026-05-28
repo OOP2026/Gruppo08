@@ -52,7 +52,7 @@ public class LoginPage extends JFrame {
                         JOptionPane.showMessageDialog(basePanel, se.getMessage());
                         success = false;
                     }
-                    break
+                    break;
                 case "coordinatore":
                     try {
                         controller.coordinatoreLogin(login, pswd);
