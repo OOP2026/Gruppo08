@@ -8,7 +8,6 @@ public class ServizioUtenti {
 
 	private StudenteRepository studRepo = new StudenteRepository();
 	private DocenteRepository docRepo = new DocenteRepository();
-	private CoordinatoreRepository coordinatoreRepo = new CoordinatoreRepository();
 
 	public Studente studenteLogin(String identifier, String pswd) throws SecurityException {
 		Studente s;
@@ -42,26 +41,22 @@ public class ServizioUtenti {
 		throw new SecurityException("login/pswd incorrect");
 	}
 
-	public Coordinatore coordinatoreLogin(String identifier, String pswd) throws SecurityException {
-		Coordinatore c;
+	// TODO: da deprecare
+	public Docente coordinatoreLogin(String identifier, String pswd) throws SecurityException {
+		Docente d;
 		try {
-			if (identifier.contains("@"))
-				c = coordinatoreRepo.findByMail(identifier);
-			else {
-				c = coordinatoreRepo.findByLogin(identifier);
-			}
-		} catch (NoSuchElementException e) {
+			d = docenteLogin(identifier, pswd);
+			return d;
+		} catch (SecurityException e) {
 			throw new SecurityException("login/pswd incorrect");
 		}
-		if (c.checkPswd(pswd))
-			return c;
-		throw new SecurityException("login/pswd incorrect");
 	}
 
 	public void registerStudente(String nome, String cognome, String login, String email, String pswd) {
 		if (studRepo.checkEmail(email) || studRepo.checkLogin(login))
 			throw new SecurityException("email/login already in use");
-		if(nome.trim().isEmpty() || cognome.trim().isEmpty() || login.trim().isEmpty() || email.trim().isEmpty() || pswd.trim().isEmpty())
+		if (nome.trim().isEmpty() || cognome.trim().isEmpty() || login.trim().isEmpty() || email.trim().isEmpty()
+				|| pswd.trim().isEmpty())
 			throw new SecurityException("Riempire tutti i campi!");
 
 		Studente s = new Studente(nome, cognome, login, email, pswd);
@@ -72,16 +67,15 @@ public class ServizioUtenti {
 		if (docRepo.checkEmail(email) || docRepo.checkLogin(login))
 			throw new SecurityException("email/login already in use");
 
-		Docente d = new Docente(nome, cognome, login, email, pswd);
+		Docente d = new Docente(nome, cognome, login, email, pswd, false);
 		docRepo.addDocente(d);
 	}
 
 	public void registerCoordinatore(String nome, String cognome, String login, String email, String pswd) {
-		if (coordinatoreRepo != null && coordinatoreRepo.getCoordinatori().isEmpty()) {
-			Coordinatore c = new Coordinatore(nome, cognome, login, email, pswd);
-			coordinatoreRepo.addCoordinatore(c);
-			return;
-		}
-		throw new SecurityException("coordinatore già esistente");
+		if (docRepo.checkEmail(email) || docRepo.checkLogin(login))
+			throw new SecurityException("email/login already in use");
+
+		Docente d = new Docente(nome, cognome, login, email, pswd, true);
+		docRepo.addDocente(d);
 	}
 }

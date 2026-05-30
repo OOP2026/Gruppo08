@@ -8,7 +8,6 @@ import model.*;
 public class ServizioLezioni {
 	private LezioneRepository lezioneRepo = new LezioneRepository();
 	private RichiestaSpostamentoRepository richiesteRepo = new RichiestaSpostamentoRepository();
-
 	private DocenteRepository docenteRepo = new DocenteRepository();
 
 	public Lezione makeLezione(int idLezione, AnnoAccademico annoAccademico, DayOfWeek giornoSett, Aula aula,

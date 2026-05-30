@@ -74,10 +74,11 @@ public class Controller {
 	 * Infrastruttura Uni *
 	 **********************
 	 */
-	public boolean makeInsegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
+
+	public boolean makeInsegnamento(String nomeMateria, String loginDocente, int numeroCfu, int annoDiCorso) {
 		if (!isCoordinatore())
 			return false;
-		sUni.makeInsegnamento(materia, numeroCfu, annoDiCorso);
+		sUni.makeInsegnamento(nomeMateria, loginDocente, numeroCfu, annoDiCorso);
 		return true;
 	}
 
@@ -88,17 +89,10 @@ public class Controller {
 		return true;
 	}
 
-	public boolean makeAnnoAccademico(int anno, Insegnamento... insegnamenti) {
+	public boolean makeAula(String nome) {
 		if (!isCoordinatore())
 			return false;
-		sUni.makeAnnoAccademico(anno, insegnamenti);
-		return true;
-	}
-
-	public boolean makeAula(char lettera, int numero, int capacita) {
-		if (!isCoordinatore())
-			return false;
-		sUni.makeAula(lettera, numero, capacita);
+		sUni.makeAula(nome);
 		return true;
 	}
 

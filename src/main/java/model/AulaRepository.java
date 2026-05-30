@@ -11,16 +11,12 @@ public class AulaRepository {
 		return aule;
 	}
 
-	public Aula searchAula(char lettera, int numero) throws NoSuchElementException {
-		for (Aula aula : aule)
-		{
-			if (lettera == aula.getLettera() && numero == aula.getNumero())
-				{
-					return aula;
-				}
+	public Aula findAula(String nome) throws NoSuchElementException {
+		for (Aula a : aule) {
+			if (a.getNome().equals(nome))
+				return a;
 		}
-
-		throw new NoSuchElementException("l'aula " + lettera + numero + " non esiste");
+		throw new NoSuchElementException();
 	}
 
 	public void addAula(Aula a) {

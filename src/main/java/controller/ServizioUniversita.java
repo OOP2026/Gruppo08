@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.NoSuchElementException;
+
 import model.*;
 
 public class ServizioUniversita {
@@ -7,6 +9,7 @@ public class ServizioUniversita {
 	private InsegnamentoRepository insegnamentoRepo = new InsegnamentoRepository();
 	private AnnoAccademicoRepository annoAccademicoRepo = new AnnoAccademicoRepository();
 	private AulaRepository aulaRepo = new AulaRepository();
+	private DocenteRepository docRepo = new DocenteRepository();
 
 	public Materia makeMateria(String nome) {
 		Materia m = new Materia(nome);
@@ -14,8 +17,17 @@ public class ServizioUniversita {
 		return m;
 	}
 
-	public Insegnamento makeInsegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
-		Insegnamento i = new Insegnamento(materia, numeroCfu, annoDiCorso);
+	public Insegnamento makeInsegnamento(String nomeMateria, String loginDocente, int numeroCfu, int annoDiCorso) {
+		Materia materia;
+		Docente docente;
+		try {
+			materia = materiaRepo.findMateria(nomeMateria);
+			docente = docRepo.findByLogin(loginDocente);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
+		Insegnamento i = new Insegnamento(materia, docente, numeroCfu, annoDiCorso);
 		insegnamentoRepo.addInsegnamento(i);
 		return i;
 	}
@@ -26,19 +38,8 @@ public class ServizioUniversita {
 		return a;
 	}
 
-	public AnnoAccademico makeAnnoAccademico(int anno, Insegnamento... insegnamenti) {
-		AnnoAccademico a = new AnnoAccademico(anno);
-
-		for (Insegnamento insegnamento : insegnamenti) {
-			a.addInsegnamento(insegnamento);
-		}
-
-		annoAccademicoRepo.addAnnoAccademico(a);
-		return a;
-	}
-
-	public Aula makeAula(char lettera, int numero, int capacita) {
-		Aula a = new Aula(lettera, numero, capacita);
+	public Aula makeAula(String nome) {
+		Aula a = new Aula(nome);
 		aulaRepo.addAula(a);
 		return a;
 	}

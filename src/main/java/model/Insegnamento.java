@@ -2,7 +2,6 @@ package model;
 
 public class Insegnamento {
 	private int numeroCfu;
-	// annoDiCorso != AnnoAccademico, e' come l'1 di fronte ad Analisi.
 	private int annoDiCorso;
 	private Materia materia;
 	private Docente docente;
