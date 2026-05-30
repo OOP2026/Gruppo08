@@ -1,7 +1,7 @@
 package controller;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import model.*;
 
@@ -108,17 +108,27 @@ public class Controller {
 	 **********************
 	 */
 
-	public boolean makeLezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
+	public boolean makeLezione(int idLezione, AnnoAccademico annoAccademico, DayOfWeek giornoSett, Aula aula,
+			Insegnamento insegnamento, LocalTime oraInizio, LocalTime oraFine) {
 		if (!isCoordinatore())
 			return false;
-		sLezioni.makeLezione(aula, insegnamento, oraInizio, oraFine);
+		sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, aula, insegnamento, oraInizio, oraFine);
 		return true;
 	}
 
-	public boolean makeOrarioLezione(AnnoAccademico anno, String giornoSett, Insegnamento insegnamento) {
+	public boolean approvaRichiestaSpostamento(int idRichiesta, boolean approvata) {
 		if (!isCoordinatore())
 			return false;
-		sLezioni.makeOrarioLezione(anno, giornoSett, insegnamento);
+		sLezioni.approvaRichiestaSpostamento(idRichiesta, approvata);
+		return true;
+	}
+
+	public boolean makeRichiestaSpostamento(int idRichiesta, int idLezioneDaSpostare, String docenteLogin,
+			DayOfWeek nuovoGiorno, LocalTime nuovaOraInizio, LocalTime nuovaOraFine) {
+		if (!session.puoRichiedereSpostamento())
+			return false;
+		sLezioni.makeRichiestaSpostamento(idRichiesta, idLezioneDaSpostare, docenteLogin, nuovoGiorno, nuovaOraInizio,
+				nuovaOraFine);
 		return true;
 	}
 }

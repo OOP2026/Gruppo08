@@ -1,26 +1,45 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 
 public class Lezione {
-	private LocalDateTime oraInizio;
-	private LocalDateTime oraFine;
-
+	private int idLezione;
+	private LocalTime oraInizio;
+	private LocalTime oraFine;
+	private AnnoAccademico annoAccademico;
+	private DayOfWeek giornoSett;
 	private Aula aula;
 	private Insegnamento insegnamento;
 
-	public Lezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
-		this.aula = aula;
-		this.insegnamento = insegnamento;
+	public Lezione(int idLezione, AnnoAccademico annoAccademico, DayOfWeek giornoSett, LocalTime oraInizio,
+			LocalTime oraFine, Aula aula, Insegnamento insegnamento) {
+		this.idLezione = idLezione;
+		this.annoAccademico = annoAccademico;
+		this.giornoSett = giornoSett;
 		this.oraInizio = oraInizio;
 		this.oraFine = oraFine;
+		this.aula = aula;
+		this.insegnamento = insegnamento;
 	}
 
-	public LocalDateTime getOraInizio() {
+	public int getIdLezione() {
+		return idLezione;
+	}
+
+	public AnnoAccademico getAnnoAccademico() {
+		return annoAccademico;
+	}
+
+	public DayOfWeek getGiornoSett() {
+		return giornoSett;
+	}
+
+	public LocalTime getOraInizio() {
 		return oraInizio;
 	}
 
-	public LocalDateTime getOraFine() {
+	public LocalTime getOraFine() {
 		return oraFine;
 	}
 
@@ -32,12 +51,20 @@ public class Lezione {
 		return insegnamento;
 	}
 
-	public void setOraInizio(LocalDateTime oraInizio) {
-		this.oraInizio = oraInizio;
+	public void setGiornoSett(DayOfWeek giornoSett) {
+		this.giornoSett = giornoSett;
 	}
 
-	public void setOraFine(LocalDateTime oraFine) {
-		this.oraFine = oraFine;
+	public void setOraInizio(LocalTime OraInizio) {
+		this.oraInizio = OraInizio;
+	}
+
+	public void setOraFine(LocalTime OraFine) {
+		this.oraFine = OraFine;
+	}
+
+	public void setAula(Aula aula) {
+		this.aula = aula;
 	}
 
 }

@@ -1,11 +1,7 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AnnoAccademico {
 	private int anno;
-	private List<Insegnamento> insegnamenti = new ArrayList<>();
 
 	public AnnoAccademico(int anno) {
 		this.anno = anno;
@@ -15,11 +11,4 @@ public class AnnoAccademico {
 		return anno;
 	}
 
-	public List<Insegnamento> getInsegnamenti() {
-		return insegnamenti;
-	}
-
-	public void addInsegnamento(Insegnamento insegnamento) {
-		insegnamenti.add(insegnamento);
-	}
 }

@@ -5,9 +5,11 @@ public class Insegnamento {
 	// annoDiCorso != AnnoAccademico, e' come l'1 di fronte ad Analisi.
 	private int annoDiCorso;
 	private Materia materia;
+	private Docente docente;
 
-	public Insegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
+	public Insegnamento(Materia materia, Docente docente, int numeroCfu, int annoDiCorso) {
 		this.materia = materia;
+		this.docente = docente;
 		this.numeroCfu = numeroCfu;
 		this.annoDiCorso = annoDiCorso;
 	}
@@ -23,4 +25,9 @@ public class Insegnamento {
 	public Materia getMateria() {
 		return materia;
 	}
+
+	public Docente getDocente() {
+		return docente;
+	}
+
 }

@@ -1,28 +1,13 @@
 package model;
 
 public class Aula {
-	private char lettera;
-	private int numero;
-	private int capacita;
+	private String nome;
 
-	// NOTE: Lezione contiene riferimento a una singola Aula, accessibile tramite
-	// LezioneRepository
-
-	public Aula(char lettera, int numero, int capacita) {
-		this.lettera = lettera;
-		this.numero = numero;
-		this.capacita = capacita;
+	public Aula(String nome) {
+		this.nome = nome;
 	}
 
-	public char getLettera() {
-		return lettera;
-	}
-
-	public int getNumero() {
-		return numero;
-	}
-
-	public int getCapacita() {
-		return capacita;
+	public String getNome() {
+		return nome;
 	}
 }

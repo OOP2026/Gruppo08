@@ -1,8 +1,11 @@
 package model;
 
 public class Docente extends Utente {
-	public Docente(String nome, String cognome, String login, String email, String pswd) {
+	private boolean isCoordinatore;
+
+	public Docente(String nome, String cognome, String login, String email, String pswd, boolean isCoordinatore) {
 		super(nome, cognome, login, email, pswd);
+		this.isCoordinatore = isCoordinatore;
 	}
 
 	@Override
@@ -12,7 +15,7 @@ public class Docente extends Utente {
 
 	@Override
 	public boolean puoModificareOrario() {
-		return false;
+		return isCoordinatore;
 	}
 
 	@Override
