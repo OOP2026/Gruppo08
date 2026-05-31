@@ -2,8 +2,11 @@ package controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
 
 import model.*;
+
+// TODO: check sui vincoli di chiave (unique) nella creazione di nuovi oggetti
 
 public class Controller {
 	private ServizioUniversita sUni = new ServizioUniversita();
@@ -30,21 +33,30 @@ public class Controller {
 		return false;
 	}
 
-	// TODO: si potrebbe rendere il login piu' modulare eliminando il formato
+	// NOTE: si potrebbe rendere il login piu' modulare eliminando il formato
 	// ruoloLogin per usare esclusivamente isRuolo
 	public void studenteLogin(String identifier, String pswd) throws SecurityException {
-		session = sUtenti.studenteLogin(identifier, pswd);
-		return;
+		try {
+			session = sUtenti.studenteLogin(identifier, pswd);
+		} catch (SecurityException e) {
+			throw e;
+		}
 	}
 
 	public void docenteLogin(String identifier, String pswd) throws SecurityException {
-		session = sUtenti.docenteLogin(identifier, pswd);
-		return;
+		try {
+			session = sUtenti.docenteLogin(identifier, pswd);
+		} catch (SecurityException e) {
+			throw e;
+		}
 	}
 
 	public void coordinatoreLogin(String identifier, String pswd) throws SecurityException {
-		session = sUtenti.coordinatoreLogin(identifier, pswd);
-		return;
+		try {
+			session = sUtenti.coordinatoreLogin(identifier, pswd);
+		} catch (SecurityException e) {
+			throw e;
+		}
 	}
 
 	public void registerStudente(String nome, String cognome, String login, String email, String pswd) {
@@ -84,9 +96,16 @@ public class Controller {
 
 	public boolean makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
 			int annoDiCorso) {
+
 		if (!isCoordinatore())
 			return false;
-		sUni.makeInsegnamento(idInsegnamento, nomeMateria, loginDocente, numeroCfu, annoDiCorso);
+
+		try {
+			sUni.makeInsegnamento(idInsegnamento, nomeMateria, loginDocente, numeroCfu, annoDiCorso);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
 		return true;
 	}
 
@@ -111,26 +130,47 @@ public class Controller {
 	 */
 
 	public boolean makeLezione(int idLezione, int annoAccademico, DayOfWeek giornoSett, String nomeAula,
-			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) {
+			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) throws NoSuchElementException {
+
 		if (!isCoordinatore())
 			return false;
-		sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, nomeAula, idInsegnamento, oraInizio, oraFine);
+
+		try {
+			sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, nomeAula, idInsegnamento, oraInizio, oraFine);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
 		return true;
 	}
 
-	public boolean approvaRichiestaSpostamento(int idRichiesta, boolean approvata) {
+	public boolean approvaRichiestaSpostamento(int idRichiesta, boolean approvata) throws NoSuchElementException {
+
 		if (!isCoordinatore())
 			return false;
-		sLezioni.approvaRichiestaSpostamento(idRichiesta, approvata);
+
+		try {
+			sLezioni.approvaRichiestaSpostamento(idRichiesta, approvata);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
 		return true;
 	}
 
 	public boolean makeRichiestaSpostamento(int idRichiesta, int idLezioneDaSpostare, String docenteLogin,
-			DayOfWeek nuovoGiorno, LocalTime nuovaOraInizio, LocalTime nuovaOraFine) {
+			DayOfWeek nuovoGiorno, LocalTime nuovaOraInizio, LocalTime nuovaOraFine) throws NoSuchElementException {
+
 		if (!session.puoRichiedereSpostamento())
 			return false;
-		sLezioni.makeRichiestaSpostamento(idRichiesta, idLezioneDaSpostare, docenteLogin, nuovoGiorno, nuovaOraInizio,
-				nuovaOraFine);
+
+		try {
+			sLezioni.makeRichiestaSpostamento(idRichiesta, idLezioneDaSpostare, docenteLogin, nuovoGiorno,
+					nuovaOraInizio, nuovaOraFine);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
 		return true;
 	}
 }

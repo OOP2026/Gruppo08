@@ -8,7 +8,6 @@ import model.*;
 /*
  * TODO:
  * - Metodi per far interfacciare l'utente alle proprie lezioni in base all'anno di corso;
- * - Error handling nella ricerca degli oggetti nel controller (perolopiu' classi repository);
  * - metodi make* senza parametro id se l'oggetto non e' presente nel db;
  *
  * NOTE:

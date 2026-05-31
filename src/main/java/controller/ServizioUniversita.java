@@ -18,7 +18,7 @@ public class ServizioUniversita {
 	}
 
 	public Insegnamento makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
-			int annoDiCorso) {
+			int annoDiCorso) throws NoSuchElementException {
 		Materia materia;
 		Docente docente;
 		try {
