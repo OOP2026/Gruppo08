@@ -6,13 +6,19 @@ import java.time.DayOfWeek;
 import model.*;
 
 public class ServizioLezioni {
-	private LezioneRepository lezioneRepo = new LezioneRepository();
-	private RichiestaSpostamentoRepository richiesteRepo = new RichiestaSpostamentoRepository();
-	private DocenteRepository docenteRepo = new DocenteRepository();
+	private LezioneRepository lezioneRepo = LezioneRepository.getInstance();
+	private RichiestaSpostamentoRepository richiesteRepo = RichiestaSpostamentoRepository.getInstance();
+	private AnnoAccademicoRepository annoRepo = AnnoAccademicoRepository.getInstance();
+	private DocenteRepository docenteRepo = DocenteRepository.getInstance();
+	private AulaRepository aulaRepo = AulaRepository.getInstance();
+	private InsegnamentoRepository insegnamentoRepo = InsegnamentoRepository.getInstance();
 
-	public Lezione makeLezione(int idLezione, AnnoAccademico annoAccademico, DayOfWeek giornoSett, Aula aula,
-			Insegnamento insegnamento, LocalTime oraInizio, LocalTime oraFine) {
-		Lezione l = new Lezione(idLezione, annoAccademico, giornoSett, oraInizio, oraFine, aula, insegnamento);
+	public Lezione makeLezione(int idLezione, int annoAccademico, DayOfWeek giornoSett, String nomeAula,
+			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) {
+		AnnoAccademico a = annoRepo.findAnno(annoAccademico);
+		Aula aula = aulaRepo.findAula(nomeAula);
+		Insegnamento insegnamento = insegnamentoRepo.findInsegnamento(idInsegnamento);
+		Lezione l = new Lezione(idLezione, a, giornoSett, oraInizio, oraFine, aula, insegnamento);
 		lezioneRepo.addLezione(l);
 		return l;
 	}
@@ -37,7 +43,8 @@ public class ServizioLezioni {
 
 		Lezione l = r.getLezioneDaSpostare();
 
-		// TODO: Spostamento solo se aula non occupata quel giorno da altre lezioni.
+		// TODO: Spostamento solo se valori compatibili (aula non occupata quel giorno
+		// da altre lezioni ecc..).
 		l.setOraInizio(r.getNuovaOraInizio());
 		l.setOraFine(r.getNuovaOraFine());
 		l.setGiornoSett(r.getNuovoGiorno());

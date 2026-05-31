@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 
 public class ServizioUtenti {
 
-	private StudenteRepository studRepo = new StudenteRepository();
-	private DocenteRepository docRepo = new DocenteRepository();
+	private StudenteRepository studRepo = StudenteRepository.getInstance();
+	private DocenteRepository docRepo = DocenteRepository.getInstance();
 
 	public Studente studenteLogin(String identifier, String pswd) throws SecurityException {
 		Studente s;

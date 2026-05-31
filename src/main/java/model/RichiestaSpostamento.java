@@ -24,6 +24,7 @@ public class RichiestaSpostamento {
         this.idRichiesta = idRichiesta;
         this.lezioneDaSpostare = lezioneDaSpostare;
         this.docente = docente;
+        this.nuovoGiorno = nuovoGiorno;
         this.nuovaOraInizio = nuovaOraInizio;
         this.nuovaOraFine = nuovaOraFine;
         this.stato = Stato.IN_ATTESA;

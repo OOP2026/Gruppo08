@@ -5,6 +5,18 @@ import java.util.NoSuchElementException;
 import java.util.ArrayList;
 
 public class RichiestaSpostamentoRepository {
+	private RichiestaSpostamentoRepository() {
+	}
+
+	private static RichiestaSpostamentoRepository instance;
+
+	public static RichiestaSpostamentoRepository getInstance() {
+		if (instance == null)
+			instance = new RichiestaSpostamentoRepository();
+
+		return instance;
+	}
+
 	List<RichiestaSpostamento> richieste = new ArrayList<>();
 
 	public void addRichiesta(RichiestaSpostamento r) {

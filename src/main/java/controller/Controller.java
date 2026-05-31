@@ -75,10 +75,18 @@ public class Controller {
 	 **********************
 	 */
 
-	public boolean makeInsegnamento(String nomeMateria, String loginDocente, int numeroCfu, int annoDiCorso) {
+	public boolean makeMateria(String nome) {
 		if (!isCoordinatore())
 			return false;
-		sUni.makeInsegnamento(nomeMateria, loginDocente, numeroCfu, annoDiCorso);
+		sUni.makeMateria(nome);
+		return true;
+	}
+
+	public boolean makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
+			int annoDiCorso) {
+		if (!isCoordinatore())
+			return false;
+		sUni.makeInsegnamento(idInsegnamento, nomeMateria, loginDocente, numeroCfu, annoDiCorso);
 		return true;
 	}
 
@@ -102,11 +110,11 @@ public class Controller {
 	 **********************
 	 */
 
-	public boolean makeLezione(int idLezione, AnnoAccademico annoAccademico, DayOfWeek giornoSett, Aula aula,
-			Insegnamento insegnamento, LocalTime oraInizio, LocalTime oraFine) {
+	public boolean makeLezione(int idLezione, int annoAccademico, DayOfWeek giornoSett, String nomeAula,
+			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) {
 		if (!isCoordinatore())
 			return false;
-		sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, aula, insegnamento, oraInizio, oraFine);
+		sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, nomeAula, idInsegnamento, oraInizio, oraFine);
 		return true;
 	}
 

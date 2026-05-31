@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 import model.*;
 
 public class ServizioUniversita {
-	private MateriaRepository materiaRepo = new MateriaRepository();
-	private InsegnamentoRepository insegnamentoRepo = new InsegnamentoRepository();
-	private AnnoAccademicoRepository annoAccademicoRepo = new AnnoAccademicoRepository();
-	private AulaRepository aulaRepo = new AulaRepository();
-	private DocenteRepository docRepo = new DocenteRepository();
+	private MateriaRepository materiaRepo = MateriaRepository.getInstance();
+	private InsegnamentoRepository insegnamentoRepo = InsegnamentoRepository.getInstance();
+	private AnnoAccademicoRepository annoAccademicoRepo = AnnoAccademicoRepository.getInstance();
+	private AulaRepository aulaRepo = AulaRepository.getInstance();
+	private DocenteRepository docRepo = DocenteRepository.getInstance();
 
 	public Materia makeMateria(String nome) {
 		Materia m = new Materia(nome);
@@ -17,7 +17,8 @@ public class ServizioUniversita {
 		return m;
 	}
 
-	public Insegnamento makeInsegnamento(String nomeMateria, String loginDocente, int numeroCfu, int annoDiCorso) {
+	public Insegnamento makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
+			int annoDiCorso) {
 		Materia materia;
 		Docente docente;
 		try {
@@ -27,7 +28,7 @@ public class ServizioUniversita {
 			throw e;
 		}
 
-		Insegnamento i = new Insegnamento(materia, docente, numeroCfu, annoDiCorso);
+		Insegnamento i = new Insegnamento(idInsegnamento, materia, docente, numeroCfu, annoDiCorso);
 		insegnamentoRepo.addInsegnamento(i);
 		return i;
 	}

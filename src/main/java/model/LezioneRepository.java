@@ -5,6 +5,18 @@ import java.util.NoSuchElementException;
 import java.util.ArrayList;
 
 public class LezioneRepository {
+	private LezioneRepository() {
+	}
+
+	private static LezioneRepository instance;
+
+	public static LezioneRepository getInstance() {
+		if (instance == null)
+			instance = new LezioneRepository();
+
+		return instance;
+	}
+
 	List<Lezione> lezioni = new ArrayList<>();
 
 	public void addLezione(Lezione l) {

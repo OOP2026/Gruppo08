@@ -5,6 +5,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MateriaRepository {
+	private MateriaRepository() {
+	}
+
+	private static MateriaRepository instance;
+
+	public static MateriaRepository getInstance() {
+		if (instance == null)
+			instance = new MateriaRepository();
+
+		return instance;
+	}
+
 	private List<Materia> materie = new ArrayList<>();
 
 	public void addMateria(Materia m) {
