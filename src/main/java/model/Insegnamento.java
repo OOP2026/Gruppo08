@@ -1,15 +1,22 @@
 package model;
 
 public class Insegnamento {
+	private int idInsegnamento;
 	private int numeroCfu;
-	// annoDiCorso != AnnoAccademico, e' come l'1 di fronte ad Analisi.
 	private int annoDiCorso;
 	private Materia materia;
+	private Docente docente;
 
-	public Insegnamento(Materia materia, int numeroCfu, int annoDiCorso) {
+	public Insegnamento(int idInsegnamento, Materia materia, Docente docente, int numeroCfu, int annoDiCorso) {
+		this.idInsegnamento = idInsegnamento;
 		this.materia = materia;
+		this.docente = docente;
 		this.numeroCfu = numeroCfu;
 		this.annoDiCorso = annoDiCorso;
+	}
+
+	public int getIdInsegnamento() {
+		return idInsegnamento;
 	}
 
 	public int getNumeroCfu() {
@@ -23,4 +30,9 @@ public class Insegnamento {
 	public Materia getMateria() {
 		return materia;
 	}
+
+	public Docente getDocente() {
+		return docente;
+	}
+
 }

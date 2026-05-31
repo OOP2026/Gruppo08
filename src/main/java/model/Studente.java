@@ -1,22 +1,22 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-// TODO: relazione con orarioLezione al posto di insegnamentiSeguiti
-
 public class Studente extends Utente {
 	private static int counter = 0;
 	private int matricola;
-	private List<Insegnamento> insegnamentiSeguiti = new ArrayList<>();
+	private int annoDiCorso = 1;
 
 	public Studente(String nome, String cognome, String login, String email, String pswd) {
 		super(nome, cognome, login, email, pswd);
 		matricola = counter++;
 	}
 
-	public List<Insegnamento> insegnamentiSeguiti() {
-		return insegnamentiSeguiti;
+	// TODO: quando dovrebbe cambiare l'anno di corso?
+	public void setAnnoDiCorso(int annoDiCorso) {
+		this.annoDiCorso = annoDiCorso;
+	}
+
+	public int getAnnoDiCorso() {
+		return annoDiCorso;
 	}
 
 	@Override

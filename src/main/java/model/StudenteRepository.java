@@ -5,6 +5,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class StudenteRepository {
+    private StudenteRepository() {
+    }
+
+    private static StudenteRepository instance;
+
+    public static StudenteRepository getInstance() {
+        if (instance == null)
+            instance = new StudenteRepository();
+
+        return instance;
+    }
+
     private List<Studente> studenti = new ArrayList<>();
 
     public List<Studente> getStudenti() {
@@ -50,7 +62,5 @@ public class StudenteRepository {
         }
         return false;
     }
-
-
 
 }

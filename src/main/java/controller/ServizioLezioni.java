@@ -1,31 +1,75 @@
 package controller;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.NoSuchElementException;
+import java.time.DayOfWeek;
 
 import model.*;
 
 public class ServizioLezioni {
-	private LezioneRepository lezioneRepo = new LezioneRepository();
-	private OrarioLezioneRepository orarioRepo = new OrarioLezioneRepository();
+	private LezioneRepository lezioneRepo = LezioneRepository.getInstance();
+	private RichiestaSpostamentoRepository richiesteRepo = RichiestaSpostamentoRepository.getInstance();
+	private AnnoAccademicoRepository annoRepo = AnnoAccademicoRepository.getInstance();
+	private DocenteRepository docenteRepo = DocenteRepository.getInstance();
+	private AulaRepository aulaRepo = AulaRepository.getInstance();
+	private InsegnamentoRepository insegnamentoRepo = InsegnamentoRepository.getInstance();
 
-	/*
-	 * TODO:
-	 * - richiediSpostamento: interagisce con Docente e OrarioLezioni e crea uno
-	 * spostamento temporaneo per una determinata settimana della lezione
-	 * - rispondiSpostamento: cambia lo StatoSpostamento di una richiesta e modifica
-	 * l'orario di una lezione
-	 */
+	public Lezione makeLezione(int idLezione, int annoAccademico, DayOfWeek giornoSett, String nomeAula,
+			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) throws NoSuchElementException {
 
-	public Lezione makeLezione(Aula aula, Insegnamento insegnamento, LocalDateTime oraInizio, LocalDateTime oraFine) {
-		Lezione l = new Lezione(aula, insegnamento, oraInizio, oraFine);
+		AnnoAccademico a;
+		Aula aula;
+		Insegnamento insegnamento;
+		try {
+			a = annoRepo.findAnno(annoAccademico);
+			aula = aulaRepo.findAula(nomeAula);
+			insegnamento = insegnamentoRepo.findInsegnamento(idInsegnamento);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
+		Lezione l = new Lezione(idLezione, a, giornoSett, oraInizio, oraFine, aula, insegnamento);
 		lezioneRepo.addLezione(l);
 		return l;
 	}
 
-	public OrarioLezione makeOrarioLezione(AnnoAccademico anno, String giornoSett, Insegnamento insegnamento) {
-		OrarioLezione o = new OrarioLezione(anno, giornoSett, insegnamento);
-		orarioRepo.addOrarioLezione(o);
-		return o;
+	public RichiestaSpostamento makeRichiestaSpostamento(int idRichiesta, int idLezioneDaSpostare, String docenteLogin,
+			DayOfWeek nuovoGiorno, LocalTime nuovaOraInizio, LocalTime nuovaOraFine) throws NoSuchElementException {
+
+		Lezione lezioneDaSpostare;
+		Docente docente;
+		try {
+			lezioneDaSpostare = lezioneRepo.findById(idLezioneDaSpostare);
+			docente = docenteRepo.findByLogin(docenteLogin);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
+		RichiestaSpostamento r = new RichiestaSpostamento(idRichiesta, lezioneDaSpostare, docente, nuovoGiorno,
+				nuovaOraInizio, nuovaOraFine);
+		richiesteRepo.addRichiesta(r);
+		return r;
+	}
+
+	public void approvaRichiestaSpostamento(int idRichiesta, boolean approvata) throws NoSuchElementException {
+		RichiestaSpostamento r;
+		try {
+			r = richiesteRepo.findById(idRichiesta);
+		} catch (NoSuchElementException e) {
+			throw e;
+		}
+
+		r.setStato(approvata);
+		if (!approvata)
+			return;
+
+		Lezione l = r.getLezioneDaSpostare();
+
+		// TODO: Spostamento solo se valori compatibili (aula non occupata quel giorno
+		// da altre lezioni ecc..).
+		l.setOraInizio(r.getNuovaOraInizio());
+		l.setOraFine(r.getNuovaOraFine());
+		l.setGiornoSett(r.getNuovoGiorno());
 	}
 
 }
