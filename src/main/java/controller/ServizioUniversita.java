@@ -19,14 +19,9 @@ public class ServizioUniversita {
 
 	public Insegnamento makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
 			int annoDiCorso) throws NoSuchElementException {
-		Materia materia;
-		Docente docente;
-		try {
-			materia = materiaRepo.findMateria(nomeMateria);
-			docente = docRepo.findByLogin(loginDocente);
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+
+		Materia materia = materiaRepo.findMateria(nomeMateria);
+		Docente docente = docRepo.findByLogin(loginDocente);
 
 		Insegnamento i = new Insegnamento(idInsegnamento, materia, docente, numeroCfu, annoDiCorso);
 		insegnamentoRepo.addInsegnamento(i);

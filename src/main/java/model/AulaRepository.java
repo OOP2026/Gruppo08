@@ -8,7 +8,7 @@ public class AulaRepository {
 	private AulaRepository() {
 	}
 
-	public static AulaRepository instance;
+	private static AulaRepository instance;
 
 	public static AulaRepository getInstance() {
 		if (instance == null)

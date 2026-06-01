@@ -55,12 +55,12 @@ public class Lezione {
 		this.giornoSett = giornoSett;
 	}
 
-	public void setOraInizio(LocalTime OraInizio) {
-		this.oraInizio = OraInizio;
+	public void setOraInizio(LocalTime oraInizio) {
+		this.oraInizio = oraInizio;
 	}
 
-	public void setOraFine(LocalTime OraFine) {
-		this.oraFine = OraFine;
+	public void setOraFine(LocalTime oraFine) {
+		this.oraFine = oraFine;
 	}
 
 	public void setAula(Aula aula) {

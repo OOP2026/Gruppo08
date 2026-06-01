@@ -16,47 +16,29 @@ public class Controller {
 	private Utente session;
 
 	public boolean isCoordinatore() {
-		if (session.puoModificareOrario() && session.puoRichiedereSpostamento())
-			return true;
-		return false;
+		return (session.puoModificareOrario() && session.puoRichiedereSpostamento());
 	}
 
 	public boolean isDocente() {
-		if (!session.puoModificareOrario() && session.puoRichiedereSpostamento())
-			return true;
-		return false;
+		return (!session.puoModificareOrario() && session.puoRichiedereSpostamento());
 	}
 
 	public boolean isStudente() {
-		if (!session.puoModificareOrario() && !session.puoRichiedereSpostamento())
-			return true;
-		return false;
+		return (!session.puoModificareOrario() && !session.puoRichiedereSpostamento());
 	}
 
 	// NOTE: si potrebbe rendere il login piu' modulare eliminando il formato
 	// ruoloLogin per usare esclusivamente isRuolo
 	public void studenteLogin(String identifier, String pswd) throws SecurityException {
-		try {
-			session = sUtenti.studenteLogin(identifier, pswd);
-		} catch (SecurityException e) {
-			throw e;
-		}
+		session = sUtenti.studenteLogin(identifier, pswd);
 	}
 
 	public void docenteLogin(String identifier, String pswd) throws SecurityException {
-		try {
-			session = sUtenti.docenteLogin(identifier, pswd);
-		} catch (SecurityException e) {
-			throw e;
-		}
+		session = sUtenti.docenteLogin(identifier, pswd);
 	}
 
 	public void coordinatoreLogin(String identifier, String pswd) throws SecurityException {
-		try {
-			session = sUtenti.coordinatoreLogin(identifier, pswd);
-		} catch (SecurityException e) {
-			throw e;
-		}
+		session = sUtenti.coordinatoreLogin(identifier, pswd);
 	}
 
 	public void registerStudente(String nome, String cognome, String login, String email, String pswd) {
@@ -95,16 +77,12 @@ public class Controller {
 	}
 
 	public boolean makeInsegnamento(int idInsegnamento, String nomeMateria, String loginDocente, int numeroCfu,
-			int annoDiCorso) {
+			int annoDiCorso) throws NoSuchElementException {
 
 		if (!isCoordinatore())
 			return false;
 
-		try {
-			sUni.makeInsegnamento(idInsegnamento, nomeMateria, loginDocente, numeroCfu, annoDiCorso);
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+		sUni.makeInsegnamento(idInsegnamento, nomeMateria, loginDocente, numeroCfu, annoDiCorso);
 
 		return true;
 	}
@@ -135,11 +113,7 @@ public class Controller {
 		if (!isCoordinatore())
 			return false;
 
-		try {
-			sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, nomeAula, idInsegnamento, oraInizio, oraFine);
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+		sLezioni.makeLezione(idLezione, annoAccademico, giornoSett, nomeAula, idInsegnamento, oraInizio, oraFine);
 
 		return true;
 	}
@@ -149,11 +123,7 @@ public class Controller {
 		if (!isCoordinatore())
 			return false;
 
-		try {
-			sLezioni.approvaRichiestaSpostamento(idRichiesta, approvata);
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+		sLezioni.approvaRichiestaSpostamento(idRichiesta, approvata);
 
 		return true;
 	}
@@ -164,12 +134,8 @@ public class Controller {
 		if (!session.puoRichiedereSpostamento())
 			return false;
 
-		try {
-			sLezioni.makeRichiestaSpostamento(idRichiesta, idLezioneDaSpostare, docenteLogin, nuovoGiorno,
-					nuovaOraInizio, nuovaOraFine);
-		} catch (NoSuchElementException e) {
-			throw e;
-		}
+		sLezioni.makeRichiestaSpostamento(idRichiesta, idLezioneDaSpostare, docenteLogin, nuovoGiorno,
+				nuovaOraInizio, nuovaOraFine);
 
 		return true;
 	}
