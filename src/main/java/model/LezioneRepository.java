@@ -30,4 +30,14 @@ public class LezioneRepository {
 		}
 		throw new NoSuchElementException();
 	}
+
+	public List<Lezione> findByAnnoDiCorso(int annoDiCorso) {
+		List<Lezione> result = new ArrayList<>();
+		for (Lezione l : lezioni) {
+			if (l.getInsegnamento().getAnnoDiCorso() == annoDiCorso)
+				result.add(l);
+		}
+		return result;
+	}
+
 }

@@ -43,6 +43,10 @@ public class Lezione {
 		return oraFine;
 	}
 
+	public String getIntervalloOrario() {
+		return oraInizio.toString() + " - " + oraFine.toString();
+	}
+
 	public Aula getAula() {
 		return aula;
 	}

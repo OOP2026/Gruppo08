@@ -1,6 +1,9 @@
 package controller;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.time.DayOfWeek;
 
@@ -72,4 +75,46 @@ public class ServizioLezioni {
 		l.setGiornoSett(r.getNuovoGiorno());
 	}
 
+	public Object[][] getOrarioMtx(int annoDiCorso) {
+		List<Lezione> lezioni = lezioneRepo.findByAnnoDiCorso(annoDiCorso);
+		lezioni.sort(Comparator.comparing(Lezione::getOraInizio));
+
+		String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
+				DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
+				DayOfWeek.SATURDAY.toString() };
+
+		ArrayList<String[]> rows = new ArrayList<>();
+
+		String[] currentRow = null;
+		Object currentOra = null;
+
+		for (Lezione lezione : lezioni) {
+			if (currentRow == null || !lezione.getOraInizio().equals(currentOra)) {
+				currentRow = new String[cols.length];
+				currentRow[0] = lezione.getIntervalloOrario();
+				rows.add(currentRow);
+				currentOra = lezione.getOraInizio();
+			}
+
+			int dayIdx = -1;
+			for (int j = 1; j < cols.length; j++) {
+				if (cols[j].equals(lezione.getGiornoSett().toString())) {
+					dayIdx = j;
+					break;
+				}
+			}
+
+			if (dayIdx != -1) {
+				currentRow[dayIdx] = lezione.getInsegnamento().getMateria().getNome();
+			}
+		}
+
+		Object[][] mtx = new Object[rows.size() + 1][cols.length];
+		mtx[0] = cols;
+		for (int i = 0; i < rows.size(); i++) {
+			mtx[i + 1] = rows.get(i);
+		}
+
+		return mtx;
+	}
 }
