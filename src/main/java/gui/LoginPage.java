@@ -5,23 +5,22 @@ import controller.Controller;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
-public class LoginPage extends JFrame {
+public class LoginPage {
     private static JFrame frame;
     private JPanel basePanel;
-    private JLabel logLabel;
-    private JPanel inputsPanel;
-    private JComboBox roleComboBox;
+    private JComboBox<String> roleComboBox;
     private JTextField loginTextField;
     private JPasswordField pswdField;
     private JButton loginButton;
     private JButton regButton;
-    private Controller controller = new Controller();
+    private final Controller controller = new Controller();
 
     public static void main(String[] args) {
         frame = new JFrame("LoginPage");
         frame.setContentPane(new LoginPage().basePanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
@@ -30,7 +29,7 @@ public class LoginPage extends JFrame {
         loginButton.addActionListener(e -> {
             String role = (String) roleComboBox.getSelectedItem();
             String login = loginTextField.getText();
-            String pswd = pswdField.getText();
+            String pswd = Arrays.toString(pswdField.getPassword());
             boolean success = true;
 
             switch (role) {
@@ -58,10 +57,13 @@ public class LoginPage extends JFrame {
                         success = false;
                     }
                     break;
+                default:
+                    JOptionPane.showMessageDialog(frame, "Invalid role");
+                    break;
             }
             if (success) {
                 JOptionPane.showMessageDialog(basePanel, "Login Success");
-                HomePage homePage = new HomePage(frame, controller);
+                new HomePage(controller);
                 frame.dispose();
             }
         });
@@ -69,17 +71,10 @@ public class LoginPage extends JFrame {
         regButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegPage regPage = new RegPage(frame, controller);
+                new RegPage(frame, controller);
                 frame.setVisible(false);
             }
         });
     }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
-
-    ;
-
 }
 

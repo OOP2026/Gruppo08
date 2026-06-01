@@ -1,22 +1,16 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import controller.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
-public class RegPage extends JFrame {
-    private static JFrame frame;
+public class RegPage {
+    private JFrame frame;
     private JPanel basePanel;
-    private JComboBox roleComboBox;
+    private JComboBox<String> roleComboBox;
     private JTextField nomeTextField;
     private JTextField cognomeTextField;
     private JTextField usernameTextField;
@@ -26,7 +20,7 @@ public class RegPage extends JFrame {
 
     public RegPage(JFrame loginPage, Controller controller) {
         frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(basePanel);
         frame.pack();
         frame.setVisible(true);
@@ -66,6 +60,9 @@ public class RegPage extends JFrame {
                             JOptionPane.showMessageDialog(basePanel, se.getMessage());
                             success = false;
                         }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(basePanel,"Ruolo non valido");
                         break;
                 }
                 if (success) {
