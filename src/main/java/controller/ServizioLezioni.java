@@ -16,6 +16,13 @@ public class ServizioLezioni {
 	private DocenteRepository docenteRepo = DocenteRepository.getInstance();
 	private AulaRepository aulaRepo = AulaRepository.getInstance();
 	private InsegnamentoRepository insegnamentoRepo = InsegnamentoRepository.getInstance();
+	private final String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
+			DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
+			DayOfWeek.SATURDAY.toString() };
+
+	public String[] getCols() {
+		return cols;
+	}
 
 	public Lezione makeLezione(int idLezione, int annoAccademico, DayOfWeek giornoSett, String nomeAula,
 			int idInsegnamento, LocalTime oraInizio, LocalTime oraFine) throws NoSuchElementException {
@@ -79,10 +86,6 @@ public class ServizioLezioni {
 		List<Lezione> lezioni = lezioneRepo.findByAnnoDiCorso(annoDiCorso);
 		lezioni.sort(Comparator.comparing(Lezione::getOraInizio));
 
-		String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
-				DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
-				DayOfWeek.SATURDAY.toString() };
-
 		ArrayList<String[]> rows = new ArrayList<>();
 
 		String[] currentRow = null;
@@ -109,12 +112,12 @@ public class ServizioLezioni {
 			}
 		}
 
-		Object[][] mtx = new Object[rows.size() + 1][cols.length];
-		mtx[0] = cols;
+		Object[][] mtx = new Object[rows.size()][cols.length];
 		for (int i = 0; i < rows.size(); i++) {
-			mtx[i + 1] = rows.get(i);
+			mtx[i] = rows.get(i);
 		}
 
 		return mtx;
 	}
+
 }

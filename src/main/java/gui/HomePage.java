@@ -118,24 +118,18 @@ public class HomePage {
         switch(anno) {
             case 1:
                 orarioModel1.setRowCount(0);
-                for(int i = 0; i < Math.min(mtx.length, 3); i++)
-                {
-                    orarioModel1.addRow(mtx[i]);
-                }
+                orarioModel1 = new DefaultTableModel(mtx, controller.getCols());
+                orarioTable1.setModel(orarioModel1);
                 break;
             case 2:
                 orarioModel2.setRowCount(0);
-                for(int i = 0; i < Math.min(mtx.length, 3); i++)
-                {
-                    orarioModel2.addRow(mtx[i]);
-                }
+                orarioModel2 = new DefaultTableModel(mtx, controller.getCols());
+                orarioTable2.setModel(orarioModel2);
                 break;
             case 3:
                 orarioModel3.setRowCount(0);
-                for(int i = 0; i < Math.min(mtx.length, 3); i++)
-                {
-                    orarioModel3.addRow(mtx[i]);
-                }
+                orarioModel3 = new DefaultTableModel(mtx, controller.getCols());
+                orarioTable3.setModel(orarioModel3);
                 break;
             default:
                 break;

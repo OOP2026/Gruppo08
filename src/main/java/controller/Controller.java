@@ -157,4 +157,7 @@ public class Controller {
 	{
 		return sLezioni.getOrarioMtx(annoDiCorso);
 	}
+
+	public String[] getCols() {return sLezioni.getCols();}
+
 }

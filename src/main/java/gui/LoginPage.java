@@ -1,11 +1,9 @@
 package gui;
 
 import controller.Controller;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class LoginPage {
     private static JFrame frame;
@@ -29,7 +27,7 @@ public class LoginPage {
         loginButton.addActionListener(e -> {
             String role = (String) roleComboBox.getSelectedItem();
             String login = loginTextField.getText();
-            String pswd = Arrays.toString(pswdField.getPassword());
+            String pswd = String.valueOf(pswdField.getPassword());
             boolean success = true;
 
             switch (role) {
