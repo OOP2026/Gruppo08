@@ -53,6 +53,19 @@ public class Controller {
 		sUtenti.registerCoordinatore(nome, cognome, login, email, pswd);
 	}
 
+	public int getAnno() throws IllegalStateException
+	{
+		if(isStudente())
+		{
+			Studente studente = (Studente)session;
+			return studente.getAnnoDiCorso();
+		}
+		else
+		{
+			throw new IllegalStateException("Non è uno studente");
+		}
+	}
+
 	public Utente getSession() {
 		return session;
 	}
@@ -138,5 +151,10 @@ public class Controller {
 				nuovaOraInizio, nuovaOraFine);
 
 		return true;
+	}
+
+	public Object[][] getOrarioMtx(int annoDiCorso)
+	{
+		return sLezioni.getOrarioMtx(annoDiCorso);
 	}
 }

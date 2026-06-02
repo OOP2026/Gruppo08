@@ -46,20 +46,6 @@
           </component>
         </children>
       </grid>
-      <scrollpane id="fd933">
-        <constraints border-constraint="Center"/>
-        <properties>
-          <background color="-13553359"/>
-          <foreground color="-13553359"/>
-        </properties>
-        <border type="none"/>
-        <children>
-          <component id="70e25" class="javax.swing.JTable" binding="orarioTable">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
-      </scrollpane>
       <grid id="d2001" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
         <properties/>
@@ -75,6 +61,110 @@
             <constraints/>
             <properties>
               <text value="Gestisci Richieste"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="743d7" layout-manager="GridLayoutManager" row-count="9" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <scrollpane id="8ff2">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13553359"/>
+              <foreground color="-13553359"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="90f0f" class="javax.swing.JTable" binding="orarioTable2">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="3e2de">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13553359"/>
+              <foreground color="-13553359"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="36a66" class="javax.swing.JTable" binding="orarioTable3">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="6b309" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Primo anno:"/>
+            </properties>
+          </component>
+          <component id="9f69e" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Secondo anno:"/>
+            </properties>
+          </component>
+          <component id="86cc" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Terzo anno:"/>
+            </properties>
+          </component>
+          <scrollpane id="db950">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13553359"/>
+              <foreground color="-13553359"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="a49e6" class="javax.swing.JTable" binding="orarioTable1">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="1a178" class="javax.swing.JButton" binding="aggiornaButton1">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Aggiorna"/>
+            </properties>
+          </component>
+          <component id="e5fd1" class="javax.swing.JButton" binding="aggiornaButton2">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Aggiorna"/>
+            </properties>
+          </component>
+          <component id="4be3a" class="javax.swing.JButton" binding="aggiornaButton3">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Aggiorna"/>
             </properties>
           </component>
         </children>
