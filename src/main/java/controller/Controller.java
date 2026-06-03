@@ -2,6 +2,7 @@ package controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import model.*;
@@ -160,6 +161,24 @@ public class Controller {
 
 	public String[] getCols() {
 		return sLezioni.getCols();
+	}
+
+	public List<Integer> getIdLezioniDocente() throws IllegalStateException {
+		if (isStudente())
+			throw new IllegalStateException();
+		return sLezioni.getIdLezioniDocente(session.getLogin());
+	}
+
+	public String getNomeMateriaLezione(int idLezione) throws NoSuchElementException {
+		return sLezioni.getNomeMateriaLezione(idLezione);
+	}
+
+	public String getIntervalloOrarioLezione(int idLezione) throws NoSuchElementException {
+		return sLezioni.getIntervalloOrarioLezione(idLezione);
+	}
+
+	public String getGiornoSettLezione(int idLezione) throws NoSuchElementException {
+		return sLezioni.getGiornoSettLezione(idLezione);
 	}
 
 }

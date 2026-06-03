@@ -120,4 +120,29 @@ public class ServizioLezioni {
 		return mtx;
 	}
 
+	public List<Integer> getIdLezioniDocente(String loginDocente) {
+		List<Integer> idLezioni = new ArrayList<>();
+
+		Docente d = docenteRepo.findByLogin(loginDocente);
+		List<Lezione> listaLezioni = lezioneRepo.findByDocente(d);
+
+		for (Lezione l : listaLezioni)
+			idLezioni.add(l.getIdLezione());
+
+		return idLezioni;
+	}
+
+	public String getNomeMateriaLezione(int idLezione) throws NoSuchElementException {
+		Lezione l = lezioneRepo.findById(idLezione);
+		return l.getInsegnamento().getMateria().getNome();
+	}
+
+	public String getIntervalloOrarioLezione(int idLezione) throws NoSuchElementException {
+		return lezioneRepo.findById(idLezione).getIntervalloOrario();
+	}
+
+	public String getGiornoSettLezione(int idLezione) throws NoSuchElementException {
+		return lezioneRepo.findById(idLezione).getGiornoSett().toString();
+	}
+
 }
