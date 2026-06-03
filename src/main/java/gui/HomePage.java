@@ -33,13 +33,11 @@ public class HomePage {
         this.controller = controller;
         initializeTable();
         wLabel.setText("Benvenuto, " + controller.getSession().getNome());
-        if (controller.isStudente())
-        {
+        if (controller.isStudente()) {
             mLabel.setVisible(true);
-            mLabel.setText("Matricola: " + controller.getSession().getMatricola().toString());
+            mLabel.setText("Matricola: " + controller.getMatricola());
 
-            switch (controller.getAnno())
-            {
+            switch (controller.getAnno()) {
                 case 1:
                     orarioTable2.setVisible(false);
                     orarioTable3.setVisible(false);
@@ -84,14 +82,13 @@ public class HomePage {
 
     private void initializeTable() {
         DefaultTableModel orarioTableModel;
-        String[] cols = {"Orario", "Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi"};
+        String[] cols = { "Orario", "Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi" };
 
-        String[] intervalliOrari = {"8:00 - 10:00", "11:00 - 13:00", "14:00 - 16:00"};
+        String[] intervalliOrari = { "8:00 - 10:00", "11:00 - 13:00", "14:00 - 16:00" };
 
         Object[][] dati = new Object[intervalliOrari.length][6];
-        for (int i = 0; i < intervalliOrari.length;i++)
+        for (int i = 0; i < intervalliOrari.length; i++)
             dati[i][0] = intervalliOrari[i];
-
 
         orarioTableModel = new DefaultTableModel(dati, cols) {
             @Override
@@ -115,7 +112,7 @@ public class HomePage {
         if (mtx == null)
             return;
 
-        switch(anno) {
+        switch (anno) {
             case 1:
                 orarioModel1.setRowCount(0);
                 orarioModel1 = new DefaultTableModel(mtx, controller.getCols());

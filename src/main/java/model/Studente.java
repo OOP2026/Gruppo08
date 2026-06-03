@@ -19,6 +19,10 @@ public class Studente extends Utente {
 		return annoDiCorso;
 	}
 
+	public int getMatricola() {
+		return matricola;
+	}
+
 	@Override
 	public boolean puoRichiedereSpostamento() {
 		return false;
@@ -27,10 +31,5 @@ public class Studente extends Utente {
 	@Override
 	public boolean puoModificareOrario() {
 		return false;
-	}
-
-	@Override
-	public Integer getMatricola() {
-		return matricola;
 	}
 }

@@ -11,8 +11,6 @@ public abstract class Utente {
 
 	public abstract boolean puoModificareOrario();
 
-	public abstract Integer getMatricola();
-
 	Utente(String nome, String cognome, String login, String email, String pswd) {
 		this.nome = nome;
 		this.cognome = cognome;

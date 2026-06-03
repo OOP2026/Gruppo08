@@ -17,9 +17,4 @@ public class Docente extends Utente {
 	public boolean puoModificareOrario() {
 		return isCoordinatore;
 	}
-
-	@Override
-	public Integer getMatricola() {
-		return null;
-	}
 }

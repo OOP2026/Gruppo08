@@ -53,17 +53,18 @@ public class Controller {
 		sUtenti.registerCoordinatore(nome, cognome, login, email, pswd);
 	}
 
-	public int getAnno() throws IllegalStateException
-	{
-		if(isStudente())
-		{
-			Studente studente = (Studente)session;
-			return studente.getAnnoDiCorso();
-		}
-		else
-		{
-			throw new IllegalStateException("Non è uno studente");
-		}
+	public int getAnno() throws IllegalStateException {
+		if (session instanceof Studente)
+			return ((Studente) session).getAnnoDiCorso();
+
+		throw new IllegalStateException("Non è uno studente");
+	}
+
+	public int getMatricola() throws IllegalStateException {
+		if (session instanceof Studente)
+			return ((Studente) session).getMatricola();
+
+		throw new IllegalStateException("Non è uno studente");
 	}
 
 	public Utente getSession() {
@@ -153,11 +154,12 @@ public class Controller {
 		return true;
 	}
 
-	public Object[][] getOrarioMtx(int annoDiCorso)
-	{
+	public Object[][] getOrarioMtx(int annoDiCorso) {
 		return sLezioni.getOrarioMtx(annoDiCorso);
 	}
 
-	public String[] getCols() {return sLezioni.getCols();}
+	public String[] getCols() {
+		return sLezioni.getCols();
+	}
 
 }
