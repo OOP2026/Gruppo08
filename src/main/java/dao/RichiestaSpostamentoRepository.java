@@ -1,8 +1,10 @@
-package model;
+package dao;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
+
+import model.RichiestaSpostamento;
 
 public class RichiestaSpostamentoRepository {
 	private RichiestaSpostamentoRepository() {

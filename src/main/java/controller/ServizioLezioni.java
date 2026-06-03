@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.time.DayOfWeek;
 
+import dao.*;
 import model.*;
 
 public class ServizioLezioni {

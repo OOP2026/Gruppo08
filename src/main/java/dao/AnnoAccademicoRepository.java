@@ -1,8 +1,10 @@
-package model;
+package dao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import model.AnnoAccademico;
 
 public class AnnoAccademicoRepository {
 	private AnnoAccademicoRepository() {

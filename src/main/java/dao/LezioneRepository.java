@@ -1,8 +1,10 @@
-package model;
+package dao;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
+
+import model.Lezione;
 
 public class LezioneRepository {
 	private LezioneRepository() {
