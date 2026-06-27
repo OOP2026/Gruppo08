@@ -1,0 +1,117 @@
+package daoImplementation;
+
+import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.ArrayList;
+import dao.ClassroomDao;
+import dao.CourseDao;
+import databaseConnection.DbConnection;
+import model.Lecture;
+import model.Classroom;
+import model.Course;
+
+public class LecturePostgresDao {
+	private DbConnection dbc = DbConnection.getInstance();
+
+	private Lecture mapRsToLecture(ResultSet rs) throws SQLException {
+		int lectureId = rs.getInt("lecture_id");
+		int courseId = rs.getInt("course_id");
+		Course course = CourseDao.getInstance().getCourseById(courseId);
+		String classroomName = rs.getString("classroom_name");
+		Classroom classroom = ClassroomDao.getInstance().getByName(classroomName);
+		String unformattedDow = rs.getString("dayofweek");
+		DayOfWeek dayofweek = DayOfWeek.valueOf(unformattedDow);
+		LocalTime startTime = rs.getObject("start_time", LocalTime.class);
+		LocalTime endTime = rs.getObject("end_time", LocalTime.class);
+
+		return new Lecture(lectureId, course, classroom, dayofweek, startTime, endTime);
+	}
+
+	public Lecture getById(int lectureId) throws NoSuchElementException {
+		final String sql = "SELECT * FROM lecture WHERE lecture_id = ?";
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, lectureId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return mapRsToLecture(rs);
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("DB exception during getById", e);
+		} finally {
+			dbc.closeConnection();
+		}
+
+		throw new NoSuchElementException("Lecture with id " + lectureId + " not found");
+	}
+
+	public List<Lecture> getAllByAcademicYear(int academicYear) throws SQLException {
+		final String sql = """
+					SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time
+					FROM lecture l
+					JOIN course c
+					ON c.course_id = l.course_id
+					WHERE c.academic_year = ?;
+				""";
+
+		List<Lecture> lectures = new ArrayList<>();
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, academicYear);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Lecture l = mapRsToLecture(rs);
+					lectures.add(l);
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbc.closeConnection();
+		}
+
+		return lectures;
+	}
+
+	public Lecture insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
+			LocalTime endTime) throws SQLException {
+		final String sql = "INSERT INTO lecture(course_id, classroom_name, dayofweek, start_time, end_time) VALUES (?, ?, ?::dow, ?::time, ?::time)";
+
+		int newLectureId = -1;
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			ps.setInt(1, courseId);
+			ps.setString(2, classroomName);
+			ps.setString(3, dayofweek.toString());
+			ps.setObject(4, startTime);
+			ps.setObject(5, endTime);
+			ps.executeUpdate();
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					// la prima colonna restituita è la chiave primaria
+					newLectureId = rs.getInt(1);
+				} else {
+					throw new SQLException("Course insertion failed, no ID found.");
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbc.closeConnection();
+		}
+
+		return new Lecture(newLectureId, CourseDao.getInstance().getCourseById(courseId),
+				ClassroomDao.getInstance().getByName(classroomName), dayofweek, startTime, endTime);
+
+	}
+}

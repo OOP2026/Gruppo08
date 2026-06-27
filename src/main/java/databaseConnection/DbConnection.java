@@ -1,16 +1,15 @@
-package database_connection;
+package databaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DbConnection {
+	private final String URL = "jdbc:postgresql://localhost:5432/exam";
+	private final String UNAME = "exam";
+	private final String PASS = "exam";
+	private Connection con;
+
 	private DbConnection() {
-		try {
-			con = DriverManager.getConnection(url, uname, pass);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
 	}
 
 	private static DbConnection instance;
@@ -21,10 +20,16 @@ public class DbConnection {
 		return instance;
 	}
 
-	private String url = "jdbc:postgresql://localhost:5432/progetto";
-	private String uname = "progetto";
-	private String pass = "0000";
-	private Connection con;
+	public Connection getCon() {
+		try {
+			if (con == null || con.isClosed())
+				con = DriverManager.getConnection(URL, UNAME, PASS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return con;
+	}
 
 	public void closeConnection() {
 		try {
