@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DbConnection {
-	private final String URL = "jdbc:postgresql://localhost:5432/exam";
-	private final String UNAME = "exam";
-	private final String PASS = "exam";
+	private static final String URL = "jdbc:postgresql://localhost:5432/exam";
+	private static final String UNAME = "exam";
+	private static final String PASS = "exam";
 	private Connection con;
 
 	private DbConnection() {
