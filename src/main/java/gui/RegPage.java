@@ -1,7 +1,9 @@
 package gui;
 
+import javax.security.sasl.AuthenticationException;
 import javax.swing.*;
-import controller.*;
+import controller.UserAuthentication;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,8 +17,10 @@ public class RegPage {
     private JPasswordField pswdField;
     private JButton confermaButton;
     private JTextField emailTextField;
+    private JComboBox ayComboBox;
+    private final UserAuthentication ua = new UserAuthentication();
 
-    public RegPage(JFrame loginPage, Controller controller) {
+    public RegPage(JFrame loginPage) {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(basePanel);
@@ -27,8 +31,9 @@ public class RegPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String role = (String) roleComboBox.getSelectedItem();
-                String nome = nomeTextField.getText();
-                String cognome = cognomeTextField.getText();
+                String fname = nomeTextField.getText();
+                String lname = cognomeTextField.getText();
+                int academicYear = Integer.parseInt((String) ayComboBox.getSelectedItem());
                 String username = usernameTextField.getText();
                 String email = emailTextField.getText();
                 String pswd = new String(pswdField.getPassword());
@@ -37,25 +42,25 @@ public class RegPage {
                 switch (role) {
                     case "Studente":
                         try {
-                            controller.registerStudente(nome, cognome, username, email, pswd);
-                        } catch (SecurityException se) {
-                            JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                            ua.register(academicYear, fname, lname, email, username, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
                             success = false;
                         }
                         break;
                     case "Docente":
                         try {
-                            controller.registerDocente(nome, cognome, username, email, pswd);
-                        } catch (SecurityException se) {
-                            JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                            ua.register(false, fname, lname, email, username, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
                             success = false;
                         }
                         break;
                     case "Coordinatore":
                         try {
-                            controller.registerCoordinatore(nome, cognome, username, email, pswd);
-                        } catch (SecurityException se) {
-                            JOptionPane.showMessageDialog(basePanel, se.getMessage());
+                            ua.register(true, fname, lname, email, username, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
                             success = false;
                         }
                         break;

@@ -1,6 +1,6 @@
 package gui;
 
-import controller.Controller;
+import controller.*;
 import javax.swing.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -14,36 +14,35 @@ public class RichiestaPage {
     private JComboBox giornoComboBox;
     private JComboBox orarioComboBox;
     private JButton confermaButton;
-    private Controller controller;
 
-    public RichiestaPage(JFrame callerFrame, Controller controller) {
+
+    public RichiestaPage(JFrame callerFrame) {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(basePanel);
         frame.pack();
         frame.setVisible(true);
-        this.controller = controller;
-        populateLezioni();
+//        populateLezioni();
     }
 
-    private void populateLezioni()
-    {
-        ArrayList<String> lezioni = new ArrayList<>();
-        List<Integer> idLezioni = controller.getIdLezioniDocente();
-
-        for(int id : idLezioni)
-        {
-            lezioni.add(controller.getNomeMateriaLezione(id) + controller.getGiornoSettLezione(id) +
-                    controller.getIntervalloOrarioLezione(id));
-        }
-
-        lezioneComboBox.setModel(new DefaultComboBoxModel(lezioni.toArray()));
-    }
-
-    private void makeRichiesta(String lezione, DayOfWeek giorno, LocalTime orario)
-    {
-
-    }
+//    private void populateLezioni()
+//    {
+//        ArrayList<String> lezioni = new ArrayList<>();
+//        List<Integer> idLezioni = controller.getIdLezioniDocente();
+//
+//        for(int id : idLezioni)
+//        {
+//            lezioni.add(controller.getNomeMateriaLezione(id) + controller.getGiornoSettLezione(id) +
+//                    controller.getIntervalloOrarioLezione(id));
+//        }
+//
+//        lezioneComboBox.setModel(new DefaultComboBoxModel(lezioni.toArray()));
+//    }
+//
+//    private void makeRichiesta(String lezione, DayOfWeek giorno, LocalTime orario)
+//    {
+//
+//    }
 }
 
 

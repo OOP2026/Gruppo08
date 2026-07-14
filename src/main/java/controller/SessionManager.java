@@ -53,4 +53,19 @@ public class SessionManager {
 		return getRole() == UserRole.STUDENT;
 	}
 
+	public int getAcademicYear() throws RuntimeException {
+		if(!isStudent())
+		{
+			throw new RuntimeException("not a student");
+		}
+		return ((Student) session).getAcademicYear();
+	}
+
+	public int getStudentId() throws RuntimeException {
+		if(!isStudent())
+		{
+			throw new RuntimeException("not a student");
+		}
+		return ((Student) session).getStudentId();
+	}
 }

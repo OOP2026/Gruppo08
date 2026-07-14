@@ -1,6 +1,6 @@
 package gui;
 
-import controller.Controller;
+import controller.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -19,25 +19,24 @@ public class HomePage {
     private JButton aggiornaButton1;
     private JButton aggiornaButton2;
     private JButton aggiornaButton3;
-    private Controller controller;
     private DefaultTableModel orarioModel1;
     private DefaultTableModel orarioModel2;
     private DefaultTableModel orarioModel3;
+    private final LectureService ls = new LectureService();
 
-    public HomePage(Controller controller) {
+    public HomePage() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(basePanel);
         frame.pack();
         frame.setVisible(true);
-        this.controller = controller;
         initializeTable();
-        wLabel.setText("Benvenuto, " + controller.getSession().getNome());
-        if (controller.isStudente()) {
+        wLabel.setText("Benvenuto, " + SessionManager.getInstance().getSession().getFname());
+        if (SessionManager.getInstance().isStudent()) {
             mLabel.setVisible(true);
-            mLabel.setText("Matricola: " + controller.getMatricola());
+            mLabel.setText("Matricola: " + SessionManager.getInstance().getStudentId());
 
-            switch (controller.getAnno()) {
+            switch (SessionManager.getInstance().getAcademicYear()) {
                 case 1:
                     orarioTable2.setVisible(false);
                     orarioTable3.setVisible(false);
@@ -82,15 +81,15 @@ public class HomePage {
 
     private void initializeTable() {
         DefaultTableModel orarioTableModel;
-        String[] cols = { "Orario", "Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi" };
+        String[] cols = ls.getCols();
 
-        String[] intervalliOrari = { "8:00 - 10:00", "11:00 - 13:00", "14:00 - 16:00" };
+        String[] timeInterval = { "8:00 - 10:00", "11:00 - 13:00", "14:00 - 16:00" };
 
-        Object[][] dati = new Object[intervalliOrari.length][6];
-        for (int i = 0; i < intervalliOrari.length; i++)
-            dati[i][0] = intervalliOrari[i];
+        Object[][] data = new Object[timeInterval.length][6];
+        for (int i = 0; i < timeInterval.length; i++)
+            data[i][0] = timeInterval[i];
 
-        orarioTableModel = new DefaultTableModel(dati, cols) {
+        orarioTableModel = new DefaultTableModel(data, cols) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -106,26 +105,33 @@ public class HomePage {
         orarioTable3.setModel(orarioModel3);
     }
 
-    private void updateTable(int anno) {
-        Object[][] mtx = controller.getOrarioMtx(anno);
+    private void updateTable(int year) {
+        Object[][] mtx = null;
+
+        try {
+            mtx = ls.getLecturesMtx(year);
+        }
+        catch (IllegalStateException e) {
+            JOptionPane.showMessageDialog(frame, "Impossibile aggiornare la tabella");
+        }
 
         if (mtx == null)
             return;
 
-        switch (anno) {
+        switch (year) {
             case 1:
                 orarioModel1.setRowCount(0);
-                orarioModel1 = new DefaultTableModel(mtx, controller.getCols());
+                orarioModel1 = new DefaultTableModel(mtx, ls.getCols());
                 orarioTable1.setModel(orarioModel1);
                 break;
             case 2:
                 orarioModel2.setRowCount(0);
-                orarioModel2 = new DefaultTableModel(mtx, controller.getCols());
+                orarioModel2 = new DefaultTableModel(mtx, ls.getCols());
                 orarioTable2.setModel(orarioModel2);
                 break;
             case 3:
                 orarioModel3.setRowCount(0);
-                orarioModel3 = new DefaultTableModel(mtx, controller.getCols());
+                orarioModel3 = new DefaultTableModel(mtx, ls.getCols());
                 orarioTable3.setModel(orarioModel3);
                 break;
             default:

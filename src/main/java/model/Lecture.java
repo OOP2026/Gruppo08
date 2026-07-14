@@ -44,4 +44,8 @@ public class Lecture {
 	public Classroom getClassroom() {
 		return classroom;
 	}
+
+	public String getTimeInterval() {
+		return startTime.toString() + " - " + endTime.toString();
+	}
 }
