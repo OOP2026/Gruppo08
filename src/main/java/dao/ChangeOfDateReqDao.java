@@ -1,6 +1,8 @@
 package dao;
 
 import model.ChangeOfDateReq;
+import model.RequestStatus;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -69,6 +71,21 @@ public class ChangeOfDateReqDao {
 		ChangeOfDateReq c = psqldao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime,
 				newEndTime);
 		codreqInMem.add(c);
+	}
+
+	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved) throws NoSuchElementException {
+		RequestStatus status = isApproved ? RequestStatus.APPROVED : RequestStatus.REJECTED;
+
+		ChangeOfDateReq c = getById(reqId);
+
+		c.setStatus(status);
+
+		try {
+			ChangeOfDateReqPostgresDao psqldao = new ChangeOfDateReqPostgresDao();
+			psqldao.changeStatusOfCODR(reviewingCoordId, reqId, status);
+		} catch (SQLException e) {
+			throw new RuntimeException("unexpected error occured during call of method: changeStatusOfCODR");
+		}
 	}
 
 }

@@ -21,7 +21,9 @@ public class ChangeOfDateReqPostgresDao {
 		int askingTeacherUid = rs.getInt("asking_teacher_id");
 		Teacher askingTeacher = (Teacher) UserDao.getInstance().getUserById(askingTeacherUid);
 		int reviewingCoordUid = rs.getInt("reviewing_coord_id");
-		Teacher reviewingCoord = (Teacher) UserDao.getInstance().getUserById(reviewingCoordUid);
+		Teacher reviewingCoord = null;
+		if (!rs.wasNull())
+			reviewingCoord = (Teacher) UserDao.getInstance().getUserById(reviewingCoordUid);
 		int lectureId = rs.getInt("lecture_id");
 		Lecture lecture = LectureDao.getInstance().getById(lectureId);
 		String unformattedDow = rs.getString("new_dayofweek");
@@ -92,6 +94,23 @@ public class ChangeOfDateReqPostgresDao {
 		return new ChangeOfDateReq(newReqId, (Teacher) UserDao.getInstance().getUserById(askingTeacherUid),
 				newReviewingCoord,
 				LectureDao.getInstance().getById(lectureId), newDow, newStartTime, newEndTime, newStatus);
+	}
+
+	public void changeStatusOfCODR(int reviewingCoordId, int reqId, RequestStatus status)
+			throws SQLException {
+		final String sql = "UPDATE change_of_date_req SET reviewing_coord_id = ?, status = ?::request_status WHERE req_id = ?;";
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, reviewingCoordId);
+			ps.setString(2, status.name());
+			ps.setInt(3, reqId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbc.closeConnection();
+		}
 	}
 
 }

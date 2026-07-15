@@ -34,7 +34,8 @@ CREATE TABLE course (
 	cfu integer NOT NULL,
 	academic_year integer NOT NULL,
 	is_active boolean NOT NULL DEFAULT false,
-	UNIQUE(name, academic_year)
+	UNIQUE(name, academic_year),
+	CONSTRAINT chk_cfu CHECK (cfu > 0)
 );
 
 CREATE TABLE classroom (
@@ -46,7 +47,7 @@ CREATE TYPE dow AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SAT
 CREATE TABLE lecture (
 	lecture_id serial PRIMARY KEY,
 	course_id integer NOT NULL REFERENCES course(course_id),
-	classroom_name varchar(16) NOT NULL REFERENCES classroom(name),
+	classroom_name varchar(16) NOT NULL REFERENCES classroom(name) ON DELETE CASCADE,
 	dayofweek dow NOT NULL,
 	start_time time NOT NULL,
 	end_time time NOT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE change_of_date_req (
 	asking_teacher_id integer NOT NULL REFERENCES teacher(user_id),
 	reviewing_coord_id integer REFERENCES teacher(user_id),
 
-	lecture_id integer NOT NULL REFERENCES lecture(lecture_id),
+	lecture_id integer NOT NULL REFERENCES lecture(lecture_id) ON DELETE CASCADE,
 	new_dayofweek dow NOT NULL,
 	new_start_time time NOT NULL,
 	new_end_time time NOT NULL,
@@ -71,7 +72,8 @@ CREATE TABLE change_of_date_req (
 
 	UNIQUE(lecture_id, new_dayofweek, new_start_time),
     CONSTRAINT chk_times CHECK (new_end_time > new_start_time),
-	CONSTRAINT chk_status_integrity CHECK (status = 'WAITING' OR reviewing_coord_id is not null)
+	CONSTRAINT chk_status_integrity CHECK (status = 'WAITING' OR reviewing_coord_id is not null),
+	CONSTRAINT chk_no_self_review CHECK (asking_teacher_id <> reviewing_coord_id)
 );
 
 

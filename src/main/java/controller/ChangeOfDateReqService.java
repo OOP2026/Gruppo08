@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
 
@@ -22,5 +23,16 @@ public class ChangeOfDateReqService {
 
 	}
 
-	// TODO: Metodi per cambiare lo stato di una ChangeOfDateReq
+	// TODO: update lecture if approved
+	public void changeStatusOfCODR(int reqId, boolean isApproved) throws IllegalStateException {
+		if (!SessionManager.getInstance().isCoordinator())
+			throw new IllegalStateException("This operation is restricted to teachers only");
+
+		ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
+		try {
+			cdao.changeStatusOfCODR(SessionManager.getInstance().getSession().getUserId(), reqId, isApproved);
+		} catch (NoSuchElementException e) {
+			throw new RuntimeException("unable to set status of change of date request with id " + reqId);
+		}
+	}
 }

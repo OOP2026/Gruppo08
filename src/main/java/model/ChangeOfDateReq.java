@@ -57,4 +57,8 @@ public class ChangeOfDateReq {
 		return askingTeacher;
 	}
 
+	public void setStatus(RequestStatus status) {
+		this.status = status;
+	}
+
 }
