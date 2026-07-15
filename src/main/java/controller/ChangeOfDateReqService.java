@@ -26,7 +26,7 @@ public class ChangeOfDateReqService {
 	// TODO: update lecture if approved
 	public void changeStatusOfCODR(int reqId, boolean isApproved) throws IllegalStateException {
 		if (!SessionManager.getInstance().isCoordinator())
-			throw new IllegalStateException("This operation is restricted to teachers only");
+			throw new IllegalStateException("This operation is restricted to coordinators only");
 
 		ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
 		try {
