@@ -52,13 +52,7 @@ public class LecturePostgresDao {
 	}
 
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws SQLException {
-		final String sql = """
-					SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time
-					FROM lecture l
-					JOIN course c
-					ON c.course_id = l.course_id
-					WHERE c.academic_year = ?;
-				""";
+		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON c.course_id = l.course_id WHERE c.academic_year = ?;";
 
 		List<Lecture> lectures = new ArrayList<>();
 
@@ -80,6 +74,32 @@ public class LecturePostgresDao {
 		}
 
 		return lectures;
+	}
+
+	public List<Lecture> getAllByTeacher(int teacherUid) throws SQLException {
+		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON l.course_id = c.course_id WHERE teacher_uid = ?";
+
+		List<Lecture> lectures = new ArrayList<>();
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, teacherUid);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Lecture l = mapRsToLecture(rs);
+					lectures.add(l);
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbc.closeConnection();
+		}
+
+		return lectures;
+
 	}
 
 	public Lecture insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
@@ -113,5 +133,23 @@ public class LecturePostgresDao {
 		return new Lecture(newLectureId, CourseDao.getInstance().getCourseById(courseId),
 				ClassroomDao.getInstance().getByName(classroomName), dayofweek, startTime, endTime);
 
+	}
+
+	public void updateLectureDate(int lectureId, DayOfWeek newDow, LocalTime newStartTime, LocalTime newEndTime)
+			throws SQLException {
+		final String sql = "UPDATE lecture SET dayofweek = ?::dow, start_time = ?::time, end_time = ?::time WHERE lecture_id = ?";
+
+		Connection con = dbc.getCon();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, newDow.name());
+			ps.setObject(2, newStartTime);
+			ps.setObject(3, newEndTime);
+			ps.setInt(4, lectureId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbc.closeConnection();
+		}
 	}
 }

@@ -12,6 +12,7 @@ import model.Lecture;
 
 public class LectureDao {
 	private List<Lecture> lectureInMem = new ArrayList<>();
+	private LecturePostgresDao sqldao = new LecturePostgresDao();
 
 	private LectureDao() {
 	}
@@ -54,21 +55,33 @@ public class LectureDao {
 			}
 		}
 
-		LecturePostgresDao psqldao = new LecturePostgresDao();
-		Lecture l = psqldao.getById(lectureId);
+		Lecture l = sqldao.getById(lectureId);
 		lectureInMem.add(l);
 		return l;
 	}
 
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws SQLException {
-		LecturePostgresDao psqldao = new LecturePostgresDao();
-		return psqldao.getAllByAcademicYear(academicYear);
+		return sqldao.getAllByAcademicYear(academicYear);
 	}
 
 	public void insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
 			LocalTime endTime) throws SQLException {
-		LecturePostgresDao psqldao = new LecturePostgresDao();
-		Lecture l = psqldao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
+		Lecture l = sqldao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 		lectureInMem.add(l);
+	}
+
+	public List<Lecture> getAllByTeacher(int teacherUid) throws SQLException {
+		return sqldao.getAllByTeacher(teacherUid);
+	}
+
+	public void changeLectureDate(int lectureId, DayOfWeek newDow,
+			LocalTime newStartTime, LocalTime newEndTime) throws SQLException {
+		Lecture l = getById(lectureId);
+
+		sqldao.updateLectureDate(lectureId, newDow, newStartTime, newEndTime);
+
+		l.setStartTime(newStartTime);
+		l.setDayofweek(newDow);
+		l.setEndTime(newEndTime);
 	}
 }

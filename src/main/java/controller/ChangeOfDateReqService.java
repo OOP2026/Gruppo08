@@ -5,9 +5,11 @@ import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
+import dao.LectureDao;
+import model.ChangeOfDateReq;
 
 public class ChangeOfDateReqService {
-	public void makeChangeOfDateReq(int askingTeacherUid, int lectureId, DayOfWeek newDow,
+	public void makeChangeOfDateReq(int lectureId, DayOfWeek newDow,
 			LocalTime newStartTime, LocalTime newEndTime)
 			throws RuntimeException {
 
@@ -16,14 +18,14 @@ public class ChangeOfDateReqService {
 
 		ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
 		try {
-			cdao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime, newEndTime);
+			cdao.insertCodReq(SessionManager.getInstance().getSession().getUserId(), lectureId, newDow, newStartTime,
+					newEndTime);
 		} catch (SQLException e) {
 			throw new RuntimeException("unable to make change of date request of lecture with id " + lectureId);
 		}
 
 	}
 
-	// TODO: update lecture if approved
 	public void changeStatusOfCODR(int reqId, boolean isApproved) throws IllegalStateException {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new IllegalStateException("This operation is restricted to coordinators only");
@@ -33,6 +35,19 @@ public class ChangeOfDateReqService {
 			cdao.changeStatusOfCODR(SessionManager.getInstance().getSession().getUserId(), reqId, isApproved);
 		} catch (NoSuchElementException e) {
 			throw new RuntimeException("unable to set status of change of date request with id " + reqId);
+		}
+
+		if (isApproved == false)
+			return;
+
+		ChangeOfDateReq codr = ChangeOfDateReqDao.getInstance().getById(reqId);
+
+		// TODO: dependency nel class diagram
+		try {
+			LectureDao.getInstance().changeLectureDate(codr.getLecture().getLectureId(), codr.getNewDow(),
+					codr.getNewStartTime(), codr.getNewEndTime());
+		} catch (SQLException e) {
+			throw new RuntimeException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR");
 		}
 	}
 }

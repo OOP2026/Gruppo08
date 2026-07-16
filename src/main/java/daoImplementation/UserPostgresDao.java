@@ -40,15 +40,7 @@ public class UserPostgresDao {
 	}
 
 	public User getUserById(int userId) {
-		final String sql = """
-				SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password,
-					   s.student_id, s.academic_year,
-					   t.is_coordinator
-						   FROM app_user u
-						   LEFT JOIN student s ON u.user_id = s.user_id
-						   LEFT JOIN teacher t ON u.user_id = t.user_id
-						   WHERE u.user_id = ?
-						   """;
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
 
 		Connection con = dbc.getCon();
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -67,15 +59,7 @@ public class UserPostgresDao {
 	}
 
 	public User getUserByLogin(String login) {
-		final String sql = """
-				SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password,
-					   s.student_id, s.academic_year,
-					   t.is_coordinator
-						   FROM app_user u
-						   LEFT JOIN student s ON u.user_id = s.user_id
-						   LEFT JOIN teacher t ON u.user_id = t.user_id
-						   WHERE u.login = ?
-						   """;
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.login = ?";
 
 		Connection con = dbc.getCon();
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -93,15 +77,7 @@ public class UserPostgresDao {
 	}
 
 	public User getUserByEmail(String email) {
-		final String sql = """
-				SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password,
-					   s.student_id, s.academic_year,
-					   t.is_coordinator
-						   FROM app_user u
-						   LEFT JOIN student s ON u.user_id = s.user_id
-						   LEFT JOIN teacher t ON u.user_id = t.user_id
-						   WHERE u.email = ?
-						   """;
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.email = ?";
 
 		Connection con = dbc.getCon();
 		try (PreparedStatement ps = con.prepareStatement(sql)) {

@@ -48,4 +48,16 @@ public class Lecture {
 	public String getTimeInterval() {
 		return startTime.toString() + " - " + endTime.toString();
 	}
+
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public void setEndTime(LocalTime endTime) {
+		this.endTime = endTime;
+	}
+
+	public void setDayofweek(DayOfWeek dayofweek) {
+		this.dayofweek = dayofweek;
+	}
 }
