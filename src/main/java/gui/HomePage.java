@@ -31,6 +31,8 @@ public class HomePage {
         frame.pack();
         frame.setVisible(true);
         initializeTable();
+        spostamentoButton.setVisible(false);
+        manageButton.setVisible(false);
         wLabel.setText("Benvenuto, " + SessionManager.getInstance().getSession().getFname());
         if (SessionManager.getInstance().isStudent()) {
             mLabel.setVisible(true);
@@ -75,6 +77,21 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateTable(3);
+            }
+        });
+
+        if(SessionManager.getInstance().isTeacher()) {
+            spostamentoButton.setVisible(true);
+            if(SessionManager.getInstance().isCoordinator()) {
+                manageButton.setVisible(true);
+            }
+        }
+
+        spostamentoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new ReqPage(frame);
             }
         });
     }

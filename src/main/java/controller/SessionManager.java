@@ -68,4 +68,9 @@ public class SessionManager {
 		}
 		return ((Student) session).getStudentId();
 	}
+
+	public int getUserId() {
+		return session.getUserId();
+	}
+
 }

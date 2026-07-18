@@ -26,53 +26,55 @@ public class LoginPage {
     }
 
     public LoginPage() {
-        loginButton.addActionListener(e -> {
-            String role = (String) roleComboBox.getSelectedItem();
-            String login = loginTextField.getText();
-            String pswd = String.valueOf(pswdField.getPassword());
-            boolean success = true;
-
-            switch (role) {
-                case "Studente":
-                    try {
-                        controller.login(login, pswd);
-                    } catch (AuthenticationException ae) {
-                        JOptionPane.showMessageDialog(basePanel, ae.getMessage());
-                        success = false;
-                    }
-                    break;
-                case "Docente":
-                    try {
-                        controller.login(login, pswd);
-                    } catch (AuthenticationException ae) {
-                        JOptionPane.showMessageDialog(basePanel, ae.getMessage());
-                        success = false;
-                    }
-                    break;
-                case "Coordinatore":
-                    try {
-                        controller.login(login, pswd);
-                    } catch (AuthenticationException ae) {
-                        JOptionPane.showMessageDialog(basePanel, ae.getMessage());
-                        success = false;
-                    }
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(frame, "Invalid role");
-                    break;
-            }
-            if (success) {
-                JOptionPane.showMessageDialog(basePanel, "Login Success");
-                new HomePage();
-                frame.dispose();
-            }
-        });
-
         regButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new RegPage(frame);
                 frame.setVisible(false);
+            }
+        });
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String role = (String) roleComboBox.getSelectedItem();
+                String login = loginTextField.getText();
+                String pswd = String.valueOf(pswdField.getPassword());
+                boolean success = true;
+
+                switch (role) {
+                    case "Studente":
+                        try {
+                            controller.login(login, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
+                            success = false;
+                        }
+                        break;
+                    case "Docente":
+                        try {
+                            controller.login(login, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
+                            success = false;
+                        }
+                        break;
+                    case "Coordinatore":
+                        try {
+                            controller.login(login, pswd);
+                        } catch (AuthenticationException ae) {
+                            JOptionPane.showMessageDialog(basePanel, ae.getMessage());
+                            success = false;
+                        }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(frame, "Invalid role");
+                        break;
+                }
+                if (success) {
+                    JOptionPane.showMessageDialog(basePanel, "Login Success");
+                    new HomePage();
+                    frame.dispose();
+                }
             }
         });
     }

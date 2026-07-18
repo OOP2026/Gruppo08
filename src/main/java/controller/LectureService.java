@@ -60,6 +60,21 @@ public class LectureService {
 		return lectures;
 	}
 
+	public List<String> getLecturesInfo(int teacherUid) throws RuntimeException {
+		List<Lecture> lectures;
+		try {
+			lectures = getAllByTeacher(teacherUid);
+		} catch (RuntimeException e) {
+			throw new RuntimeException(e);
+		}
+		List<String> lecturesInfo = new ArrayList<>();
+		for (Lecture lecture : lectures) {
+			lecturesInfo.add(lecture.getLectureId() + " " + lecture.getCourse().getName() + " " + lecture.getTimeInterval());
+		}
+
+		return lecturesInfo;
+	}
+
 	public void changeLectureDate(int lectureId, DayOfWeek newDow,
 			LocalTime newStartTime, LocalTime newEndTime) throws RuntimeException {
 		if (!SessionManager.getInstance().isCoordinator())

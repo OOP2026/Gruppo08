@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.RichiestaPage">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.ReqPage">
   <grid id="27dc6" binding="basePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
@@ -53,6 +53,10 @@
       </grid>
       <grid id="1d9b9" layout-manager="FormLayout">
         <rowspec value="center:d:noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
@@ -120,21 +124,36 @@
             </constraints>
             <properties>
               <foreground color="-2894893"/>
-              <text value="All'orario:"/>
+              <text value="Nuovo orario inizio:"/>
             </properties>
           </component>
-          <component id="d1ea4" class="javax.swing.JComboBox" binding="orarioComboBox">
+          <component id="bae85" class="javax.swing.JFormattedTextField" binding="startFTextField" custom-create="true">
             <constraints>
-              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-              <forms/>
+              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="71d52" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <model>
-                <item value="8:00 - 10:00"/>
-                <item value="11:00 - 13:00"/>
-                <item value="14:00 - 16:00"/>
-              </model>
+              <foreground color="-2894893"/>
+              <text value="Nuovo orario fine:"/>
             </properties>
+          </component>
+          <component id="94c80" class="javax.swing.JFormattedTextField" binding="endFTextField" custom-create="true">
+            <constraints>
+              <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>
