@@ -94,6 +94,14 @@ public class HomePage {
                 new ReqPage(frame);
             }
         });
+
+        manageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new ManagePage(frame);
+            }
+        });
     }
 
     private void initializeTable() {

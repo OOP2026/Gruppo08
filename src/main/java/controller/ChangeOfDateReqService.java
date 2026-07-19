@@ -2,6 +2,8 @@ package controller;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
@@ -49,5 +51,24 @@ public class ChangeOfDateReqService {
 		} catch (SQLException e) {
 			throw new RuntimeException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR");
 		}
+	}
+
+	public List<ChangeOfDateReq> getChangeOfDateReqs () {}
+
+	public List<String> getCODRInfo() throws IllegalStateException {
+		List<ChangeOfDateReq> codrs;
+
+		try {
+			codrs = getChangeOfDateReqs();
+		} catch (Exception e) {
+			throw new IllegalStateException("TEMP. EXCEPTION");
+		}
+
+		List<String> codrInfo = new ArrayList();
+		for (ChangeOfDateReq codr : codrs) {
+			codrInfo.add(codr.getReqId() + "Professore: " +
+					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname() );
+		}
+		return codrInfo;
 	}
 }
