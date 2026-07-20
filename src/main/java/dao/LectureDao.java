@@ -3,7 +3,6 @@ package dao;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import daoImplementation.LecturePostgresDao;
@@ -20,10 +19,6 @@ public class LectureDao extends AbstractDao<Lecture, LecturePostgresDao, Integer
 		if (instance == null)
 			instance = new LectureDao();
 		return instance;
-	}
-
-	public List<Lecture> getAllInMem() {
-		return new ArrayList<>(inMem);
 	}
 
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws SQLException {

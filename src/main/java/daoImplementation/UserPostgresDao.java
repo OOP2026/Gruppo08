@@ -3,6 +3,8 @@ package daoImplementation;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
+import daoImplementation.exception.DataInsertionException;
+import daoImplementation.exception.DataRetrievalException;
 import model.Student;
 import model.Teacher;
 import model.User;
@@ -36,8 +38,9 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getById(Integer userId) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setInt(1, userId);
 
 			try (ResultSet rs = ps.executeQuery()) {
@@ -45,8 +48,9 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 					return mapRowToUser(rs);
 				}
 			}
+
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getUserById", e);
+			throw new DataRetrievalException("DB exception during getUserById", e);
 		}
 
 		throw new NoSuchElementException("User with ID " + userId + " not found");
@@ -55,16 +59,19 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getUserByLogin(String login) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.login = ?";
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setString(1, login);
+
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
 					return mapRowToUser(rs);
 				}
 			}
+
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getUserByLogin", e);
+			throw new DataRetrievalException("DB exception during getUserByLogin", e);
 		}
 
 		throw new NoSuchElementException("User with login " + login + " not found");
@@ -73,16 +80,19 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getUserByEmail(String email) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.email = ?";
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setString(1, email);
+
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
 					return mapRowToUser(rs);
 				}
 			}
+
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getUserByEmail", e);
+			throw new DataRetrievalException("DB exception during getUserByEmail", e);
 		}
 
 		throw new NoSuchElementException("User with email " + email + " not found");
@@ -91,10 +101,14 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public Student insertStudent(int academicYear, String fname, String lname, String email,
 			String login, String password) throws SQLException {
 
-		Connection con = dbc.getCon();
+		Connection con;
 
-		// Uso RETURN_GENERATED_KEYS di Postgres per ottenere subito l'ID
-		// senza dover fare una query di SELECT alla fine.
+		try {
+			con = databaseConnection.DbConnection.getCon();
+		} catch (SQLException e) {
+			throw new DataInsertionException("Unable to establish connection", e);
+		}
+
 		final String usql = "INSERT INTO app_user(fname, lname, email, login, password) VALUES (?, ?, ?, ?, ?)";
 		final String ssql = "INSERT INTO student(user_id, academic_year) VALUES (?, ?)";
 
@@ -104,6 +118,8 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		try {
 			con.setAutoCommit(false);
 
+			// Uso RETURN_GENERATED_KEYS di Postgres per ottenere subito l'ID
+			// senza dover fare una query di select alla fine.
 			try (PreparedStatement psUser = con.prepareStatement(usql, Statement.RETURN_GENERATED_KEYS)) {
 				psUser.setString(1, fname);
 				psUser.setString(2, lname);
@@ -117,7 +133,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 						// la prima colonna restituita è la chiave primaria
 						newUserId = rs.getInt(1);
 					} else {
-						throw new SQLException("User insertion failed, no ID found.");
+						throw new DataInsertionException("User insertion failed, no ID found.");
 					}
 				}
 			}
@@ -148,17 +164,21 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 				con.setAutoCommit(true);
 			}
 
-			dbc.closeConnection();
+			con.close();
 		}
 	}
 
 	public Teacher insertTeacher(boolean isCoordinator, String fname, String lname, String email,
 			String login, String password) throws SQLException {
 
-		Connection con = dbc.getCon();
+		Connection con;
 
-		// Uso RETURN_GENERATED_KEYS di Postgres per ottenere subito l'ID
-		// senza dover fare una query di SELECT alla fine.
+		try {
+			con = databaseConnection.DbConnection.getCon();
+		} catch (SQLException e) {
+			throw new DataInsertionException("Unable to establish connection", e);
+		}
+
 		final String usql = "INSERT INTO app_user(fname, lname, email, login, password) VALUES (?, ?, ?, ?, ?)";
 		final String tsql = "INSERT INTO teacher(user_id, is_coordinator) VALUES (?, ?)";
 
@@ -205,7 +225,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 				con.setAutoCommit(true);
 			}
 
-			dbc.closeConnection();
+			con.close();
 		}
 	}
 }

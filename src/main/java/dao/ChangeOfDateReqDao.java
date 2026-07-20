@@ -12,7 +12,6 @@ import daoImplementation.ChangeOfDateReqPostgresDao;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDateReqPostgresDao, Integer> {
 	private static ChangeOfDateReqDao instance;
@@ -27,18 +26,26 @@ public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDat
 		return instance;
 	}
 
-	public List<ChangeOfDateReq> getCodReqInMem() {
-		return new ArrayList<>(inMem);
+	/**
+	 * @return lista di tutte le richieste in attesa
+	 */
+	public List<ChangeOfDateReq> getAllWaiting() {
+		List<ChangeOfDateReq> codrs = sqldao.getAllWaiting();
+
+		for (ChangeOfDateReq c : codrs) {
+			inMem.add(c);
+		}
+
+		return codrs;
 	}
 
 	/**
 	 * Inserisce una ChangeOfDateReq in memory e nel db
 	 * 
-	 * @throws SQLException
+	 * @throws daoImplementation.exception.DataInsertionException
 	 */
 	public void insertCodReq(int askingTeacherUid, int lectureId, DayOfWeek newDow,
-			LocalTime newStartTime, LocalTime newEndTime)
-			throws SQLException {
+			LocalTime newStartTime, LocalTime newEndTime) {
 		ChangeOfDateReq c = sqldao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime,
 				newEndTime);
 		inMem.add(c);

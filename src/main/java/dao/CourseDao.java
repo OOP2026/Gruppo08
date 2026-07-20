@@ -1,14 +1,10 @@
 package dao;
 
-import model.Course;
-
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.sql.SQLException;
 
 import daoImplementation.CoursePostgresDao;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
+import model.Course;
 
 public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
 	private static CourseDao instance;
@@ -21,10 +17,6 @@ public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
 		if (instance == null)
 			instance = new CourseDao();
 		return instance;
-	}
-
-	public List<Course> getCourseInMem() {
-		return new ArrayList<>(inMem);
 	}
 
 	private boolean isNameNYearInMem(String name, int academicYear) {

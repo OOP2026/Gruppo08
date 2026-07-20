@@ -47,9 +47,8 @@ public class UserDao extends AbstractDao<User, UserPostgresDao, Integer> {
 		if (isLoginInMem(login)) {
 			try {
 				return getUserByLoginInMem(login);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
+			} catch (NoSuchElementException e) {
+				throw new IllegalStateException("memory corruption for login: " + login, e);
 			}
 		}
 
@@ -78,9 +77,8 @@ public class UserDao extends AbstractDao<User, UserPostgresDao, Integer> {
 		if (isEmailInMem(email)) {
 			try {
 				return getUserByEmailInMem(email);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
+			} catch (NoSuchElementException e) {
+				throw new IllegalStateException("memory corruption for email: " + email, e);
 			}
 		}
 

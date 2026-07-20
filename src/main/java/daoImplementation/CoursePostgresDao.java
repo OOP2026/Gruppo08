@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 import java.sql.*;
 
 import dao.UserDao;
+import daoImplementation.exception.DataInsertionException;
+import daoImplementation.exception.DataRetrievalException;
 import model.Teacher;
 
 public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
@@ -22,10 +24,11 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 
 	@Override
 	public Course getById(Integer courseId) throws NoSuchElementException {
-		final String sql = "SELECT * FROM course WHERE course_id = ?";
+		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE course_id = ?";
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setInt(1, courseId);
 
 			try (ResultSet rs = ps.executeQuery()) {
@@ -33,20 +36,20 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 					return mapRsToCourse(rs);
 				}
 			}
+
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getById", e);
-		} finally {
-			dbc.closeConnection();
+			throw new DataRetrievalException("DB exception during getById", e);
 		}
 
 		throw new NoSuchElementException("Course with id " + courseId + " not found");
 	}
 
 	public Course getByNameNYear(String name, int academicYear) {
-		final String sql = "SELECT * FROM course WHERE name = ? AND academic_year = ?";
+		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE name = ? AND academic_year = ?";
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setString(1, name);
 			ps.setInt(2, academicYear);
 
@@ -55,23 +58,21 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 					return mapRsToCourse(rs);
 				}
 			}
+
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getById", e);
-		} finally {
-			dbc.closeConnection();
+			throw new DataRetrievalException("DB exception during getById", e);
 		}
 
 		throw new NoSuchElementException("Course with name " + name + academicYear + " not found");
 	}
 
-	public Course insertCourse(int teacherUid, String name, int cfu, int academicYear, boolean isActive)
-			throws SQLException {
+	public Course insertCourse(int teacherUid, String name, int cfu, int academicYear, boolean isActive) {
 		final String sql = "INSERT INTO course(teacher_uid, name, cfu, academic_year, is_active) VALUES (?, ?, ?, ?, ?)";
 
 		int newCourseId = -1;
 
-		Connection con = dbc.getCon();
-		try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+		try (Connection con = databaseConnection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setInt(1, teacherUid);
 			ps.setString(2, name);
 			ps.setInt(3, cfu);
@@ -83,13 +84,11 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 					// la prima colonna restituita è la chiave primaria
 					newCourseId = rs.getInt(1);
 				} else {
-					throw new SQLException("Course insertion failed, no ID found.");
+					throw new DataInsertionException("Course insertion failed, no ID found.");
 				}
 			}
 		} catch (SQLException e) {
-			throw e;
-		} finally {
-			dbc.closeConnection();
+			throw new DataInsertionException("Unexpected error during course insertion", e);
 		}
 
 		return new Course(newCourseId,

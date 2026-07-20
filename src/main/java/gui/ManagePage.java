@@ -39,7 +39,7 @@ public class ManagePage {
         List<String> codrs;
 
         try {
-            codrs = cs.getCODRInfo();
+            codrs = cs.getWaitingCODRInfo();
             reqComboBox.setModel(new DefaultComboBoxModel<>(codrs.toArray(new String[0])));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, e.getMessage());

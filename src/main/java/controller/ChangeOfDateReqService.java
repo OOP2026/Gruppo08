@@ -12,10 +12,13 @@ import controller.exception.UnauthorizedException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
 import dao.LectureDao;
+import daoImplementation.exception.DataInsertionException;
 import model.ChangeOfDateReq;
 
-public class ChangeOfDateReqService {
-	private final ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
+public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDao> {
+	public ChangeOfDateReqService() {
+		super(ChangeOfDateReqDao.getInstance());
+	}
 
 	/**
 	 * Metodo per creare una richiesta di spostamento lezione
@@ -31,9 +34,9 @@ public class ChangeOfDateReqService {
 			throw new UnauthorizedException("This operation is restricted to teachers only");
 
 		try {
-			cdao.insertCodReq(SessionManager.getInstance().getUserId(), lectureId, newDow, newStartTime,
+			dao.insertCodReq(SessionManager.getInstance().getUserId(), lectureId, newDow, newStartTime,
 					newEndTime);
-		} catch (SQLException e) {
+		} catch (DataInsertionException e) {
 			throw new DatabaseException("unable to make change of date request of lecture with id " + lectureId, e);
 		}
 
@@ -50,7 +53,7 @@ public class ChangeOfDateReqService {
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
 		try {
-			cdao.changeStatusOfCODR(SessionManager.getInstance().getUserId(), reqId, isApproved);
+			dao.changeStatusOfCODR(SessionManager.getInstance().getUserId(), reqId, isApproved);
 		} catch (NoSuchElementException e) {
 			throw new DatabaseException("unable to set status of change of date request with id " + reqId, e);
 		}
@@ -70,19 +73,13 @@ public class ChangeOfDateReqService {
 		}
 	}
 
-	public List<ChangeOfDateReq> getChangeOfDateReqs() throws UnsupportedOperationException {
-		// TODO: implementazione
-		throw new UnsupportedOperationException("TODO");
-	}
+	public List<String> getWaitingCODRInfo() throws UnauthorizedException {
+		if (!SessionManager.getInstance().isCoordinator())
+			throw new UnauthorizedException("getWaitingCODRInfo() is restricted to coordinators only");
 
-	public List<String> getCODRInfo() throws IllegalStateException {
 		List<ChangeOfDateReq> codrs;
 
-		try {
-			codrs = getChangeOfDateReqs();
-		} catch (Exception e) {
-			throw new IllegalStateException("TEMP. EXCEPTION");
-		}
+		codrs = dao.getAllWaiting();
 
 		List<String> codrInfo = new ArrayList<>();
 		for (ChangeOfDateReq codr : codrs) {

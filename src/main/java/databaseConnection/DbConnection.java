@@ -2,42 +2,17 @@ package databaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DbConnection {
 	private static final String URL = "jdbc:postgresql://localhost:5432/exam";
 	private static final String UNAME = "exam";
 	private static final String PASS = "exam";
-	private Connection con;
 
 	private DbConnection() {
 	}
 
-	private static DbConnection instance;
-
-	public static DbConnection getInstance() {
-		if (instance == null)
-			instance = new DbConnection();
-		return instance;
+	public static Connection getCon() throws SQLException {
+		return DriverManager.getConnection(URL, UNAME, PASS);
 	}
-
-	public Connection getCon() {
-		try {
-			if (con == null || con.isClosed())
-				con = DriverManager.getConnection(URL, UNAME, PASS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return con;
-	}
-
-	public void closeConnection() {
-		try {
-			if (con != null && !con.isClosed())
-				con.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }
