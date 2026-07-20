@@ -16,11 +16,11 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 	private ChangeOfDateReq mapRsToCodReq(ResultSet rs) throws SQLException {
 		int reqId = rs.getInt("req_id");
 		int askingTeacherUid = rs.getInt("asking_teacher_id");
-		Teacher askingTeacher = (Teacher) UserDao.getInstance().getUserById(askingTeacherUid);
+		Teacher askingTeacher = (Teacher) UserDao.getInstance().getById(askingTeacherUid);
 		int reviewingCoordUid = rs.getInt("reviewing_coord_id");
 		Teacher reviewingCoord = null;
 		if (!rs.wasNull())
-			reviewingCoord = (Teacher) UserDao.getInstance().getUserById(reviewingCoordUid);
+			reviewingCoord = (Teacher) UserDao.getInstance().getById(reviewingCoordUid);
 		int lectureId = rs.getInt("lecture_id");
 		Lecture lecture = LectureDao.getInstance().getById(lectureId);
 		String unformattedDow = rs.getString("new_dayofweek");
@@ -89,7 +89,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 			dbc.closeConnection();
 		}
 
-		return new ChangeOfDateReq(newReqId, (Teacher) UserDao.getInstance().getUserById(askingTeacherUid),
+		return new ChangeOfDateReq(newReqId, (Teacher) UserDao.getInstance().getById(askingTeacherUid),
 				newReviewingCoord,
 				LectureDao.getInstance().getById(lectureId), newDow, newStartTime, newEndTime, newStatus);
 	}

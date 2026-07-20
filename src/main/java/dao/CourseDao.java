@@ -10,12 +10,11 @@ import daoImplementation.CoursePostgresDao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CourseDao {
+public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
 	private static CourseDao instance;
 
-	private List<Course> courseInMem = new ArrayList<>();
-
 	private CourseDao() {
+		super(new CoursePostgresDao());
 	}
 
 	public static CourseDao getInstance() {
@@ -25,43 +24,11 @@ public class CourseDao {
 	}
 
 	public List<Course> getCourseInMem() {
-		return new ArrayList<>(courseInMem);
-	}
-
-	private boolean isIdInMem(int courseId) {
-		for (Course c : courseInMem) {
-			if (c.getCourseId() == courseId)
-				return true;
-		}
-		return false;
-	}
-
-	private Course getCourseByIdInMem(int courseId) throws NoSuchElementException {
-		for (Course c : courseInMem) {
-			if (c.getCourseId() == courseId)
-				return c;
-		}
-		throw new NoSuchElementException(courseId + " course_id not found");
-	}
-
-	public Course getCourseById(int courseId) throws NoSuchElementException {
-		if (isIdInMem(courseId)) {
-			try {
-				return getCourseByIdInMem(courseId);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		CoursePostgresDao psqldao = new CoursePostgresDao();
-		Course c = psqldao.getById(courseId);
-		courseInMem.add(c);
-		return c;
+		return new ArrayList<>(inMem);
 	}
 
 	private boolean isNameNYearInMem(String name, int academicYear) {
-		for (Course c : courseInMem) {
+		for (Course c : inMem) {
 			if (c.getName().equals(name) && c.getAcademicYear() == academicYear)
 				return true;
 		}
@@ -69,7 +36,7 @@ public class CourseDao {
 	}
 
 	private Course getCourseByNameNYearInMem(String name, int academicYear) throws NoSuchElementException {
-		for (Course c : courseInMem) {
+		for (Course c : inMem) {
 			if (c.getName().equals(name) && c.getAcademicYear() == academicYear)
 				return c;
 		}
@@ -86,18 +53,16 @@ public class CourseDao {
 			}
 		}
 
-		CoursePostgresDao psqldao = new CoursePostgresDao();
-		Course c = psqldao.getByNameNYear(name, academicYear);
-		courseInMem.add(c);
+		Course c = sqldao.getByNameNYear(name, academicYear);
+		inMem.add(c);
 		return c;
 	}
 
 	public void insertCourse(int teacherUid, String name, int cfu, int academicYear, boolean isActive)
 			throws SQLException {
 
-		CoursePostgresDao psqldao = new CoursePostgresDao();
-		Course c = psqldao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
-		courseInMem.add(c);
+		Course c = sqldao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
+		inMem.add(c);
 
 	}
 }

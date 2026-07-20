@@ -8,20 +8,17 @@ import java.util.List;
 import java.util.ArrayList;
 import dao.ClassroomDao;
 import dao.CourseDao;
-import databaseConnection.DbConnection;
 import model.Lecture;
 import model.Classroom;
 import model.Course;
 
-public class LecturePostgresDao {
-	private DbConnection dbc = DbConnection.getInstance();
-
+public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 	private Lecture mapRsToLecture(ResultSet rs) throws SQLException {
 		int lectureId = rs.getInt("lecture_id");
 		int courseId = rs.getInt("course_id");
-		Course course = CourseDao.getInstance().getCourseById(courseId);
+		Course course = CourseDao.getInstance().getById(courseId);
 		String classroomName = rs.getString("classroom_name");
-		Classroom classroom = ClassroomDao.getInstance().getByName(classroomName);
+		Classroom classroom = ClassroomDao.getInstance().getById(classroomName);
 		String unformattedDow = rs.getString("dayofweek");
 		DayOfWeek dayofweek = DayOfWeek.valueOf(unformattedDow);
 		LocalTime startTime = rs.getObject("start_time", LocalTime.class);
@@ -30,7 +27,8 @@ public class LecturePostgresDao {
 		return new Lecture(lectureId, course, classroom, dayofweek, startTime, endTime);
 	}
 
-	public Lecture getById(int lectureId) throws NoSuchElementException {
+	@Override
+	public Lecture getById(Integer lectureId) throws NoSuchElementException {
 		final String sql = "SELECT * FROM lecture WHERE lecture_id = ?";
 
 		Connection con = dbc.getCon();
@@ -130,8 +128,8 @@ public class LecturePostgresDao {
 			dbc.closeConnection();
 		}
 
-		return new Lecture(newLectureId, CourseDao.getInstance().getCourseById(courseId),
-				ClassroomDao.getInstance().getByName(classroomName), dayofweek, startTime, endTime);
+		return new Lecture(newLectureId, CourseDao.getInstance().getById(courseId),
+				ClassroomDao.getInstance().getById(classroomName), dayofweek, startTime, endTime);
 
 	}
 

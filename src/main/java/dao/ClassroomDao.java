@@ -1,14 +1,9 @@
 package dao;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import daoImplementation.ClassroomPostgresDao;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import model.Classroom;
+import daoImplementation.ClassroomPostgresDao;
 
 public class ClassroomDao extends AbstractDao<Classroom, ClassroomPostgresDao, String> {
 	private static ClassroomDao instance;

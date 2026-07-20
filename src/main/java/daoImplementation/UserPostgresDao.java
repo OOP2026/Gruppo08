@@ -3,18 +3,11 @@ package daoImplementation;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import databaseConnection.DbConnection;
 import model.Student;
 import model.Teacher;
 import model.User;
 
-public class UserPostgresDao {
-	private DbConnection dbc = DbConnection.getInstance();
-
-	/**
-	 * Metodo di utility per mappare il ResultSet a un oggetto User (Student o
-	 * Teacher).
-	 */
+public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	private User mapRowToUser(ResultSet rs) throws SQLException {
 		int userId = rs.getInt("user_id");
 		String fname = rs.getString("fname");
@@ -39,7 +32,8 @@ public class UserPostgresDao {
 		throw new IllegalStateException("User " + userId + " is neither a student nor a teacher.");
 	}
 
-	public User getUserById(int userId) {
+	@Override
+	public User getById(Integer userId) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
 
 		Connection con = dbc.getCon();

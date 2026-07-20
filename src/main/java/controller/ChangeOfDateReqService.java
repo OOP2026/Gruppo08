@@ -31,7 +31,7 @@ public class ChangeOfDateReqService {
 			throw new UnauthorizedException("This operation is restricted to teachers only");
 
 		try {
-			cdao.insertCodReq(SessionManager.getInstance().getSession().getUserId(), lectureId, newDow, newStartTime,
+			cdao.insertCodReq(SessionManager.getInstance().getUserId(), lectureId, newDow, newStartTime,
 					newEndTime);
 		} catch (SQLException e) {
 			throw new DatabaseException("unable to make change of date request of lecture with id " + lectureId, e);
@@ -50,7 +50,7 @@ public class ChangeOfDateReqService {
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
 		try {
-			cdao.changeStatusOfCODR(SessionManager.getInstance().getSession().getUserId(), reqId, isApproved);
+			cdao.changeStatusOfCODR(SessionManager.getInstance().getUserId(), reqId, isApproved);
 		} catch (NoSuchElementException e) {
 			throw new DatabaseException("unable to set status of change of date request with id " + reqId, e);
 		}
@@ -62,7 +62,7 @@ public class ChangeOfDateReqService {
 
 		// TODO: dependency nel class diagram verso lectureDao
 		try {
-			LectureDao.getInstance().changeLectureDate(codr.getLecture().getLectureId(), codr.getNewDow(),
+			LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
 					codr.getNewStartTime(), codr.getNewEndTime());
 		} catch (SQLException e) {
 			throw new DatabaseException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR",
@@ -86,7 +86,7 @@ public class ChangeOfDateReqService {
 
 		List<String> codrInfo = new ArrayList<>();
 		for (ChangeOfDateReq codr : codrs) {
-			codrInfo.add(codr.getReqId() + "Professore: " +
+			codrInfo.add(codr.getId() + "Professore: " +
 					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname());
 		}
 		return codrInfo;

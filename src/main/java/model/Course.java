@@ -1,6 +1,6 @@
 package model;
 
-public class Course {
+public class Course implements Identifiable<Integer> {
 	private int courseId;
 	private Teacher teacher;
 	private String name;
@@ -25,7 +25,8 @@ public class Course {
 		return name;
 	}
 
-	public int getCourseId() {
+	@Override
+	public Integer getId() {
 		return courseId;
 	}
 

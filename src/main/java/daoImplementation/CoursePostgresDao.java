@@ -3,18 +3,15 @@ package daoImplementation;
 import model.Course;
 import java.util.NoSuchElementException;
 import java.sql.*;
-import databaseConnection.DbConnection;
 
 import dao.UserDao;
 import model.Teacher;
 
-public class CoursePostgresDao {
-	private DbConnection dbc = DbConnection.getInstance();
-
+public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 	private Course mapRsToCourse(ResultSet rs) throws SQLException {
 		int courseId = rs.getInt("course_id");
 		int teacherUid = rs.getInt("teacher_uid");
-		Teacher teacher = (Teacher) UserDao.getInstance().getUserById(teacherUid);
+		Teacher teacher = (Teacher) UserDao.getInstance().getById(teacherUid);
 		String name = rs.getString("name");
 		int cfu = rs.getInt("cfu");
 		int academicYear = rs.getInt("academic_year");
@@ -23,7 +20,8 @@ public class CoursePostgresDao {
 		return new Course(courseId, teacher, name, cfu, academicYear, isActive);
 	}
 
-	public Course getById(int courseId) throws NoSuchElementException {
+	@Override
+	public Course getById(Integer courseId) throws NoSuchElementException {
 		final String sql = "SELECT * FROM course WHERE course_id = ?";
 
 		Connection con = dbc.getCon();
@@ -95,7 +93,7 @@ public class CoursePostgresDao {
 		}
 
 		return new Course(newCourseId,
-				(Teacher) UserDao.getInstance().getUserById(teacherUid),
+				(Teacher) UserDao.getInstance().getById(teacherUid),
 				name, cfu, academicYear, isActive);
 
 	}

@@ -3,7 +3,7 @@ package model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public class Lecture {
+public class Lecture implements Identifiable<Integer> {
 	private int lectureId;
 	private Course course;
 	private Classroom classroom;
@@ -25,7 +25,8 @@ public class Lecture {
 		return startTime;
 	}
 
-	public int getLectureId() {
+	@Override
+	public Integer getId() {
 		return lectureId;
 	}
 

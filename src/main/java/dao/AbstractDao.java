@@ -39,7 +39,7 @@ public abstract class AbstractDao<ENTITY extends Identifiable<ID>, SQLDAO extend
 	 *
 	 * @throws NoSuchElementException se il dato non e' presente
 	 */
-	protected ENTITY getById(ID id) throws NoSuchElementException {
+	public ENTITY getById(ID id) throws NoSuchElementException {
 		if (isIdInMem(id)) {
 			try {
 				return getByIdInMem(id);

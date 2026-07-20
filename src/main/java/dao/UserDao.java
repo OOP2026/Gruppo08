@@ -10,12 +10,11 @@ import daoImplementation.UserPostgresDao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UserDao {
+public class UserDao extends AbstractDao<User, UserPostgresDao, Integer> {
 	private static UserDao instance;
 
-	private List<User> userInMem = new ArrayList<>();
-
 	private UserDao() {
+		super(new UserPostgresDao());
 	}
 
 	public static UserDao getInstance() {
@@ -25,43 +24,11 @@ public class UserDao {
 	}
 
 	public List<User> getUserInMem() {
-		return new ArrayList<User>(userInMem);
-	}
-
-	private boolean isIdInMem(int userId) {
-		for (User u : userInMem) {
-			if (u.getUserId() == userId)
-				return true;
-		}
-		return false;
-	}
-
-	private User getUserByIdInMem(int userId) throws NoSuchElementException {
-		for (User u : userInMem) {
-			if (u.getUserId() == userId)
-				return u;
-		}
-		throw new NoSuchElementException(userId + " uid not found");
-	}
-
-	public User getUserById(int userId) throws NoSuchElementException {
-		if (isIdInMem(userId)) {
-			try {
-				return getUserByIdInMem(userId);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		UserPostgresDao psqldao = new UserPostgresDao();
-		User u = psqldao.getUserById(userId);
-		userInMem.add(u);
-		return u;
+		return new ArrayList<User>(inMem);
 	}
 
 	private boolean isLoginInMem(String login) {
-		for (User u : userInMem) {
+		for (User u : inMem) {
 			if (u.getLogin().equals(login))
 				return true;
 		}
@@ -69,7 +36,7 @@ public class UserDao {
 	}
 
 	private User getUserByLoginInMem(String login) throws NoSuchElementException {
-		for (User u : userInMem) {
+		for (User u : inMem) {
 			if (u.getLogin().equals(login))
 				return u;
 		}
@@ -86,14 +53,13 @@ public class UserDao {
 			}
 		}
 
-		UserPostgresDao psqldao = new UserPostgresDao();
-		User u = psqldao.getUserByLogin(login);
-		userInMem.add(u);
+		User u = sqldao.getUserByLogin(login);
+		inMem.add(u);
 		return u;
 	}
 
 	private boolean isEmailInMem(String email) {
-		for (User u : userInMem) {
+		for (User u : inMem) {
 			if (u.getEmail().equals(email))
 				return true;
 		}
@@ -101,7 +67,7 @@ public class UserDao {
 	}
 
 	private User getUserByEmailInMem(String email) throws NoSuchElementException {
-		for (User u : userInMem) {
+		for (User u : inMem) {
 			if (u.getEmail().equals(email))
 				return u;
 		}
@@ -118,29 +84,22 @@ public class UserDao {
 			}
 		}
 
-		UserPostgresDao psqldao = new UserPostgresDao();
-		User u = psqldao.getUserByEmail(email);
-		userInMem.add(u);
+		User u = sqldao.getUserByEmail(email);
+		inMem.add(u);
 		return u;
 	}
 
 	public void insertStudent(int academicYear, String fname, String lname, String email,
 			String login, String password) throws SQLException {
-
-		UserPostgresDao psqldao = new UserPostgresDao();
-
-		User u = psqldao.insertStudent(academicYear, fname, lname, email, login, password);
-		userInMem.add(u);
+		User u = sqldao.insertStudent(academicYear, fname, lname, email, login, password);
+		inMem.add(u);
 
 	}
 
 	public void insertTeacher(boolean isCoordinator, String fname, String lname, String email,
 			String login, String password) throws SQLException {
-
-		UserPostgresDao psqldao = new UserPostgresDao();
-
-		User u = psqldao.insertTeacher(isCoordinator, fname, lname, email, login, password);
-		userInMem.add(u);
+		User u = sqldao.insertTeacher(isCoordinator, fname, lname, email, login, password);
+		inMem.add(u);
 
 	}
 

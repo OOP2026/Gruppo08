@@ -18,13 +18,13 @@ public class TestController {
 
 		List<Lecture> lectures = new ArrayList<>();
 		try {
-			lectures = lService.getAllByTeacher(SessionManager.getInstance().getSession().getUserId());
+			lectures = lService.getAllByTeacher(SessionManager.getInstance().getUserId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		for (Lecture l : lectures)
-			System.out.println(l.getLectureId());
+			System.out.println(l.getId());
 
 		System.out.println(".");
 	}

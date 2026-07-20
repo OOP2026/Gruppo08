@@ -81,7 +81,7 @@ public class SessionManager {
 	}
 
 	public int getUserId() {
-		return session.getUserId();
+		return session.getId();
 	}
 
 }
