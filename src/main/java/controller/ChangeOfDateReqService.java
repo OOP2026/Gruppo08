@@ -73,6 +73,11 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		}
 	}
 
+	/**
+	 * @return Lista di stringhe con le informazioni identificative delle
+	 *         ChangeOfDateReq con status WAITING
+	 * @throws UnauthorizedException se l'utente non è un coordinatore.
+	 */
 	public List<String> getWaitingCODRInfo() throws UnauthorizedException {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("getWaitingCODRInfo() is restricted to coordinators only");

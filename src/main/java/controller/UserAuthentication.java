@@ -6,6 +6,10 @@ import model.User;
 import dao.UserDao;
 
 public class UserAuthentication {
+	/**
+	 * @param identifier puo' essere login o email di un User
+	 * @throws AuthenticationException
+	 */
 	public User login(String identifier, String password) throws AuthenticationException {
 		User u;
 		UserDao udao = UserDao.getInstance();
@@ -27,6 +31,11 @@ public class UserAuthentication {
 		return u;
 	}
 
+	/**
+	 * Registra uno studente
+	 * 
+	 * @throws AuthenticationException
+	 */
 	public void register(int academicYear, String fname, String lname, String email, String login, String password)
 			throws AuthenticationException {
 		UserDao udao = UserDao.getInstance();
@@ -37,6 +46,12 @@ public class UserAuthentication {
 		}
 	}
 
+	/**
+	 * Registra un docente
+	 * 
+	 * @param isCoordinator registra un docente coordinatore
+	 * @throws AuthenticationException
+	 */
 	public void register(boolean isCoordinator, String fname, String lname, String email, String login, String password)
 			throws AuthenticationException {
 		UserDao udao = UserDao.getInstance();
