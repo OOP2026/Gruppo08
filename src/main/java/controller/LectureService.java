@@ -6,33 +6,42 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import controller.exception.DatabaseException;
+import controller.exception.UnauthorizedException;
 import dao.LectureDao;
 import model.Lecture;
 
 public class LectureService {
-	private final String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
-			DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
-			DayOfWeek.SATURDAY.toString() };
+	private final LectureDao ldao = LectureDao.getInstance();
 
-	public String[] getCols() {
-		return cols;
-	}
-
+	/**
+	 * Crea una lezione interfacciandosi al DB e al dao in memory.
+	 *
+	 * @throws UnauthorizedException se l'utente non e' coordinatore
+	 * @throws DatabaseException     se il db fallisce
+	 */
 	public void makeLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
-			LocalTime endTime) throws IllegalStateException {
+			LocalTime endTime) {
 		if (!SessionManager.getInstance().isCoordinator())
-			throw new IllegalStateException("This operation is restricted to coordinators only");
+			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		LectureDao ldao = LectureDao.getInstance();
 		try {
 			ldao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 		} catch (SQLException e) {
-			throw new IllegalStateException(
-					"unable to insert lecture " + courseId + classroomName + dayofweek + startTime + endTime);
+			throw new DatabaseException(
+					"unable to insert lecture " + courseId + classroomName + dayofweek + startTime + endTime, e);
 		}
 
 	}
 
+	/**
+	 * Restituisce una lista di lezioni di un anno accademico passato come
+	 * parametro.
+	 *
+	 * @throws UnauthorizedException se l'utente non e' coordinatore
+	 * @throws DatabaseException     se il db fallisce
+	 */
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws IllegalStateException {
 		List<Lecture> lectures;
 		try {
@@ -48,47 +57,74 @@ public class LectureService {
 		return lectures;
 	}
 
-	public List<Lecture> getAllByTeacher(int teacherUid) throws RuntimeException {
+	/**
+	 * Restituisce una lista di tutte le lezioni di un docente (Teacher).
+	 * 
+	 * @throws DatabaseException se il db fallisce
+	 */
+	public List<Lecture> getAllByTeacher(int teacherUid) {
 		List<Lecture> lectures = new ArrayList<>();
 
 		try {
-			lectures = LectureDao.getInstance().getAllByTeacher(teacherUid);
+			lectures = ldao.getAllByTeacher(teacherUid);
 		} catch (SQLException e) {
-			throw new RuntimeException("Unable to retrieve lectures of teacher with uid: " + teacherUid);
+			throw new DatabaseException("Unable to retrieve lectures of teacher with uid: " + teacherUid, e);
 		}
 
 		return lectures;
 	}
 
-	public List<String> getLecturesInfo(int teacherUid) throws RuntimeException {
-		List<Lecture> lectures;
-		try {
-			lectures = getAllByTeacher(teacherUid);
-		} catch (RuntimeException e) {
-			throw new RuntimeException(e);
-		}
-		List<String> lecturesInfo = new ArrayList<>();
-		for (Lecture lecture : lectures) {
-			lecturesInfo.add(lecture.getLectureId() + " " + lecture.getCourse().getName() + " " + lecture.getTimeInterval());
-		}
+	/**
+	 * Metodo analogo a getAllByTeacher,
+	 * restituisce una lista di tutte le lezioni di un docente (Teacher)
+	 *
+	 * @return lista di stringhe che rappresentano le lezioni
+	 * @throws DatabaseException se il recupero dei dati dal database fallisce
+	 */
+	public List<String> getAllByTeacherToString(int teacherUid) {
+		List<Lecture> lectures = getAllByTeacher(teacherUid);
+		List<String> lecturesString = new ArrayList<>();
 
-		return lecturesInfo;
+		for (Lecture l : lectures)
+			lecturesString.add(l.toString());
+
+		return lecturesString;
 	}
 
+	/**
+	 * Cambia la data di una lezione.
+	 *
+	 * @param lectureId lezione da modificare
+	 * @throws UnauthorizedException se l'utente in session non e' coordinatore
+	 */
 	public void changeLectureDate(int lectureId, DayOfWeek newDow,
-			LocalTime newStartTime, LocalTime newEndTime) throws RuntimeException {
+			LocalTime newStartTime, LocalTime newEndTime) {
 		if (!SessionManager.getInstance().isCoordinator())
-			throw new IllegalStateException("This operation is restricted to coordinators only");
+			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		LectureDao ldao = LectureDao.getInstance();
 		try {
 			ldao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
 		} catch (SQLException e) {
-			throw new RuntimeException("unable to update lecture with id " + lectureId);
+			throw new DatabaseException("unable to update lecture with id " + lectureId, e);
 		}
 	}
 
+	public String[] getCols() {
+		final String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
+				DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
+				DayOfWeek.SATURDAY.toString() };
+		return cols;
+	}
+
+	/**
+	 * @param academicYear
+	 * @return matrice delle lezioni ordinate da utilizzare nella gui
+	 * @throws UnauthorizedException se l'utente non e' coordinatore
+	 * @throws DatabaseException     se il db fallisce
+	 */
 	public Object[][] getLecturesMtx(int academicYear) {
+		final String[] cols = getCols();
+
 		List<Lecture> lectures = getAllByAcademicYear(academicYear);
 		lectures.sort(Comparator.comparing(Lecture::getStartTime));
 

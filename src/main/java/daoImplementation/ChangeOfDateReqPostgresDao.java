@@ -8,14 +8,11 @@ import java.util.NoSuchElementException;
 import model.ChangeOfDateReq;
 import model.Lecture;
 import model.RequestStatus;
-import databaseConnection.DbConnection;
 import model.Teacher;
 import dao.LectureDao;
 import dao.UserDao;
 
-public class ChangeOfDateReqPostgresDao {
-	private DbConnection dbc = DbConnection.getInstance();
-
+public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, Integer> {
 	private ChangeOfDateReq mapRsToCodReq(ResultSet rs) throws SQLException {
 		int reqId = rs.getInt("req_id");
 		int askingTeacherUid = rs.getInt("asking_teacher_id");
@@ -37,7 +34,8 @@ public class ChangeOfDateReqPostgresDao {
 				status);
 	}
 
-	public ChangeOfDateReq getById(int reqId) throws NoSuchElementException {
+	@Override
+	public ChangeOfDateReq getById(Integer reqId) throws NoSuchElementException {
 		final String sql = "SELECT * FROM change_of_date_req WHERE req_id = ?";
 
 		Connection con = dbc.getCon();

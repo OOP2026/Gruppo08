@@ -3,7 +3,7 @@ package model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public class ChangeOfDateReq {
+public class ChangeOfDateReq implements Identifiable<Integer> {
 	private int reqId;
 	private Teacher askingTeacher;
 	private Teacher reviewingCoord;
@@ -25,16 +25,17 @@ public class ChangeOfDateReq {
 		this.status = status;
 	}
 
+	@Override
+	public Integer getId() {
+		return reqId;
+	}
+
 	public String getStatusStr() {
 		return status.toString();
 	}
 
 	public Teacher getReviewingCoord() {
 		return reviewingCoord;
-	}
-
-	public int getReqId() {
-		return reqId;
 	}
 
 	public LocalTime getNewStartTime() {

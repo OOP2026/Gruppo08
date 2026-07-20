@@ -6,6 +6,7 @@ import model.RequestStatus;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import controller.exception.DatabaseException;
 import daoImplementation.ChangeOfDateReqPostgresDao;
 
 import java.sql.SQLException;
@@ -13,12 +14,11 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class ChangeOfDateReqDao {
+public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDateReqPostgresDao, Integer> {
 	private static ChangeOfDateReqDao instance;
 
-	private List<ChangeOfDateReq> codreqInMem = new ArrayList<>();
-
 	private ChangeOfDateReqDao() {
+		super(new ChangeOfDateReqPostgresDao());
 	}
 
 	public static ChangeOfDateReqDao getInstance() {
@@ -28,51 +28,31 @@ public class ChangeOfDateReqDao {
 	}
 
 	public List<ChangeOfDateReq> getCodReqInMem() {
-		return new ArrayList<>(codreqInMem);
+		return new ArrayList<>(inMem);
 	}
 
-	private boolean isIdInMem(int reqId) {
-		for (ChangeOfDateReq c : codreqInMem) {
-			if (c.getReqId() == reqId)
-				return true;
-		}
-		return false;
-	}
-
-	private ChangeOfDateReq getByIdInMem(int reqId) throws NoSuchElementException {
-		for (ChangeOfDateReq c : codreqInMem) {
-			if (c.getReqId() == reqId)
-				return c;
-		}
-
-		throw new NoSuchElementException(reqId + " request id not found in mem");
-	}
-
-	public ChangeOfDateReq getById(int reqId) throws NoSuchElementException {
-		if (isIdInMem(reqId)) {
-			try {
-				return getByIdInMem(reqId);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		ChangeOfDateReqPostgresDao psqldao = new ChangeOfDateReqPostgresDao();
-		ChangeOfDateReq c = psqldao.getById(reqId);
-		codreqInMem.add(c);
-		return c;
-	}
-
+	/**
+	 * Inserisce una ChangeOfDateReq in memory e nel db
+	 * 
+	 * @throws SQLException
+	 */
 	public void insertCodReq(int askingTeacherUid, int lectureId, DayOfWeek newDow,
 			LocalTime newStartTime, LocalTime newEndTime)
 			throws SQLException {
-		ChangeOfDateReqPostgresDao psqldao = new ChangeOfDateReqPostgresDao();
-		ChangeOfDateReq c = psqldao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime,
+		ChangeOfDateReq c = sqldao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime,
 				newEndTime);
-		codreqInMem.add(c);
+		inMem.add(c);
 	}
 
+	/**
+	 * 
+	 * @param reviewingCoordId id del coordinatore che cambia lo stato della
+	 *                         richiesta
+	 * @param reqId            id della richiesta da modificare
+	 * @param isApproved       se true RequestStatus.APPROVED altrimenti
+	 *                         RequestStatus.REJECTED.
+	 * @throws NoSuchElementException
+	 */
 	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved) throws NoSuchElementException {
 		RequestStatus status = isApproved ? RequestStatus.APPROVED : RequestStatus.REJECTED;
 
@@ -81,10 +61,9 @@ public class ChangeOfDateReqDao {
 		c.setStatus(status);
 
 		try {
-			ChangeOfDateReqPostgresDao psqldao = new ChangeOfDateReqPostgresDao();
-			psqldao.changeStatusOfCODR(reviewingCoordId, reqId, status);
+			sqldao.changeStatusOfCODR(reviewingCoordId, reqId, status);
 		} catch (SQLException e) {
-			throw new RuntimeException("unexpected error occured during call of method: changeStatusOfCODR");
+			throw new DatabaseException("unexpected error occured during call of method: changeStatusOfCODR", e);
 		}
 	}
 

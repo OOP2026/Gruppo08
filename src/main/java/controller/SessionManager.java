@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import controller.exception.UnauthorizedException;
 import model.Student;
 import model.Teacher;
 
@@ -24,6 +25,12 @@ public class SessionManager {
 		return session;
 	}
 
+	/**
+	 * Metodo per impostare la sessione utente,
+	 * imposta il ruolo dell'utente in automatico.
+	 * 
+	 * @param session nuova sessione
+	 */
 	public void setSession(User session) {
 		this.session = session;
 
@@ -53,18 +60,22 @@ public class SessionManager {
 		return getRole() == UserRole.STUDENT;
 	}
 
-	public int getAcademicYear() throws RuntimeException {
-		if(!isStudent())
-		{
-			throw new RuntimeException("not a student");
+	/**
+	 * @throws UnauthorizedException se l'utente non e' studente
+	 */
+	public int getAcademicYear() {
+		if (!isStudent()) {
+			throw new UnauthorizedException("not a student");
 		}
 		return ((Student) session).getAcademicYear();
 	}
 
-	public int getStudentId() throws RuntimeException {
-		if(!isStudent())
-		{
-			throw new RuntimeException("not a student");
+	/**
+	 * @throws UnauthorizedException se l'utente non e' studente
+	 */
+	public int getStudentId() {
+		if (!isStudent()) {
+			throw new UnauthorizedException("not a student");
 		}
 		return ((Student) session).getStudentId();
 	}

@@ -5,55 +5,75 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import controller.exception.DatabaseException;
+import controller.exception.UnauthorizedException;
+
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
 import dao.LectureDao;
 import model.ChangeOfDateReq;
 
 public class ChangeOfDateReqService {
+	private final ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
+
+	/**
+	 * Metodo per creare una richiesta di spostamento lezione
+	 *
+	 * @throws UnauthorizedException se l'utente non è un docente.
+	 * @throws DatabaseException     se il DB fallisce.
+	 */
 	public void makeChangeOfDateReq(int lectureId, DayOfWeek newDow,
 			LocalTime newStartTime, LocalTime newEndTime)
 			throws RuntimeException {
 
 		if (!SessionManager.getInstance().isTeacher())
-			throw new RuntimeException("This operation is restricted to teachers only");
+			throw new UnauthorizedException("This operation is restricted to teachers only");
 
-		ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
 		try {
 			cdao.insertCodReq(SessionManager.getInstance().getSession().getUserId(), lectureId, newDow, newStartTime,
 					newEndTime);
 		} catch (SQLException e) {
-			throw new RuntimeException("unable to make change of date request of lecture with id " + lectureId);
+			throw new DatabaseException("unable to make change of date request of lecture with id " + lectureId, e);
 		}
 
 	}
 
-	public void changeStatusOfCODR(int reqId, boolean isApproved) throws IllegalStateException {
+	/**
+	 * Metodo per approvare una richiesta di spostamento lezione
+	 *
+	 * @throws UnauthorizedException se l'utente non è un coordinatore.
+	 * @throws DatabaseException     se il DB fallisce.
+	 */
+	public void changeStatusOfCODR(int reqId, boolean isApproved) {
 		if (!SessionManager.getInstance().isCoordinator())
-			throw new IllegalStateException("This operation is restricted to coordinators only");
+			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		ChangeOfDateReqDao cdao = ChangeOfDateReqDao.getInstance();
 		try {
 			cdao.changeStatusOfCODR(SessionManager.getInstance().getSession().getUserId(), reqId, isApproved);
 		} catch (NoSuchElementException e) {
-			throw new RuntimeException("unable to set status of change of date request with id " + reqId);
+			throw new DatabaseException("unable to set status of change of date request with id " + reqId, e);
 		}
 
-		if (isApproved == false)
+		if (!isApproved)
 			return;
 
 		ChangeOfDateReq codr = ChangeOfDateReqDao.getInstance().getById(reqId);
 
-		// TODO: dependency nel class diagram
+		// TODO: dependency nel class diagram verso lectureDao
 		try {
 			LectureDao.getInstance().changeLectureDate(codr.getLecture().getLectureId(), codr.getNewDow(),
 					codr.getNewStartTime(), codr.getNewEndTime());
 		} catch (SQLException e) {
-			throw new RuntimeException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR");
+			throw new DatabaseException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR",
+					e);
 		}
 	}
 
-	public List<ChangeOfDateReq> getChangeOfDateReqs () {}
+	public List<ChangeOfDateReq> getChangeOfDateReqs() throws UnsupportedOperationException {
+		// TODO: implementazione
+		throw new UnsupportedOperationException("TODO");
+	}
 
 	public List<String> getCODRInfo() throws IllegalStateException {
 		List<ChangeOfDateReq> codrs;
@@ -64,10 +84,10 @@ public class ChangeOfDateReqService {
 			throw new IllegalStateException("TEMP. EXCEPTION");
 		}
 
-		List<String> codrInfo = new ArrayList();
+		List<String> codrInfo = new ArrayList<>();
 		for (ChangeOfDateReq codr : codrs) {
 			codrInfo.add(codr.getReqId() + "Professore: " +
-					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname() );
+					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname());
 		}
 		return codrInfo;
 	}

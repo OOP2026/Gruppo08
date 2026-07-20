@@ -60,4 +60,9 @@ public class Lecture {
 	public void setDayofweek(DayOfWeek dayofweek) {
 		this.dayofweek = dayofweek;
 	}
+
+	@Override
+	public String toString() {
+		return lectureId + " " + course.getName() + " " + getTimeInterval();
+	}
 }

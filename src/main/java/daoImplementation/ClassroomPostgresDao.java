@@ -3,13 +3,11 @@ package daoImplementation;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import databaseConnection.DbConnection;
 import model.Classroom;
 
-public class ClassroomPostgresDao {
-	private DbConnection dbc = DbConnection.getInstance();
-
-	public Classroom getByName(String name) throws NoSuchElementException {
+public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
+	@Override
+	public Classroom getById(String name) throws NoSuchElementException {
 		final String sql = "SELECT name FROM classroom WHERE name = ?";
 
 		Connection con = dbc.getCon();
