@@ -73,6 +73,14 @@ public class ReqPage {
         List<String> lectures;
 
         try {
+            if (!SessionManager.getInstance().isLoggedIn()) {
+                JOptionPane.showMessageDialog(frame,
+                        "Nessun utente autenticato.",
+                        "Errore di Autenticazione",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
             lectures = ls.getAllByTeacherToString(SessionManager.getInstance().getUserId());
             lezioneComboBox.setModel(new DefaultComboBoxModel<>(lectures.toArray(new String[0])));
         } catch (NullPointerException _) {

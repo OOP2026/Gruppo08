@@ -8,7 +8,7 @@ public abstract class User implements Identifiable<Integer> {
 	private String login;
 	private String password;
 
-	public User(int userId, String fname, String lname, String email, String login, String password) {
+	protected User(int userId, String fname, String lname, String email, String login, String password) {
 		this.userId = userId;
 		this.fname = fname;
 		this.lname = lname;

@@ -86,4 +86,8 @@ public class SessionManager {
 		return session.getId();
 	}
 
+	public boolean isLoggedIn() {
+		return session != null;
+	}
+
 }
