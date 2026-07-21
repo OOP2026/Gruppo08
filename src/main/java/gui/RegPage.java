@@ -17,7 +17,7 @@ public class RegPage {
     private JPasswordField pswdField;
     private JButton confermaButton;
     private JTextField emailTextField;
-    private JComboBox ayComboBox;
+    private JComboBox<Integer> ayComboBox;
     private final UserAuthentication ua = new UserAuthentication();
 
     public RegPage(JFrame loginPage) {

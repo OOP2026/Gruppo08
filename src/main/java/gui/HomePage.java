@@ -136,7 +136,7 @@ public class HomePage {
         try {
             mtx = ls.getLecturesMtx(year);
         }
-        catch (IllegalStateException e) {
+        catch (IllegalStateException _) {
             JOptionPane.showMessageDialog(frame, "Impossibile aggiornare la tabella");
         }
 

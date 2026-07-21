@@ -160,4 +160,8 @@ public class LectureService {
 
 		return mtx;
 	}
+
+	public Lecture getLectureById(int lectureId) {
+		return ldao.getById(lectureId);
+	}
 }

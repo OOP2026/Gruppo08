@@ -14,6 +14,7 @@ import dao.ChangeOfDateReqDao;
 import dao.LectureDao;
 import daoImplementation.exception.DataInsertionException;
 import model.ChangeOfDateReq;
+import model.Lecture;
 
 public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDao> {
 	public ChangeOfDateReqService() {
@@ -88,9 +89,26 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 
 		List<String> codrInfo = new ArrayList<>();
 		for (ChangeOfDateReq codr : codrs) {
-			codrInfo.add(codr.getId() + "Professore: " +
+			codrInfo.add(codr.getId() + " Professore: " +
 					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname());
 		}
 		return codrInfo;
+	}
+
+	public ChangeOfDateReq getCODRbyId(int reqId) throws UnauthorizedException {
+		if (!SessionManager.getInstance().isCoordinator())
+			throw new UnauthorizedException("getCODRbyId() is restricted to coordinators only");
+		return dao.getById(reqId);
+	}
+
+	public String getCODROldTimeAndDate (int reqId) throws  UnauthorizedException {
+		Lecture lecture = LectureDao.getInstance().getById(getCODRbyId(reqId).getLecture().getId());
+		return lecture.getDayofweek().toString() + " " + lecture.getTimeInterval();
+	}
+
+	public String getCODRNewTimeAndDate (int reqId) throws UnauthorizedException {
+		ChangeOfDateReq codr = getCODRbyId(reqId);
+		return codr.getNewDow().toString() + " " +
+				codr.getNewStartTime().toString() + " - " + codr.getNewEndTime().toString();
 	}
 }

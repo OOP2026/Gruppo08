@@ -3,6 +3,8 @@ package gui;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import controller.*;
+import controller.exception.DatabaseException;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.DayOfWeek;
@@ -19,12 +21,13 @@ public class ReqPage {
     private JButton confermaButton;
     private JFormattedTextField startFTextField;
     private JFormattedTextField endFTextField;
+    private JButton indietroButton;
     private final LectureService ls = new LectureService();
     private final ChangeOfDateReqService cs = new ChangeOfDateReqService();
 
     public ReqPage(JFrame callerFrame) {
         frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(basePanel);
         frame.pack();
         frame.setVisible(true);
@@ -56,6 +59,14 @@ public class ReqPage {
                 }
             }
         });
+
+        indietroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                callerFrame.setVisible(true);
+                frame.dispose();
+            }
+        });
     }
 
     private void populateLectures() {
@@ -66,8 +77,8 @@ public class ReqPage {
             lezioneComboBox.setModel(new DefaultComboBoxModel<>(lectures.toArray(new String[0])));
         } catch (NullPointerException _) {
             JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle lezioni");
-        } catch (RuntimeException ex) {
-            JOptionPane.showMessageDialog(frame, ex.getMessage());
+        } catch (DatabaseException de) {
+            JOptionPane.showMessageDialog(frame, de.getMessage());
         }
     }
 
