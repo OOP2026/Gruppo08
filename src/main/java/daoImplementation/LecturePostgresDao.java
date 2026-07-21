@@ -32,7 +32,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 	@Override
 	public Lecture getById(Integer lectureId) throws NoSuchElementException {
-		final String sql = "SELECT * FROM lecture WHERE lecture_id = ?";
+		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
 
 		try (Connection con = databaseConnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 			}
 
 		} catch (SQLException e) {
-			throw new RuntimeException("DB exception during getById", e);
+			throw new DataRetrievalException("DB exception during getById", e);
 		}
 
 		throw new NoSuchElementException("Lecture with id " + lectureId + " not found");

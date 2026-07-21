@@ -12,8 +12,10 @@ import controller.exception.UnauthorizedException;
 import dao.LectureDao;
 import model.Lecture;
 
-public class LectureService {
-	private final LectureDao ldao = LectureDao.getInstance();
+public class LectureService extends AbstractDaoService<LectureDao> {
+	public LectureService() {
+		super(LectureDao.getInstance());
+	}
 
 	/**
 	 * Crea una lezione interfacciandosi al DB e al dao in memory.
@@ -27,7 +29,7 @@ public class LectureService {
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
 		try {
-			ldao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
+			dao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 		} catch (SQLException e) {
 			throw new DatabaseException(
 					"unable to insert lecture " + courseId + classroomName + dayofweek + startTime + endTime, e);
@@ -45,7 +47,7 @@ public class LectureService {
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws IllegalStateException {
 		List<Lecture> lectures;
 		try {
-			lectures = LectureDao.getInstance().getAllByAcademicYear(academicYear);
+			lectures = dao.getAllByAcademicYear(academicYear);
 		} catch (SQLException e) {
 			throw new IllegalStateException(
 					"Unexpected error while retrieving lectures for academic year: " + academicYear);
@@ -66,7 +68,7 @@ public class LectureService {
 		List<Lecture> lectures = new ArrayList<>();
 
 		try {
-			lectures = ldao.getAllByTeacher(teacherUid);
+			lectures = dao.getAllByTeacher(teacherUid);
 		} catch (SQLException e) {
 			throw new DatabaseException("Unable to retrieve lectures of teacher with uid: " + teacherUid, e);
 		}
@@ -103,7 +105,7 @@ public class LectureService {
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
 		try {
-			ldao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
+			dao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
 		} catch (SQLException e) {
 			throw new DatabaseException("unable to update lecture with id " + lectureId, e);
 		}
@@ -162,6 +164,6 @@ public class LectureService {
 	}
 
 	public Lecture getLectureById(int lectureId) {
-		return ldao.getById(lectureId);
+		return dao.getById(lectureId);
 	}
 }

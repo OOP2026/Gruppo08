@@ -28,8 +28,7 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 	 * @throws DatabaseException     se il DB fallisce.
 	 */
 	public void makeChangeOfDateReq(int lectureId, DayOfWeek newDow,
-			LocalTime newStartTime, LocalTime newEndTime)
-			throws RuntimeException {
+			LocalTime newStartTime, LocalTime newEndTime) {
 
 		if (!SessionManager.getInstance().isTeacher())
 			throw new UnauthorizedException("This operation is restricted to teachers only");
@@ -101,12 +100,12 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		return dao.getById(reqId);
 	}
 
-	public String getCODROldTimeAndDate (int reqId) throws  UnauthorizedException {
+	public String getCODROldTimeAndDate(int reqId) throws UnauthorizedException {
 		Lecture lecture = LectureDao.getInstance().getById(getCODRbyId(reqId).getLecture().getId());
 		return lecture.getDayofweek().toString() + " " + lecture.getTimeInterval();
 	}
 
-	public String getCODRNewTimeAndDate (int reqId) throws UnauthorizedException {
+	public String getCODRNewTimeAndDate(int reqId) throws UnauthorizedException {
 		ChangeOfDateReq codr = getCODRbyId(reqId);
 		return codr.getNewDow().toString() + " " +
 				codr.getNewStartTime().toString() + " - " + codr.getNewEndTime().toString();

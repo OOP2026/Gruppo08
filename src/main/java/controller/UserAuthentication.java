@@ -1,25 +1,34 @@
 package controller;
 
+import java.sql.SQLException;
+import java.util.NoSuchElementException;
+
 import javax.security.sasl.AuthenticationException;
 
 import model.User;
 import dao.UserDao;
 
-public class UserAuthentication {
+public class UserAuthentication extends AbstractDaoService<UserDao> {
+	public UserAuthentication() {
+		super(UserDao.getInstance());
+	}
+
 	/**
+	 * Modifica "session" di SessionManager con l'utente identificato da
+	 * "identifier" se la password e' corretta.
+	 *
 	 * @param identifier puo' essere login o email di un User
 	 * @throws AuthenticationException
 	 */
 	public User login(String identifier, String password) throws AuthenticationException {
 		User u;
-		UserDao udao = UserDao.getInstance();
 
 		try {
 			if (identifier.contains("@"))
-				u = udao.getUserByEmail(identifier);
+				u = dao.getUserByEmail(identifier);
 			else
-				u = udao.getUserByLogin(identifier);
-		} catch (Exception e) {
+				u = dao.getUserByLogin(identifier);
+		} catch (NoSuchElementException e) {
 			throw new AuthenticationException("incorrect login/pswd");
 		}
 
@@ -38,10 +47,9 @@ public class UserAuthentication {
 	 */
 	public void register(int academicYear, String fname, String lname, String email, String login, String password)
 			throws AuthenticationException {
-		UserDao udao = UserDao.getInstance();
 		try {
-			udao.insertStudent(academicYear, fname, lname, email, login, password);
-		} catch (Exception e) {
+			dao.insertStudent(academicYear, fname, lname, email, login, password);
+		} catch (SQLException e) {
 			throw new AuthenticationException("unable to register");
 		}
 	}
@@ -49,15 +57,14 @@ public class UserAuthentication {
 	/**
 	 * Registra un docente
 	 * 
-	 * @param isCoordinator registra un docente coordinatore
+	 * @param isCoordinator se true registra un docente coordinatore
 	 * @throws AuthenticationException
 	 */
 	public void register(boolean isCoordinator, String fname, String lname, String email, String login, String password)
 			throws AuthenticationException {
-		UserDao udao = UserDao.getInstance();
 		try {
-			udao.insertTeacher(isCoordinator, fname, lname, email, login, password);
-		} catch (Exception e) {
+			dao.insertTeacher(isCoordinator, fname, lname, email, login, password);
+		} catch (SQLException e) {
 			throw new AuthenticationException("unable to register");
 		}
 	}
