@@ -5,7 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
-import daoImplementation.LecturePostgresDao;
+import dao.impl.LecturePostgresDao;
 import model.Lecture;
 
 public class LectureDao extends AbstractDao<Lecture, LecturePostgresDao, Integer> {
@@ -21,12 +21,12 @@ public class LectureDao extends AbstractDao<Lecture, LecturePostgresDao, Integer
 		return instance;
 	}
 
-	public List<Lecture> getAllByAcademicYear(int academicYear) throws SQLException {
+	public List<Lecture> getAllByAcademicYear(int academicYear) {
 		return sqldao.getAllByAcademicYear(academicYear);
 	}
 
 	public void insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
-			LocalTime endTime) throws SQLException {
+			LocalTime endTime) {
 		Lecture l = sqldao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 		inMem.add(l);
 	}
@@ -36,7 +36,7 @@ public class LectureDao extends AbstractDao<Lecture, LecturePostgresDao, Integer
 	}
 
 	public void changeLectureDate(int lectureId, DayOfWeek newDow,
-			LocalTime newStartTime, LocalTime newEndTime) throws SQLException {
+			LocalTime newStartTime, LocalTime newEndTime) {
 		Lecture l = getById(lectureId);
 
 		sqldao.updateLectureDate(lectureId, newDow, newStartTime, newEndTime);

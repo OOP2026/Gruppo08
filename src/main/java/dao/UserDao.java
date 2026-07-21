@@ -5,7 +5,7 @@ import model.User;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import daoImplementation.UserPostgresDao;
+import dao.impl.UserPostgresDao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

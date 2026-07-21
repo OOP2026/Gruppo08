@@ -17,11 +17,7 @@ public class TestController {
 		}
 
 		List<Lecture> lectures = new ArrayList<>();
-		try {
-			lectures = lService.getAllByTeacher(SessionManager.getInstance().getUserId());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		lectures = lService.getAllByTeacher(SessionManager.getInstance().getUserId());
 
 		for (Lecture l : lectures)
 			System.out.println(l.getId());

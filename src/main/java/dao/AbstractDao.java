@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import daoImplementation.AbstractSqldao;
+import dao.impl.AbstractSqldao;
 import model.Identifiable;
 
 /**
  * 
  * Classe astratta base di tutte le classi nel package dao
  *
- * @param <ENTITY> la classe che gestisce il dao
- * @param <SQLDAO> la classe del package daoImplementation che viene utilizzata
- *                 per ricavare i dati persistenti
- * @param <ID>     il tipo della chiave primaria dell'ENTITY
+ * @param <E> la classe che gestisce il dao
+ * @param <D> la classe del package dao.impl che viene utilizzata
+ *            per ricavare i dati persistenti
+ * @param <I> il tipo della chiave primaria dell'E
  */
-public abstract class AbstractDao<ENTITY extends Identifiable<ID>, SQLDAO extends AbstractSqldao<ENTITY, ID>, ID> {
-	protected final SQLDAO sqldao;
-	protected List<ENTITY> inMem;
+public abstract class AbstractDao<E extends Identifiable<I>, D extends AbstractSqldao<E, I>, I> {
+	protected final D sqldao;
+	protected List<E> inMem;
 
-	protected AbstractDao(SQLDAO sqldao) {
+	protected AbstractDao(D sqldao) {
 		this.sqldao = sqldao;
 		this.inMem = new ArrayList<>();
 	}
@@ -29,8 +29,8 @@ public abstract class AbstractDao<ENTITY extends Identifiable<ID>, SQLDAO extend
 	 * @param id chiave primaria dell'entita'
 	 * @return true se id e' presente in memory, false nel caso contrario
 	 */
-	protected boolean isIdInMem(ID id) {
-		for (ENTITY e : inMem) {
+	protected boolean isIdInMem(I id) {
+		for (E e : inMem) {
 			if (e.getId().equals(id))
 				return true;
 		}
@@ -39,11 +39,11 @@ public abstract class AbstractDao<ENTITY extends Identifiable<ID>, SQLDAO extend
 
 	/**
 	 * @param id chiave primaria dell'entita'
-	 * @return ENTITY che ha un match con l'id
+	 * @return E che ha un match con l'id
 	 * @throws NoSuchElementException se l'istanza non e' stata trovata
 	 */
-	protected ENTITY getByIdInMem(ID id) throws NoSuchElementException {
-		for (ENTITY e : inMem) {
+	protected E getByIdInMem(I id) throws NoSuchElementException {
+		for (E e : inMem) {
 			if (e.getId().equals(id))
 				return e;
 		}
@@ -52,21 +52,21 @@ public abstract class AbstractDao<ENTITY extends Identifiable<ID>, SQLDAO extend
 	}
 
 	/**
-	 * Restituisce una ENTITY dall'ID cercando prima in memory e,
+	 * Restituisce una E dall'I cercando prima in memory e,
 	 * successivamente, se il dato non e' presente, nel db.
 	 *
 	 * @throws NoSuchElementException se il dato non e' presente
 	 */
-	public ENTITY getById(ID id) throws NoSuchElementException {
+	public E getById(I id) throws NoSuchElementException {
 		if (isIdInMem(id)) {
 			try {
 				return getByIdInMem(id);
 			} catch (NoSuchElementException e) {
-				throw new IllegalStateException("memory corruption for ID: " + id, e);
+				throw new IllegalStateException("memory corruption for I: " + id, e);
 			}
 		}
 
-		ENTITY e = sqldao.getById(id);
+		E e = sqldao.getById(id);
 		inMem.add(e);
 		return e;
 	}

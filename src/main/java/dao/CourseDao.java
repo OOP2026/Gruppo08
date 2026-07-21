@@ -1,9 +1,8 @@
 package dao;
 
 import java.util.NoSuchElementException;
-import java.sql.SQLException;
 
-import daoImplementation.CoursePostgresDao;
+import dao.impl.CoursePostgresDao;
 import model.Course;
 
 public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
@@ -39,9 +38,9 @@ public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
 		if (isNameNYearInMem(name, academicYear)) {
 			try {
 				return getCourseByNameNYearInMem(name, academicYear);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
+			} catch (NoSuchElementException e) {
+				throw new IllegalStateException(
+						"Memory corruption on method call getByNameNYear(" + name + "," + academicYear + ")", e);
 			}
 		}
 
@@ -50,11 +49,8 @@ public class CourseDao extends AbstractDao<Course, CoursePostgresDao, Integer> {
 		return c;
 	}
 
-	public void insertCourse(int teacherUid, String name, int cfu, int academicYear, boolean isActive)
-			throws SQLException {
-
+	public void insertCourse(int teacherUid, String name, int cfu, int academicYear, boolean isActive) {
 		Course c = sqldao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
 		inMem.add(c);
-
 	}
 }

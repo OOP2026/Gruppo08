@@ -1,4 +1,4 @@
-package daoImplementation;
+package dao.impl;
 
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.ArrayList;
 import dao.ClassroomDao;
 import dao.CourseDao;
-import daoImplementation.exception.DataInsertionException;
-import daoImplementation.exception.DataRetrievalException;
-import daoImplementation.exception.DataUpdateException;
+import dao.impl.exception.DataInsertionException;
+import dao.impl.exception.DataRetrievalException;
+import dao.impl.exception.DataUpdateException;
 import model.Lecture;
 import model.Classroom;
 import model.Course;
@@ -34,7 +34,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 	public Lecture getById(Integer lectureId) throws NoSuchElementException {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, lectureId);
@@ -57,7 +57,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 		List<Lecture> lectures = new ArrayList<>();
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, academicYear);
@@ -82,7 +82,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 		List<Lecture> lectures = new ArrayList<>();
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, teacherUid);
@@ -109,7 +109,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 		int newLectureId = -1;
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			ps.setInt(1, courseId);
@@ -139,7 +139,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 	public void updateLectureDate(int lectureId, DayOfWeek newDow, LocalTime newStartTime, LocalTime newEndTime) {
 		final String sql = "UPDATE lecture SET dayofweek = ?::dow, start_time = ?::time, end_time = ?::time WHERE lecture_id = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, newDow.name());

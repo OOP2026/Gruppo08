@@ -3,7 +3,7 @@ package dao;
 import java.sql.SQLException;
 
 import model.Classroom;
-import daoImplementation.ClassroomPostgresDao;
+import dao.impl.ClassroomPostgresDao;
 
 public class ClassroomDao extends AbstractDao<Classroom, ClassroomPostgresDao, String> {
 	private static ClassroomDao instance;

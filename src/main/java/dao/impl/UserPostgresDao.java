@@ -1,10 +1,10 @@
-package daoImplementation;
+package dao.impl;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import daoImplementation.exception.DataInsertionException;
-import daoImplementation.exception.DataRetrievalException;
+import dao.impl.exception.DataInsertionException;
+import dao.impl.exception.DataRetrievalException;
 import model.Student;
 import model.Teacher;
 import model.User;
@@ -38,7 +38,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getById(Integer userId) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, userId);
@@ -59,7 +59,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getUserByLogin(String login) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.login = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, login);
@@ -80,7 +80,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 	public User getUserByEmail(String email) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.email = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, email);
@@ -104,7 +104,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		Connection con;
 
 		try {
-			con = databaseConnection.DbConnection.getCon();
+			con = dbconnection.DbConnection.getCon();
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unable to establish connection", e);
 		}
@@ -155,15 +155,10 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 			return new Student(newStudentId, academicYear, newUserId, fname, lname, email, login, password);
 
 		} catch (SQLException e) {
-			if (con != null) {
-				con.rollback();
-			}
+			con.rollback();
 			throw e;
 		} finally {
-			if (con != null) {
-				con.setAutoCommit(true);
-			}
-
+			con.setAutoCommit(true);
 			con.close();
 		}
 	}
@@ -174,7 +169,7 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		Connection con;
 
 		try {
-			con = databaseConnection.DbConnection.getCon();
+			con = dbconnection.DbConnection.getCon();
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unable to establish connection", e);
 		}
@@ -216,15 +211,10 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 			return new Teacher(isCoordinator, newUserId, fname, lname, email, login, password);
 
 		} catch (SQLException e) {
-			if (con != null) {
-				con.rollback();
-			}
+			con.rollback();
 			throw e;
 		} finally {
-			if (con != null) {
-				con.setAutoCommit(true);
-			}
-
+			con.setAutoCommit(true);
 			con.close();
 		}
 	}

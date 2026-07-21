@@ -1,4 +1,4 @@
-package daoImplementation.exception;
+package dao.impl.exception;
 
 public class DataUpdateException extends RuntimeException {
 	public DataUpdateException(String message) {

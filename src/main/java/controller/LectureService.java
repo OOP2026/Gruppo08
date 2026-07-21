@@ -21,20 +21,14 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 	 * Crea una lezione interfacciandosi al DB e al dao in memory.
 	 *
 	 * @throws UnauthorizedException se l'utente non e' coordinatore
-	 * @throws DatabaseException     se il db fallisce
 	 */
 	public void makeLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
 			LocalTime endTime) {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		try {
-			dao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
-		} catch (SQLException e) {
-			throw new DatabaseException(
-					"unable to insert lecture " + courseId + classroomName + dayofweek + startTime + endTime, e);
-		}
 
+		dao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 	}
 
 	/**
@@ -46,12 +40,7 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 	 */
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws IllegalStateException {
 		List<Lecture> lectures;
-		try {
-			lectures = dao.getAllByAcademicYear(academicYear);
-		} catch (SQLException e) {
-			throw new IllegalStateException(
-					"Unexpected error while retrieving lectures for academic year: " + academicYear);
-		}
+		lectures = dao.getAllByAcademicYear(academicYear);
 
 		if (lectures == null || lectures.isEmpty())
 			throw new IllegalStateException("No lectures were found for academic year: " + academicYear);
@@ -104,18 +93,14 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		try {
-			dao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
-		} catch (SQLException e) {
-			throw new DatabaseException("unable to update lecture with id " + lectureId, e);
-		}
+
+		dao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
 	}
 
 	public String[] getCols() {
-		final String[] cols = { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
+		return new String[] { "Orario", DayOfWeek.MONDAY.toString(), DayOfWeek.TUESDAY.toString(),
 				DayOfWeek.WEDNESDAY.toString(), DayOfWeek.THURSDAY.toString(), DayOfWeek.FRIDAY.toString(),
 				DayOfWeek.SATURDAY.toString() };
-		return cols;
 	}
 
 	/**

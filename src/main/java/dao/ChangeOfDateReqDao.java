@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import controller.exception.DatabaseException;
-import daoImplementation.ChangeOfDateReqPostgresDao;
+import dao.impl.ChangeOfDateReqPostgresDao;
 
 import java.sql.SQLException;
 import java.time.DayOfWeek;
@@ -42,7 +42,7 @@ public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDat
 	/**
 	 * Inserisce una ChangeOfDateReq in memory e nel db
 	 * 
-	 * @throws daoImplementation.exception.DataInsertionException
+	 * @throws dao.impl.exception.DataInsertionException
 	 */
 	public void insertCodReq(int askingTeacherUid, int lectureId, DayOfWeek newDow,
 			LocalTime newStartTime, LocalTime newEndTime) {

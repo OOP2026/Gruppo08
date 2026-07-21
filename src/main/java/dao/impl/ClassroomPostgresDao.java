@@ -1,10 +1,10 @@
-package daoImplementation;
+package dao.impl;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import daoImplementation.exception.DataInsertionException;
-import daoImplementation.exception.DataRetrievalException;
+import dao.impl.exception.DataInsertionException;
+import dao.impl.exception.DataRetrievalException;
 import model.Classroom;
 
 public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
@@ -12,7 +12,7 @@ public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
 	public Classroom getById(String name) throws NoSuchElementException {
 		final String sql = "SELECT name FROM classroom WHERE name = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, name);
@@ -33,7 +33,7 @@ public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
 	public Classroom insertClassroom(String name) throws SQLException {
 		final String sql = "INSERT INTO classroom(name) VALUES (?)";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, name);
 			ps.executeUpdate();

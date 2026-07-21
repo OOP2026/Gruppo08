@@ -1,4 +1,4 @@
-package daoImplementation.exception;
+package dao.impl.exception;
 
 public class DataRetrievalException extends RuntimeException {
 	public DataRetrievalException(String message) {

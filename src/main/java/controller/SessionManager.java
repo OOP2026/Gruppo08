@@ -8,7 +8,7 @@ import model.Teacher;
 public class SessionManager {
 	private static SessionManager instance;
 
-	private User session;
+	private User session = null;
 	private UserRole role;
 
 	private SessionManager() {
@@ -81,6 +81,8 @@ public class SessionManager {
 	}
 
 	public int getUserId() {
+		if (session == null)
+			throw new IllegalStateException("Trying to retrieve user id of session = null");
 		return session.getId();
 	}
 

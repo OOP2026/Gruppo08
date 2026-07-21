@@ -1,12 +1,12 @@
-package daoImplementation;
+package dao.impl;
 
 import model.Course;
 import java.util.NoSuchElementException;
 import java.sql.*;
 
 import dao.UserDao;
-import daoImplementation.exception.DataInsertionException;
-import daoImplementation.exception.DataRetrievalException;
+import dao.impl.exception.DataInsertionException;
+import dao.impl.exception.DataRetrievalException;
 import model.Teacher;
 
 public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
@@ -26,7 +26,7 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 	public Course getById(Integer courseId) throws NoSuchElementException {
 		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE course_id = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, courseId);
@@ -47,7 +47,7 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 	public Course getByNameNYear(String name, int academicYear) {
 		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE name = ? AND academic_year = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, name);
@@ -71,7 +71,7 @@ public class CoursePostgresDao extends AbstractSqldao<Course, Integer> {
 
 		int newCourseId = -1;
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setInt(1, teacherUid);
 			ps.setString(2, name);

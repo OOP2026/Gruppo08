@@ -1,4 +1,4 @@
-package daoImplementation;
+package dao.impl;
 
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -13,9 +13,9 @@ import model.RequestStatus;
 import model.Teacher;
 import dao.LectureDao;
 import dao.UserDao;
-import daoImplementation.exception.DataInsertionException;
-import daoImplementation.exception.DataRetrievalException;
-import daoImplementation.exception.DataUpdateException;
+import dao.impl.exception.DataInsertionException;
+import dao.impl.exception.DataRetrievalException;
+import dao.impl.exception.DataUpdateException;
 
 public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, Integer> {
 	private ChangeOfDateReq mapRsToCodReq(ResultSet rs) throws SQLException {
@@ -43,7 +43,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 	public ChangeOfDateReq getById(Integer reqId) throws NoSuchElementException {
 		final String sql = "SELECT req_id, asking_teacher_id, reviewing_coord_id, lecture_id, new_dayofweek, new_start_time, new_end_time, status FROM change_of_date_req WHERE req_id = ?";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, reqId);
@@ -66,7 +66,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 
 		List<ChangeOfDateReq> codrs = new ArrayList<>();
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				Statement s = con.createStatement()) {
 
 			try (ResultSet rs = s.executeQuery(sql)) {
@@ -92,7 +92,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 		RequestStatus newStatus = RequestStatus.WAITING;
 		Teacher newReviewingCoord = null;
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql,
 						Statement.RETURN_GENERATED_KEYS)) {
 			ps.setInt(1, askingTeacherUid);
@@ -122,7 +122,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 			throws SQLException {
 		final String sql = "UPDATE change_of_date_req SET reviewing_coord_id = ?, status = ?::request_status WHERE req_id = ?;";
 
-		try (Connection con = databaseConnection.DbConnection.getCon();
+		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, reviewingCoordId);
 			ps.setString(2, status.name());

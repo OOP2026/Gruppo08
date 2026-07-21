@@ -1,4 +1,4 @@
-package daoImplementation.exception;
+package dao.impl.exception;
 
 public class DataInsertionException extends RuntimeException {
 	public DataInsertionException(String message) {

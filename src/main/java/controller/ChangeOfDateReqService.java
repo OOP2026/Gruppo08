@@ -1,6 +1,5 @@
 package controller;
 
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import controller.exception.UnauthorizedException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
 import dao.LectureDao;
-import daoImplementation.exception.DataInsertionException;
+import dao.impl.exception.DataInsertionException;
 import model.ChangeOfDateReq;
 import model.Lecture;
 
@@ -64,13 +63,8 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		ChangeOfDateReq codr = ChangeOfDateReqDao.getInstance().getById(reqId);
 
 		// TODO: dependency nel class diagram verso lectureDao
-		try {
-			LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
+		LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
 					codr.getNewStartTime(), codr.getNewEndTime());
-		} catch (SQLException e) {
-			throw new DatabaseException("Unexpected error occurred on call of changeLectureDate in changeStatusOfCODR",
-					e);
-		}
 	}
 
 	/**
