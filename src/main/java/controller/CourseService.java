@@ -4,8 +4,10 @@ import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.CourseDao;
 
-public class CourseService {
-	private final CourseDao cdao = CourseDao.getInstance();
+public class CourseService extends AbstractDaoService<CourseDao> {
+	public CourseService() {
+		super(CourseDao.getInstance());
+	}
 
 	/**
 	 * Metodo per creare un corso di insegnamento
@@ -17,7 +19,7 @@ public class CourseService {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		cdao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
+		dao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
 	}
 
 }

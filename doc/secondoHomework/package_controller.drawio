@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
-    <mxGraphModel dx="1653" dy="1880" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2321" dy="1924" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -123,6 +123,53 @@
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint x="370" y="198" as="sourcePoint" />
             <mxPoint x="502" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-1" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;i&gt;AbstractDaoService&lt;/i&gt;&amp;lt;D&amp;gt;" vertex="1">
+          <mxGeometry height="60" width="160" x="280" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-2" parent="-WEIC0djAgPYQW1XVo1U-1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-3" parent="-WEIC0djAgPYQW1XVo1U-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="# dao: D" vertex="1">
+          <mxGeometry height="26" width="160" y="34" as="geometry" />
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-5" edge="1" parent="1" source="c3OOQRYHgm3irvs4XgnJ-13" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" target="-WEIC0djAgPYQW1XVo1U-1" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="340" y="270" as="sourcePoint" />
+            <mxPoint x="500" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-6" edge="1" parent="1" source="c3OOQRYHgm3irvs4XgnJ-71" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="-WEIC0djAgPYQW1XVo1U-1" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="-24" />
+              <mxPoint x="810" y="500" />
+            </Array>
+            <mxPoint x="580" y="420" as="sourcePoint" />
+            <mxPoint x="696" y="501" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-7" edge="1" parent="1" source="c3OOQRYHgm3irvs4XgnJ-31" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" target="-WEIC0djAgPYQW1XVo1U-1" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="430" y="450" as="sourcePoint" />
+            <mxPoint x="546" y="531" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-8" edge="1" parent="1" source="c3OOQRYHgm3irvs4XgnJ-5" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" target="-WEIC0djAgPYQW1XVo1U-1" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="320" y="440" as="sourcePoint" />
+            <mxPoint x="436" y="521" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-WEIC0djAgPYQW1XVo1U-9" edge="1" parent="1" source="c3OOQRYHgm3irvs4XgnJ-17" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="-WEIC0djAgPYQW1XVo1U-1" value="Extends">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <Array as="points">
+              <mxPoint x="-50" y="130" />
+              <mxPoint x="-50" y="500" />
+            </Array>
+            <mxPoint x="990" y="470" as="sourcePoint" />
+            <mxPoint x="670" y="994" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>

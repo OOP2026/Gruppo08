@@ -1,6 +1,10 @@
 CREATE USER exam WITH PASSWORD 'exam';
 CREATE DATABASE exam OWNER exam;
 
+CREATE DOMAIN year_of_study AS integer CHECK (VALUE IN (1, 2, 3));
+
+CREATE TYPE dow AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY');
+
 CREATE TABLE app_user (
 	user_id serial PRIMARY KEY, 
 	fname varchar(64) NOT NULL,
@@ -13,7 +17,7 @@ CREATE TABLE app_user (
 CREATE TABLE student (
 	user_id integer PRIMARY KEY,
 	student_id serial UNIQUE NOT NULL,
-	academic_year integer NOT NULL,
+	academic_year year_of_study NOT NULL,
 
 	FOREIGN KEY (user_id) REFERENCES app_user(user_id) 
 	ON DELETE CASCADE ON UPDATE CASCADE
@@ -32,7 +36,7 @@ CREATE TABLE course (
 	teacher_uid integer NOT NULL REFERENCES teacher(user_id),
 	name varchar(64) NOT NULL,
 	cfu integer NOT NULL,
-	academic_year integer NOT NULL,
+	academic_year year_of_study NOT NULL,
 	is_active boolean NOT NULL DEFAULT false,
 	UNIQUE(name, academic_year),
 	CONSTRAINT chk_cfu CHECK (cfu > 0)
@@ -41,8 +45,6 @@ CREATE TABLE course (
 CREATE TABLE classroom (
 	name varchar(16) PRIMARY KEY
 );
-
-CREATE TYPE dow AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY');
 
 CREATE TABLE lecture (
 	lecture_id serial PRIMARY KEY,
@@ -113,8 +115,8 @@ BEGIN
 		FROM lecture
 		WHERE classroom_name = new.classroom_name
 		AND dayofweek = new.dayofweek
-		AND (TG_OP = 'INSERT' OR lecture_id <> new.lecture_id) -- Fix Update
-		AND (new.start_time < end_time AND new.end_time > start_time) -- Fix Overlap Temporale
+		AND (TG_OP = 'INSERT' OR lecture_id <> new.lecture_id) 
+		AND (new.start_time < end_time AND new.end_time > start_time) 
 	) THEN
 		RAISE EXCEPTION 'classroom is already busy on % %-%', new.dayofweek, new.start_time, new.end_time;
 	END IF;

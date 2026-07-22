@@ -9,11 +9,10 @@ public class Classroom implements Identifiable<String> {
 
 	@Override
 	public String getId() {
-		return name;
+		return getName();
 	}
 
-	@Deprecated
 	public String getName() {
-		return getId();
+		return name;
 	}
 }
