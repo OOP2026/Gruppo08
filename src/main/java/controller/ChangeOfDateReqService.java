@@ -3,8 +3,6 @@ package controller;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 
@@ -51,11 +49,7 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		try {
-			dao.changeStatusOfCODR(SessionManager.getInstance().getUserId(), reqId, isApproved);
-		} catch (NoSuchElementException e) {
-			throw new DatabaseException("unable to set status of change of date request with id " + reqId, e);
-		}
+		dao.changeStatusOfCODR(SessionManager.getInstance().getUserId(), reqId, isApproved);
 
 		if (!isApproved)
 			return;

@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.SQLException;
-
 import model.Classroom;
 import dao.impl.ClassroomPostgresDao;
 
@@ -18,7 +16,7 @@ public class ClassroomDao extends AbstractDao<Classroom, ClassroomPostgresDao, S
 		return instance;
 	}
 
-	public void insertClassroom(String name) throws SQLException {
+	public void insertClassroom(String name) {
 		Classroom c = sqldao.insertClassroom(name);
 		inMem.add(c);
 	}

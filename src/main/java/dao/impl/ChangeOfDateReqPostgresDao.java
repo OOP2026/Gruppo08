@@ -118,8 +118,7 @@ public class ChangeOfDateReqPostgresDao extends AbstractSqldao<ChangeOfDateReq, 
 				LectureDao.getInstance().getById(lectureId), newDow, newStartTime, newEndTime, newStatus);
 	}
 
-	public void changeStatusOfCODR(int reviewingCoordId, int reqId, RequestStatus status)
-			throws SQLException {
+	public void changeStatusOfCODR(int reviewingCoordId, int reqId, RequestStatus status) {
 		final String sql = "UPDATE change_of_date_req SET reviewing_coord_id = ?, status = ?::request_status WHERE req_id = ?;";
 
 		try (Connection con = dbconnection.DbConnection.getCon();

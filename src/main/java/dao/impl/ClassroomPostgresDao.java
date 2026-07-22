@@ -30,7 +30,7 @@ public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
 		throw new NoSuchElementException("Classroom with name " + name + " not found");
 	}
 
-	public Classroom insertClassroom(String name) throws SQLException {
+	public Classroom insertClassroom(String name) {
 		final String sql = "INSERT INTO classroom(name) VALUES (?)";
 
 		try (Connection con = dbconnection.DbConnection.getCon();

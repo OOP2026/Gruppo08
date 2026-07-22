@@ -32,7 +32,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 	@Override
 	public Lecture getById(Integer lectureId) throws NoSuchElementException {
-		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
+		final String sql = "SELECT lecture_id, course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
 
 		try (Connection con = dbconnection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
@@ -77,7 +77,7 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 		return lectures;
 	}
 
-	public List<Lecture> getAllByTeacher(int teacherUid) throws SQLException {
+	public List<Lecture> getAllByTeacher(int teacherUid) {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON l.course_id = c.course_id WHERE teacher_uid = ?";
 
 		List<Lecture> lectures = new ArrayList<>();

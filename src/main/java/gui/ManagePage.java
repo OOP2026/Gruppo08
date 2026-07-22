@@ -26,7 +26,6 @@ public class ManagePage {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        populateRequests();
 
         indietroButton.addActionListener(new ActionListener() {
             @Override
@@ -35,6 +34,7 @@ public class ManagePage {
                 frame.dispose();
             }
         });
+        populateRequests();
 
         rifiutaButton.addActionListener(new ActionListener() {
             @Override
@@ -80,6 +80,8 @@ public class ManagePage {
             JOptionPane.showMessageDialog(frame, ue.getMessage());
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle richieste.");
+        } catch (DatabaseException e) {
+            JOptionPane.showMessageDialog(frame, "impossibile recuperare le richieste di spostamento");
         }
     }
 

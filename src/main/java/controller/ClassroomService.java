@@ -1,10 +1,9 @@
 package controller;
 
-import java.sql.SQLException;
-
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.ClassroomDao;
+import dao.impl.exception.DataInsertionException;
 
 public class ClassroomService extends AbstractDaoService<ClassroomDao> {
 	public ClassroomService() {
@@ -21,7 +20,7 @@ public class ClassroomService extends AbstractDaoService<ClassroomDao> {
 
 		try {
 			dao.insertClassroom(name);
-		} catch (SQLException e) {
+		} catch (DataInsertionException e) {
 			throw new DatabaseException("unable to insert classroom with name " + name, e);
 		}
 	}

@@ -1,6 +1,5 @@
 package dao;
 
-import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
@@ -31,7 +30,7 @@ public class LectureDao extends AbstractDao<Lecture, LecturePostgresDao, Integer
 		inMem.add(l);
 	}
 
-	public List<Lecture> getAllByTeacher(int teacherUid) throws SQLException {
+	public List<Lecture> getAllByTeacher(int teacherUid) {
 		return sqldao.getAllByTeacher(teacherUid);
 	}
 

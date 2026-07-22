@@ -10,6 +10,7 @@ import java.util.List;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.LectureDao;
+import dao.impl.exception.DataRetrievalException;
 import model.Lecture;
 
 public class LectureService extends AbstractDaoService<LectureDao> {
@@ -54,13 +55,16 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 	 * @throws DatabaseException se il db fallisce
 	 */
 	public List<Lecture> getAllByTeacher(int teacherUid) {
-		List<Lecture> lectures = new ArrayList<>();
+		List<Lecture> lectures = null;
 
 		try {
 			lectures = dao.getAllByTeacher(teacherUid);
-		} catch (SQLException e) {
+		} catch (DataRetrievalException e) {
 			throw new DatabaseException("Unable to retrieve lectures of teacher with uid: " + teacherUid, e);
 		}
+
+		if (lectures == null)
+			return new ArrayList<>();
 
 		return lectures;
 	}

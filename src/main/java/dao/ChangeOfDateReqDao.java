@@ -1,15 +1,11 @@
 package dao;
 
+import dao.impl.exception.DataUpdateException;
 import model.ChangeOfDateReq;
 import model.RequestStatus;
-
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import controller.exception.DatabaseException;
 import dao.impl.ChangeOfDateReqPostgresDao;
-
-import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
@@ -58,9 +54,9 @@ public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDat
 	 * @param reqId            id della richiesta da modificare
 	 * @param isApproved       se true RequestStatus.APPROVED altrimenti
 	 *                         RequestStatus.REJECTED.
-	 * @throws NoSuchElementException
+	 * @throws DatabaseException
 	 */
-	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved) throws NoSuchElementException {
+	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved) {
 		RequestStatus status = isApproved ? RequestStatus.APPROVED : RequestStatus.REJECTED;
 
 		ChangeOfDateReq c = getById(reqId);
@@ -69,7 +65,7 @@ public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDat
 
 		try {
 			sqldao.changeStatusOfCODR(reviewingCoordId, reqId, status);
-		} catch (SQLException e) {
+		} catch (DataUpdateException e) {
 			throw new DatabaseException("unexpected error occured during call of method: changeStatusOfCODR", e);
 		}
 	}
