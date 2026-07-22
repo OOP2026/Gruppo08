@@ -62,7 +62,6 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 
 		ChangeOfDateReq codr = ChangeOfDateReqDao.getInstance().getById(reqId);
 
-		// TODO: dependency nel class diagram verso lectureDao
 		LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
 					codr.getNewStartTime(), codr.getNewEndTime());
 	}
