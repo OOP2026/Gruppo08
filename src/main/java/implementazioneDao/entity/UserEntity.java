@@ -1,7 +1,7 @@
-package dao.dto;
+package implementazioneDao.entity;
 
-public class UserDTO implements IdentifiableDTO<Integer> {
-	public UserDTO(
+public class UserEntity implements IdentifiableEntity<Integer> {
+	public UserEntity(
 			int user_id,
 			String fname,
 			String lname,

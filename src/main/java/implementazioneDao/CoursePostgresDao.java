@@ -1,14 +1,16 @@
 package implementazioneDao;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.sql.*;
-import dao.dto.CourseDTO;
+import implementazioneDao.entity.CourseEntity;
 import implementazioneDao.exception.DataInsertionException;
 import implementazioneDao.exception.DataRetrievalException;
 import dao.CourseDao;
 
 public class CoursePostgresDao implements CourseDao {
-	private CourseDTO mapRsToCourse(ResultSet rs) throws SQLException {
+	private CourseEntity mapRsToCourse(ResultSet rs) throws SQLException {
 		int courseId = rs.getInt("course_id");
 		int teacherUid = rs.getInt("teacher_uid");
 		String name = rs.getString("name");
@@ -16,11 +18,11 @@ public class CoursePostgresDao implements CourseDao {
 		int academicYear = rs.getInt("academic_year");
 		boolean isActive = rs.getBoolean("is_active");
 
-		return new CourseDTO(courseId, teacherUid, name, cfu, academicYear, isActive);
+		return new CourseEntity(courseId, teacherUid, name, cfu, academicYear, isActive);
 	}
 
 	@Override
-	public CourseDTO getById(Integer courseId) throws NoSuchElementException {
+	public CourseEntity getById(Integer courseId) throws NoSuchElementException {
 		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE course_id = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
@@ -42,7 +44,7 @@ public class CoursePostgresDao implements CourseDao {
 	}
 
 	@Override
-	public CourseDTO getByNameNYear(String name, int academicYear) {
+	public CourseEntity getByNameNYear(String name, int academicYear) {
 		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE name = ? AND academic_year = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
@@ -80,5 +82,26 @@ public class CoursePostgresDao implements CourseDao {
 			throw new DataInsertionException("Unexpected error during course insertion", e);
 		}
 
+	}
+
+	@Override
+	public List<CourseEntity> getAllActiveCourses() {
+		final String sql = "SELECT course_id, teacher_uid, name, cfu, academic_year, is_active FROM course WHERE is_active = true";
+
+		List<CourseEntity> courses = new ArrayList<>();
+
+		try (Connection con = database_connection.DbConnection.getCon();
+				Statement s = con.createStatement();
+				ResultSet rs = s.executeQuery(sql)) {
+
+			while (rs.next()) {
+				courses.add(mapRsToCourse(rs));
+			}
+
+		} catch (SQLException e) {
+			throw new DataRetrievalException("Unexpected error during retrieval of all teachers", e);
+		}
+
+		return courses;
 	}
 }

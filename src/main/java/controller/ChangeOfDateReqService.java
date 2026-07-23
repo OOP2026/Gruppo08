@@ -3,20 +3,41 @@ package controller;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import controller.cache.ChangeOfDateReqCache;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
-import dao.LectureDao;
 import implementazioneDao.exception.DataInsertionException;
 import model.ChangeOfDateReq;
 import model.Lecture;
-
+import model.RequestStatus;
+import model.Teacher;
 import implementazioneDao.ChangeOfDateReqPostgresDao;
+import implementazioneDao.entity.ChangeOfDateReqEntity;
 
-public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDao> {
+public class ChangeOfDateReqService
+		extends AbstractDaoService<ChangeOfDateReq, ChangeOfDateReqEntity, Integer, ChangeOfDateReqDao> {
 	public ChangeOfDateReqService() {
 		super(new ChangeOfDateReqPostgresDao());
+	}
+
+	@Override
+	protected ChangeOfDateReq mapEntityToModel(ChangeOfDateReqEntity e) {
+		UserAuthentication uauth = new UserAuthentication();
+		Teacher askingTeacher = (Teacher) uauth.getById(e.getAskingTeacherUid());
+		Teacher reviewingCoord = (Teacher) uauth.getById(e.getReviewingCoordUid());
+		LectureService lService = new LectureService();
+		Lecture lecture = lService.getById(e.getLectureId());
+		return new ChangeOfDateReq(e.getId(), askingTeacher, reviewingCoord, lecture, e.getNewDow(),
+				e.getNewStartTime(), e.getNewEndTime(),
+				RequestStatus.valueOf(e.getUnformattedStatus()));
+	}
+
+	@Override
+	public ChangeOfDateReq getById(Integer id) {
+		return mapEntityToModel(ChangeOfDateReqCache.getInstance().getById(id));
 	}
 
 	/**
@@ -55,10 +76,10 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		if (!isApproved)
 			return;
 
-		// TODO:
-		ChangeOfDateReq codr = dao.getById(reqId);
+		ChangeOfDateReq codr = getById(reqId);
 
-		LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
+		LectureService ls = new LectureService();
+		ls.changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
 				codr.getNewStartTime(), codr.getNewEndTime());
 	}
 
@@ -71,31 +92,29 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("getWaitingCODRInfo() is restricted to coordinators only");
 
-		List<ChangeOfDateReq> codrs;
+		List<ChangeOfDateReqEntity> codrsEntity;
 
-		codrs = dao.getAllWaiting();
+		codrsEntity = dao.getAllWaiting();
 
 		List<String> codrInfo = new ArrayList<>();
-		for (ChangeOfDateReq codr : codrs) {
+		for (ChangeOfDateReqEntity codrEntity : codrsEntity) {
+
+			ChangeOfDateReq codr = mapEntityToModel(codrEntity);
 			codrInfo.add(codr.getId() + " Professore: " +
 					codr.getAskingTeacher().getFname() + " " + codr.getAskingTeacher().getLname());
 		}
 		return codrInfo;
 	}
 
-	public ChangeOfDateReq getCODRbyId(int reqId) throws UnauthorizedException {
-		if (!SessionManager.getInstance().isCoordinator())
-			throw new UnauthorizedException("getCODRbyId() is restricted to coordinators only");
-		return dao.getById(reqId);
-	}
-
 	public String getCODROldTimeAndDate(int reqId) throws UnauthorizedException {
-		Lecture lecture = LectureDao.getInstance().getById(getCODRbyId(reqId).getLecture().getId());
+		int lectureId = getById(reqId).getLecture().getId();
+		LectureService lService = new LectureService();
+		Lecture lecture = lService.getById(lectureId);
 		return lecture.getDayofweek().toString() + " " + lecture.getTimeInterval();
 	}
 
 	public String getCODRNewTimeAndDate(int reqId) throws UnauthorizedException {
-		ChangeOfDateReq codr = getCODRbyId(reqId);
+		ChangeOfDateReq codr = getById(reqId);
 		return codr.getNewDow().toString() + " " +
 				codr.getNewStartTime().toString() + " - " + codr.getNewEndTime().toString();
 	}

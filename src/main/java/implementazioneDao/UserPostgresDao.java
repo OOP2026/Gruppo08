@@ -1,17 +1,20 @@
 package implementazioneDao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import dao.UserDao;
-import dao.dto.StudentDTO;
-import dao.dto.TeacherDTO;
-import dao.dto.UserDTO;
+import implementazioneDao.entity.StudentEntity;
+import implementazioneDao.entity.TeacherEntity;
+import implementazioneDao.entity.UserEntity;
 import implementazioneDao.exception.DataInsertionException;
 import implementazioneDao.exception.DataRetrievalException;
 
 public class UserPostgresDao implements UserDao {
-	private UserDTO mapRowToUser(ResultSet rs) throws SQLException {
+
+	private UserEntity mapRowToUser(ResultSet rs) throws SQLException {
 		int userId = rs.getInt("user_id");
 		String fname = rs.getString("fname");
 		String lname = rs.getString("lname");
@@ -23,25 +26,29 @@ public class UserPostgresDao implements UserDao {
 		int studentId = rs.getInt("student_id");
 		if (!rs.wasNull()) {
 			int academicYear = rs.getInt("academic_year");
-			return new StudentDTO(userId, fname, lname, email, login, password, studentId,
-					academicYear);
+			return new StudentEntity(userId, fname, lname, email, login, password, studentId, academicYear);
 		}
 
-		// analogo per teacher
+		// Controlla se l'utente ha i dati da docente
 		boolean isCoordinator = rs.getBoolean("is_coordinator");
 		if (!rs.wasNull()) {
-			return new TeacherDTO(userId, fname, lname, email, login, password, isCoordinator);
+			return new TeacherEntity(userId, fname, lname, email, login, password, isCoordinator);
 		}
 
 		throw new IllegalStateException("User " + userId + " is neither a student nor a teacher.");
 	}
 
 	@Override
-	public UserDTO getById(Integer userId) {
-		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
+	public UserEntity getById(Integer userId) {
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, " +
+				"s.student_id, s.academic_year, t.is_coordinator " +
+				"FROM app_user u " +
+				"LEFT JOIN student s ON u.user_id = s.user_id " +
+				"LEFT JOIN teacher t ON u.user_id = t.user_id " +
+				"WHERE u.user_id = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		     PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, userId);
 
@@ -59,11 +66,16 @@ public class UserPostgresDao implements UserDao {
 	}
 
 	@Override
-	public UserDTO getUserByLogin(String login) {
-		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.login = ?";
+	public UserEntity getUserByLogin(String login) {
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, " +
+				"s.student_id, s.academic_year, t.is_coordinator " +
+				"FROM app_user u " +
+				"LEFT JOIN student s ON u.user_id = s.user_id " +
+				"LEFT JOIN teacher t ON u.user_id = t.user_id " +
+				"WHERE u.login = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		     PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, login);
 
@@ -81,11 +93,16 @@ public class UserPostgresDao implements UserDao {
 	}
 
 	@Override
-	public UserDTO getUserByEmail(String email) {
-		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.email = ?";
+	public UserEntity getUserByEmail(String email) {
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, " +
+				"s.student_id, s.academic_year, t.is_coordinator " +
+				"FROM app_user u " +
+				"LEFT JOIN student s ON u.user_id = s.user_id " +
+				"LEFT JOIN teacher t ON u.user_id = t.user_id " +
+				"WHERE u.email = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		     PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, email);
 
@@ -104,10 +121,9 @@ public class UserPostgresDao implements UserDao {
 
 	@Override
 	public void insertStudent(int academicYear, String fname, String lname, String email,
-			String login, String password) throws SQLException {
+	                          String login, String password) throws SQLException {
 
 		Connection con;
-
 		try {
 			con = database_connection.DbConnection.getCon();
 		} catch (SQLException e) {
@@ -117,13 +133,10 @@ public class UserPostgresDao implements UserDao {
 		final String usql = "INSERT INTO app_user(fname, lname, email, login, password) VALUES (?, ?, ?, ?, ?)";
 		final String ssql = "INSERT INTO student(user_id, academic_year) VALUES (?, ?)";
 
-		int newUserId = -1;
-
 		try {
 			con.setAutoCommit(false);
+			int newUserId;
 
-			// Uso RETURN_GENERATED_KEYS di Postgres per ottenere subito l'ID
-			// senza dover fare una query di select alla fine.
 			try (PreparedStatement psUser = con.prepareStatement(usql, Statement.RETURN_GENERATED_KEYS)) {
 				psUser.setString(1, fname);
 				psUser.setString(2, lname);
@@ -131,9 +144,17 @@ public class UserPostgresDao implements UserDao {
 				psUser.setString(4, login);
 				psUser.setString(5, password);
 				psUser.executeUpdate();
+
+				try (ResultSet rs = psUser.getGeneratedKeys()) {
+					if (rs.next()) {
+						newUserId = rs.getInt(1);
+					} else {
+						throw new SQLException("Inserimento utente fallito, nessun ID generato.");
+					}
+				}
 			}
 
-			try (PreparedStatement psStudent = con.prepareStatement(ssql, Statement.RETURN_GENERATED_KEYS)) {
+			try (PreparedStatement psStudent = con.prepareStatement(ssql)) {
 				psStudent.setInt(1, newUserId);
 				psStudent.setInt(2, academicYear);
 				psStudent.executeUpdate();
@@ -152,10 +173,9 @@ public class UserPostgresDao implements UserDao {
 
 	@Override
 	public void insertTeacher(boolean isCoordinator, String fname, String lname, String email,
-			String login, String password) throws SQLException {
+	                          String login, String password) throws SQLException {
 
 		Connection con;
-
 		try {
 			con = database_connection.DbConnection.getCon();
 		} catch (SQLException e) {
@@ -165,10 +185,9 @@ public class UserPostgresDao implements UserDao {
 		final String usql = "INSERT INTO app_user(fname, lname, email, login, password) VALUES (?, ?, ?, ?, ?)";
 		final String tsql = "INSERT INTO teacher(user_id, is_coordinator) VALUES (?, ?)";
 
-		int newUserId = -1;
-
 		try {
 			con.setAutoCommit(false);
+			int newUserId;
 
 			try (PreparedStatement psUser = con.prepareStatement(usql, Statement.RETURN_GENERATED_KEYS)) {
 				psUser.setString(1, fname);
@@ -177,9 +196,17 @@ public class UserPostgresDao implements UserDao {
 				psUser.setString(4, login);
 				psUser.setString(5, password);
 				psUser.executeUpdate();
+
+				try (ResultSet rs = psUser.getGeneratedKeys()) {
+					if (rs.next()) {
+						newUserId = rs.getInt(1);
+					} else {
+						throw new SQLException("Inserimento utente fallito, nessun ID generato.");
+					}
+				}
 			}
 
-			try (PreparedStatement psTeacher = con.prepareStatement(tsql, Statement.RETURN_GENERATED_KEYS)) {
+			try (PreparedStatement psTeacher = con.prepareStatement(tsql)) {
 				psTeacher.setInt(1, newUserId);
 				psTeacher.setBoolean(2, isCoordinator);
 				psTeacher.executeUpdate();
@@ -194,5 +221,35 @@ public class UserPostgresDao implements UserDao {
 			con.setAutoCommit(true);
 			con.close();
 		}
+	}
+
+	@Override
+	public List<TeacherEntity> getAllTeachers() {
+		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, t.is_coordinator " +
+				"FROM teacher t INNER JOIN app_user u ON t.user_id = u.user_id";
+
+		List<TeacherEntity> teachers = new ArrayList<>();
+
+		try (Connection con = database_connection.DbConnection.getCon();
+		     Statement s = con.createStatement();
+		     ResultSet rs = s.executeQuery(sql)) {
+
+			while (rs.next()) {
+				teachers.add(new TeacherEntity(
+						rs.getInt("user_id"),
+						rs.getString("fname"),
+						rs.getString("lname"),
+						rs.getString("email"),
+						rs.getString("login"),
+						rs.getString("password"),
+						rs.getBoolean("is_coordinator")
+				));
+			}
+
+		} catch (SQLException e) {
+			throw new DataRetrievalException("Unexpected error during retrieval of all teachers", e);
+		}
+
+		return teachers;
 	}
 }

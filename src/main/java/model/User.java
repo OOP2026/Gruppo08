@@ -22,6 +22,11 @@ public abstract class User implements Identifiable<Integer> {
 		return userId;
 	}
 
+	@Override
+	public String toString() {
+		return Integer.toString(userId) + " " + fname + " " + lname;
+	}
+
 	public boolean checkPswd(String password) {
 		return password.equals(this.password);
 	}

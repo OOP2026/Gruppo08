@@ -7,13 +7,13 @@ import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
 import dao.LectureDao;
-import dao.dto.LectureDTO;
+import implementazioneDao.entity.LectureEntity;
 import implementazioneDao.exception.DataInsertionException;
 import implementazioneDao.exception.DataRetrievalException;
 import implementazioneDao.exception.DataUpdateException;
 
 public class LecturePostgresDao implements LectureDao {
-	private LectureDTO mapRsToLecture(ResultSet rs) throws SQLException {
+	private LectureEntity mapRsToLecture(ResultSet rs) throws SQLException {
 		int lectureId = rs.getInt("lecture_id");
 		int courseId = rs.getInt("course_id");
 		String classroomName = rs.getString("classroom_name");
@@ -22,11 +22,11 @@ public class LecturePostgresDao implements LectureDao {
 		LocalTime startTime = rs.getObject("start_time", LocalTime.class);
 		LocalTime endTime = rs.getObject("end_time", LocalTime.class);
 
-		return new LectureDTO(lectureId, courseId, classroomName, dayofweek, startTime, endTime);
+		return new LectureEntity(lectureId, courseId, classroomName, dayofweek, startTime, endTime);
 	}
 
 	@Override
-	public LectureDTO getById(Integer lectureId) throws NoSuchElementException {
+	public LectureEntity getById(Integer lectureId) throws NoSuchElementException {
 		final String sql = "SELECT lecture_id, course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
@@ -48,10 +48,10 @@ public class LecturePostgresDao implements LectureDao {
 	}
 
 	@Override
-	public List<LectureDTO> getAllByAcademicYear(int academicYear) {
+	public List<LectureEntity> getAllByAcademicYear(int academicYear) {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON c.course_id = l.course_id WHERE c.academic_year = ?;";
 
-		List<LectureDTO> lectures = new ArrayList<>();
+		List<LectureEntity> lectures = new ArrayList<>();
 
 		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
@@ -60,7 +60,7 @@ public class LecturePostgresDao implements LectureDao {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					LectureDTO l = mapRsToLecture(rs);
+					LectureEntity l = mapRsToLecture(rs);
 					lectures.add(l);
 				}
 			}
@@ -74,10 +74,10 @@ public class LecturePostgresDao implements LectureDao {
 	}
 
 	@Override
-	public List<LectureDTO> getAllByTeacher(int teacherUid) {
+	public List<LectureEntity> getAllByTeacher(int teacherUid) {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON l.course_id = c.course_id WHERE teacher_uid = ?";
 
-		List<LectureDTO> lectures = new ArrayList<>();
+		List<LectureEntity> lectures = new ArrayList<>();
 
 		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
@@ -86,7 +86,7 @@ public class LecturePostgresDao implements LectureDao {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					LectureDTO l = mapRsToLecture(rs);
+					LectureEntity l = mapRsToLecture(rs);
 					lectures.add(l);
 				}
 			}

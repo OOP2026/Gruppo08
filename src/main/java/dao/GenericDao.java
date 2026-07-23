@@ -1,6 +1,6 @@
 package dao;
 
-import dao.dto.IdentifiableDTO;
+import implementazioneDao.entity.IdentifiableEntity;
 
 /**
  * interfaccia di tutte le classi in implementazioneDao.
@@ -8,6 +8,6 @@ import dao.dto.IdentifiableDTO;
  * @param <E> L'entita' che il dao gestisce
  * @param <I> Il tipo della chiave primaria
  */
-public interface GenericDao<E extends IdentifiableDTO<I>, I> {
+public interface GenericDao<E extends IdentifiableEntity<I>, I> {
 	public E getById(I id);
 }

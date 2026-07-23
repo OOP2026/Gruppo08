@@ -1,7 +1,7 @@
-package dao.dto;
+package implementazioneDao.entity;
 
-public class CourseDTO implements IdentifiableDTO<Integer> {
-	public CourseDTO(int courseId, int teacherUid, String name, int cfu, int academicYear, boolean isActive) {
+public class CourseEntity implements IdentifiableEntity<Integer> {
+	public CourseEntity(int courseId, int teacherUid, String name, int cfu, int academicYear, boolean isActive) {
 		this.academicYear = academicYear;
 		this.isActive = isActive;
 		this.name = name;

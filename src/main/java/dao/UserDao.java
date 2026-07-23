@@ -1,12 +1,14 @@
 package dao;
 
-import dao.dto.UserDTO;
+import implementazioneDao.entity.TeacherEntity;
+import implementazioneDao.entity.UserEntity;
 import java.sql.SQLException;
+import java.util.List;
 
-public interface UserDao extends GenericDao<UserDTO, Integer> {
-	public UserDTO getUserByLogin(String login);
+public interface UserDao extends GenericDao<UserEntity, Integer> {
+	public UserEntity getUserByLogin(String login);
 
-	public UserDTO getUserByEmail(String email);
+	public UserEntity getUserByEmail(String email);
 
 	public void insertStudent(int academicYear, String fname, String lname, String email,
 			String login, String password) throws SQLException;
@@ -14,4 +16,5 @@ public interface UserDao extends GenericDao<UserDTO, Integer> {
 	public void insertTeacher(boolean isCoordinator, String fname, String lname, String email,
 			String login, String password) throws SQLException;
 
+	public List<TeacherEntity> getAllTeachers();
 }

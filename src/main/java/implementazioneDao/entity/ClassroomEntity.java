@@ -1,7 +1,7 @@
-package dao.dto;
+package implementazioneDao.entity;
 
-public class ClassroomDTO implements IdentifiableDTO<String> {
-	public ClassroomDTO(String name) {
+public class ClassroomEntity implements IdentifiableEntity<String> {
+	public ClassroomEntity(String name) {
 		this.name = name;
 	}
 

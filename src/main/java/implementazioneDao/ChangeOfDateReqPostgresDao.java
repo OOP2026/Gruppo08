@@ -6,14 +6,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import dao.dto.ChangeOfDateReqDTO;
+import implementazioneDao.entity.ChangeOfDateReqEntity;
 import implementazioneDao.exception.DataInsertionException;
 import implementazioneDao.exception.DataRetrievalException;
 import implementazioneDao.exception.DataUpdateException;
 import dao.ChangeOfDateReqDao;
 
 public class ChangeOfDateReqPostgresDao implements ChangeOfDateReqDao {
-	private ChangeOfDateReqDTO mapRsToCodReq(ResultSet rs) throws SQLException {
+	private ChangeOfDateReqEntity mapRsToCodReq(ResultSet rs) throws SQLException {
 		int reqId = rs.getInt("req_id");
 		int askingTeacherUid = rs.getInt("asking_teacher_id");
 		int reviewingCoordUid = rs.getInt("reviewing_coord_id");
@@ -24,12 +24,12 @@ public class ChangeOfDateReqPostgresDao implements ChangeOfDateReqDao {
 		LocalTime newEndTime = rs.getObject("new_end_time", LocalTime.class);
 		String unformattedStatus = rs.getString("status");
 
-		return new ChangeOfDateReqDTO(reqId, askingTeacherUid, reviewingCoordUid, lectureId, newDow, newStartTime,
+		return new ChangeOfDateReqEntity(reqId, askingTeacherUid, reviewingCoordUid, lectureId, newDow, newStartTime,
 				newEndTime, unformattedStatus);
 	}
 
 	@Override
-	public ChangeOfDateReqDTO getById(Integer reqId) throws NoSuchElementException {
+	public ChangeOfDateReqEntity getById(Integer reqId) throws NoSuchElementException {
 		final String sql = "SELECT req_id, asking_teacher_id, reviewing_coord_id, lecture_id, new_dayofweek, new_start_time, new_end_time, status FROM change_of_date_req WHERE req_id = ?";
 
 		try (Connection con = database_connection.DbConnection.getCon();
@@ -51,17 +51,17 @@ public class ChangeOfDateReqPostgresDao implements ChangeOfDateReqDao {
 	}
 
 	@Override
-	public List<ChangeOfDateReqDTO> getAllWaiting() throws DataRetrievalException {
+	public List<ChangeOfDateReqEntity> getAllWaiting() throws DataRetrievalException {
 		final String sql = "SELECT req_id, asking_teacher_id, reviewing_coord_id, lecture_id, new_dayofweek, new_start_time, new_end_time, status FROM change_of_date_req WHERE status = 'WAITING'";
 
-		List<ChangeOfDateReqDTO> codrs = new ArrayList<>();
+		List<ChangeOfDateReqEntity> codrs = new ArrayList<>();
 
 		try (Connection con = database_connection.DbConnection.getCon();
 				Statement s = con.createStatement()) {
 
 			try (ResultSet rs = s.executeQuery(sql)) {
 				while (rs.next()) {
-					ChangeOfDateReqDTO codr = mapRsToCodReq(rs);
+					ChangeOfDateReqEntity codr = mapRsToCodReq(rs);
 					codrs.add(codr);
 				}
 			}

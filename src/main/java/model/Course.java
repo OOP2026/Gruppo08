@@ -17,6 +17,11 @@ public class Course implements Identifiable<Integer> {
 		this.isActive = isActive;
 	}
 
+	@Override
+	public String toString() {
+		return Integer.toString(courseId) + " " + name;
+	}
+
 	public Teacher getTeacher() {
 		return teacher;
 	}

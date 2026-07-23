@@ -1,7 +1,11 @@
 package dao;
 
-import dao.dto.ClassroomDTO;
+import java.util.List;
 
-public interface ClassroomDao extends GenericDao<ClassroomDTO, String> {
+import implementazioneDao.entity.ClassroomEntity;
+
+public interface ClassroomDao extends GenericDao<ClassroomEntity, String> {
 	public void insertClassroom(String name);
+
+	public List<ClassroomEntity> getAllClassrooms();
 }

@@ -1,9 +1,9 @@
-package dao.dto;
+package implementazioneDao.entity;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public class ChangeOfDateReqDTO implements IdentifiableDTO<Integer> {
+public class ChangeOfDateReqEntity implements IdentifiableEntity<Integer> {
 	private Integer reqId;
 	private Integer askingTeacherUid;
 	private Integer reviewingCoordUid;
@@ -13,7 +13,7 @@ public class ChangeOfDateReqDTO implements IdentifiableDTO<Integer> {
 	private LocalTime newEndTime;
 	private String unformattedStatus;
 
-	public ChangeOfDateReqDTO(
+	public ChangeOfDateReqEntity(
 			Integer reqId,
 			Integer askingTeacherUid,
 			Integer reviewingCoordUid,

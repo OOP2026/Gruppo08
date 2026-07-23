@@ -1,16 +1,45 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
-
 import javax.security.sasl.AuthenticationException;
-
+import controller.cache.UserCache;
+import model.Student;
+import model.Teacher;
 import model.User;
 import dao.UserDao;
+import implementazioneDao.UserPostgresDao;
+import implementazioneDao.entity.StudentEntity;
+import implementazioneDao.entity.TeacherEntity;
+import implementazioneDao.entity.UserEntity;
 
-public class UserAuthentication extends AbstractDaoService<UserDao> {
+public class UserAuthentication extends AbstractDaoService<User, UserEntity, Integer, UserDao> {
 	public UserAuthentication() {
-		super(UserDao.getInstance());
+		super(new UserPostgresDao());
+	}
+
+	@Override
+	public User mapEntityToModel(UserEntity e) {
+		User u = null;
+
+		if (e instanceof StudentEntity) {
+			StudentEntity se = (StudentEntity) e;
+			u = new Student(se.getStudentId(), se.getAcademicYear(), se.getId(), se.getFname(), se.getLname(),
+					se.getEmail(), se.getLogin(), se.getPassword());
+		} else if (e instanceof TeacherEntity) {
+			TeacherEntity te = (TeacherEntity) e;
+			u = new Teacher(te.isCoordinator(), te.getId(), te.getFname(), te.getLname(), te.getEmail(), te.getLogin(),
+					te.getPassword());
+		}
+
+		return u;
+	}
+
+	@Override
+	public User getById(Integer id) {
+		return mapEntityToModel(UserCache.getInstance().getById(id));
 	}
 
 	/**
@@ -25,9 +54,9 @@ public class UserAuthentication extends AbstractDaoService<UserDao> {
 
 		try {
 			if (identifier.contains("@"))
-				u = dao.getUserByEmail(identifier);
+				u = mapEntityToModel(dao.getUserByEmail(identifier));
 			else
-				u = dao.getUserByLogin(identifier);
+				u = mapEntityToModel(dao.getUserByLogin(identifier));
 		} catch (NoSuchElementException e) {
 			throw new AuthenticationException("incorrect login/pswd");
 		}
@@ -67,5 +96,20 @@ public class UserAuthentication extends AbstractDaoService<UserDao> {
 		} catch (SQLException e) {
 			throw new AuthenticationException("unable to register");
 		}
+	}
+
+	public List<String> getAllTeachersInfo() {
+		List<TeacherEntity> tes = dao.getAllTeachers();
+		List<User> users = new ArrayList<>();
+
+		for (TeacherEntity t : tes)
+			users.add(mapEntityToModel(t));
+
+		List<String> r = new ArrayList<>();
+
+		for (User u : users)
+			r.add(u.toString());
+
+		return r;
 	}
 }

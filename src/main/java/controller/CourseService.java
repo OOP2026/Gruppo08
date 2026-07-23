@@ -1,12 +1,32 @@
 package controller;
 
+import controller.cache.CourseCache;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.CourseDao;
+import implementazioneDao.CoursePostgresDao;
+import implementazioneDao.entity.CourseEntity;
+import model.Course;
+import model.Teacher;
 
-public class CourseService extends AbstractDaoService<CourseDao> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CourseService extends AbstractDaoService<Course, CourseEntity, Integer, CourseDao> {
 	public CourseService() {
-		super(CourseDao.getInstance());
+		super(new CoursePostgresDao());
+	}
+
+	@Override
+	protected Course mapEntityToModel(CourseEntity e) {
+		UserAuthentication uauth = new UserAuthentication();
+		Teacher teacher = (Teacher) uauth.getById(e.getTeacherUid());
+		return new Course(e.getId(), teacher, e.getName(), e.getCfu(), e.getAcademicYear(), e.isActive());
+	}
+
+	@Override
+	public Course getById(Integer id) {
+		return mapEntityToModel(CourseCache.getInstance().getById(id));
 	}
 
 	/**
@@ -20,6 +40,18 @@ public class CourseService extends AbstractDaoService<CourseDao> {
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
 		dao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
+	}
+
+	public List<String> getAllCoursesInfo() {
+		List<CourseEntity> coursesE = dao.getAllActiveCourses();
+
+		List<String> r = new ArrayList<>();
+		for (CourseEntity ce : coursesE) {
+			Course c = mapEntityToModel(ce);
+			r.add(c.toString());
+		}
+
+		return r;
 	}
 
 }

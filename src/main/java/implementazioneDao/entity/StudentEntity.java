@@ -1,8 +1,8 @@
-package dao.dto;
+package implementazioneDao.entity;
 
-public class StudentDTO extends UserDTO {
+public class StudentEntity extends UserEntity {
 
-	public StudentDTO(
+	public StudentEntity(
 			int user_id,
 			String fname,
 			String lname,

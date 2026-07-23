@@ -1,8 +1,8 @@
-package dao.dto;
+package implementazioneDao.entity;
 
-public class TeacherDTO extends UserDTO {
+public class TeacherEntity extends UserEntity {
 
-	public TeacherDTO(
+	public TeacherEntity(
 			int userId,
 			String fname,
 			String lname,

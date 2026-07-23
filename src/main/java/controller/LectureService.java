@@ -1,21 +1,48 @@
 package controller;
 
-import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import controller.cache.LectureCache;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.LectureDao;
+import implementazioneDao.LecturePostgresDao;
+import implementazioneDao.entity.LectureEntity;
 import implementazioneDao.exception.DataRetrievalException;
+import model.Classroom;
+import model.Course;
 import model.Lecture;
 
-public class LectureService extends AbstractDaoService<LectureDao> {
+public class LectureService extends AbstractDaoService<Lecture, LectureEntity, Integer, LectureDao> {
 	public LectureService() {
-		super(LectureDao.getInstance());
+		super(new LecturePostgresDao());
+	}
+
+	@Override
+	protected Lecture mapEntityToModel(LectureEntity e) {
+		CourseService cService = new CourseService();
+		Course course = cService.getById(e.getCourseId());
+		ClassroomService classroomService = new ClassroomService();
+		Classroom classroom = classroomService.getById(e.getClassroomName());
+		return new Lecture(e.getId(), course, classroom, e.getDayofweek(), e.getStartTime(), e.getEndTime());
+	}
+
+	@Override
+	public Lecture getById(Integer id) {
+		return mapEntityToModel(LectureCache.getInstance().getById(id));
+	}
+
+	private List<Lecture> mapEntityListToModelList(List<LectureEntity> lecturesE) {
+		List<Lecture> lectures = new ArrayList<>();
+		for (LectureEntity le : lecturesE) {
+			lectures.add(mapEntityToModel(le));
+		}
+
+		return lectures;
 	}
 
 	/**
@@ -28,7 +55,6 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-
 		dao.insertLecture(courseId, classroomName, dayofweek, startTime, endTime);
 	}
 
@@ -40,13 +66,13 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 	 * @throws DatabaseException     se il db fallisce
 	 */
 	public List<Lecture> getAllByAcademicYear(int academicYear) throws IllegalStateException {
-		List<Lecture> lectures;
-		lectures = dao.getAllByAcademicYear(academicYear);
+		List<LectureEntity> lecturesE;
+		lecturesE = dao.getAllByAcademicYear(academicYear);
 
-		if (lectures == null || lectures.isEmpty())
+		if (lecturesE == null || lecturesE.isEmpty())
 			throw new IllegalStateException("No lectures were found for academic year: " + academicYear);
 
-		return lectures;
+		return mapEntityListToModelList(lecturesE);
 	}
 
 	/**
@@ -55,16 +81,13 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 	 * @throws DatabaseException se il db fallisce
 	 */
 	public List<Lecture> getAllByTeacher(int teacherUid) {
-		List<Lecture> lectures = null;
+		List<Lecture> lectures = new ArrayList<>();
 
 		try {
-			lectures = dao.getAllByTeacher(teacherUid);
+			lectures = mapEntityListToModelList(dao.getAllByTeacher(teacherUid));
 		} catch (DataRetrievalException e) {
 			throw new DatabaseException("Unable to retrieve lectures of teacher with uid: " + teacherUid, e);
 		}
-
-		if (lectures == null)
-			return new ArrayList<>();
 
 		return lectures;
 	}
@@ -96,7 +119,6 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 			LocalTime newStartTime, LocalTime newEndTime) {
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
-
 
 		dao.changeLectureDate(lectureId, newDow, newStartTime, newEndTime);
 	}
@@ -152,7 +174,4 @@ public class LectureService extends AbstractDaoService<LectureDao> {
 		return mtx;
 	}
 
-	public Lecture getLectureById(int lectureId) {
-		return dao.getById(lectureId);
-	}
 }
