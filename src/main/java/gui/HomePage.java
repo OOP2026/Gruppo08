@@ -48,9 +48,8 @@ public class HomePage {
         scrollPane2.getViewport().setBackground(new Color(49, 49, 49));
         scrollPane3.getViewport().setBackground(new Color(49, 49, 49));
         spostamentoButton.setVisible(false);
-        manageReqButton.setVisible(false);
-        adminButton.setVisible(false);
-        wLabel.setText("Benvenuto, " + SessionManager.getInstance().getSession().getFname());
+        manageButton.setVisible(false);
+        wLabel.setText("Benvenuto, " + SessionManager.getInstance().getFname());
         if (SessionManager.getInstance().isStudent()) {
             mLabel.setVisible(true);
             mLabel.setText("Matricola: " + SessionManager.getInstance().getStudentId());

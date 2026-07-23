@@ -3,7 +3,7 @@ package controller;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.ClassroomDao;
-import dao.impl.exception.DataInsertionException;
+import implementazioneDao.exception.DataInsertionException;
 
 public class ClassroomService extends AbstractDaoService<ClassroomDao> {
 	public ClassroomService() {

@@ -1,4 +1,4 @@
-package dao.impl;
+package implementazioneDao;
 
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -6,35 +6,30 @@ import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
-import dao.ClassroomDao;
-import dao.CourseDao;
-import dao.impl.exception.DataInsertionException;
-import dao.impl.exception.DataRetrievalException;
-import dao.impl.exception.DataUpdateException;
-import model.Lecture;
-import model.Classroom;
-import model.Course;
+import dao.LectureDao;
+import dao.dto.LectureDTO;
+import implementazioneDao.exception.DataInsertionException;
+import implementazioneDao.exception.DataRetrievalException;
+import implementazioneDao.exception.DataUpdateException;
 
-public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
-	private Lecture mapRsToLecture(ResultSet rs) throws SQLException {
+public class LecturePostgresDao implements LectureDao {
+	private LectureDTO mapRsToLecture(ResultSet rs) throws SQLException {
 		int lectureId = rs.getInt("lecture_id");
 		int courseId = rs.getInt("course_id");
-		Course course = CourseDao.getInstance().getById(courseId);
 		String classroomName = rs.getString("classroom_name");
-		Classroom classroom = ClassroomDao.getInstance().getById(classroomName);
 		String unformattedDow = rs.getString("dayofweek");
 		DayOfWeek dayofweek = DayOfWeek.valueOf(unformattedDow);
 		LocalTime startTime = rs.getObject("start_time", LocalTime.class);
 		LocalTime endTime = rs.getObject("end_time", LocalTime.class);
 
-		return new Lecture(lectureId, course, classroom, dayofweek, startTime, endTime);
+		return new LectureDTO(lectureId, courseId, classroomName, dayofweek, startTime, endTime);
 	}
 
 	@Override
-	public Lecture getById(Integer lectureId) throws NoSuchElementException {
+	public LectureDTO getById(Integer lectureId) throws NoSuchElementException {
 		final String sql = "SELECT lecture_id, course_id, classroom_name, dayofweek, start_time, end_time FROM lecture WHERE lecture_id = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, lectureId);
@@ -52,19 +47,20 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 		throw new NoSuchElementException("Lecture with id " + lectureId + " not found");
 	}
 
-	public List<Lecture> getAllByAcademicYear(int academicYear) {
+	@Override
+	public List<LectureDTO> getAllByAcademicYear(int academicYear) {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON c.course_id = l.course_id WHERE c.academic_year = ?;";
 
-		List<Lecture> lectures = new ArrayList<>();
+		List<LectureDTO> lectures = new ArrayList<>();
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, academicYear);
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					Lecture l = mapRsToLecture(rs);
+					LectureDTO l = mapRsToLecture(rs);
 					lectures.add(l);
 				}
 			}
@@ -77,19 +73,20 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 		return lectures;
 	}
 
-	public List<Lecture> getAllByTeacher(int teacherUid) {
+	@Override
+	public List<LectureDTO> getAllByTeacher(int teacherUid) {
 		final String sql = "SELECT lecture_id, l.course_id, classroom_name, dayofweek, start_time, end_time FROM lecture l JOIN course c ON l.course_id = c.course_id WHERE teacher_uid = ?";
 
-		List<Lecture> lectures = new ArrayList<>();
+		List<LectureDTO> lectures = new ArrayList<>();
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, teacherUid);
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					Lecture l = mapRsToLecture(rs);
+					LectureDTO l = mapRsToLecture(rs);
 					lectures.add(l);
 				}
 			}
@@ -103,43 +100,30 @@ public class LecturePostgresDao extends AbstractSqldao<Lecture, Integer> {
 
 	}
 
-	public Lecture insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
+	@Override
+	public void insertLecture(int courseId, String classroomName, DayOfWeek dayofweek, LocalTime startTime,
 			LocalTime endTime) {
 		final String sql = "INSERT INTO lecture(course_id, classroom_name, dayofweek, start_time, end_time) VALUES (?, ?, ?::dow, ?::time, ?::time)";
 
-		int newLectureId = -1;
-
-		try (Connection con = dbconnection.DbConnection.getCon();
-				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+		try (Connection con = database_connection.DbConnection.getCon();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, courseId);
 			ps.setString(2, classroomName);
 			ps.setString(3, dayofweek.toString());
 			ps.setObject(4, startTime);
 			ps.setObject(5, endTime);
 			ps.executeUpdate();
-
-			try (ResultSet rs = ps.getGeneratedKeys()) {
-				if (rs.next()) {
-					// la prima colonna restituita è la chiave primaria
-					newLectureId = rs.getInt(1);
-				} else {
-					throw new DataInsertionException("Course insertion failed, no ID found.");
-				}
-			}
-
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unexpected error during insertion of lecture", e);
 		}
 
-		return new Lecture(newLectureId, CourseDao.getInstance().getById(courseId),
-				ClassroomDao.getInstance().getById(classroomName), dayofweek, startTime, endTime);
 	}
 
-	public void updateLectureDate(int lectureId, DayOfWeek newDow, LocalTime newStartTime, LocalTime newEndTime) {
+	@Override
+	public void changeLectureDate(int lectureId, DayOfWeek newDow, LocalTime newStartTime, LocalTime newEndTime) {
 		final String sql = "UPDATE lecture SET dayofweek = ?::dow, start_time = ?::time, end_time = ?::time WHERE lecture_id = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, newDow.name());

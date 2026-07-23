@@ -1,25 +1,25 @@
-package dao.impl;
+package implementazioneDao;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
+import implementazioneDao.exception.DataInsertionException;
+import implementazioneDao.exception.DataRetrievalException;
+import dao.dto.ClassroomDTO;
+import dao.ClassroomDao;
 
-import dao.impl.exception.DataInsertionException;
-import dao.impl.exception.DataRetrievalException;
-import model.Classroom;
-
-public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
+public class ClassroomPostgresDao implements ClassroomDao {
 	@Override
-	public Classroom getById(String name) throws NoSuchElementException {
+	public ClassroomDTO getById(String name) throws NoSuchElementException {
 		final String sql = "SELECT name FROM classroom WHERE name = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, name);
 
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					return new Classroom(name);
+					return new ClassroomDTO(name);
 				}
 			}
 
@@ -30,17 +30,16 @@ public class ClassroomPostgresDao extends AbstractSqldao<Classroom, String> {
 		throw new NoSuchElementException("Classroom with name " + name + " not found");
 	}
 
-	public Classroom insertClassroom(String name) {
+	@Override
+	public void insertClassroom(String name) {
 		final String sql = "INSERT INTO classroom(name) VALUES (?)";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, name);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unexpected error during call of insertClassroom(" + name + ")", e);
 		}
-
-		return new Classroom(name);
 	}
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
 import dao.LectureDao;
-import dao.impl.exception.DataRetrievalException;
+import implementazioneDao.exception.DataRetrievalException;
 import model.Lecture;
 
 public class LectureService extends AbstractDaoService<LectureDao> {

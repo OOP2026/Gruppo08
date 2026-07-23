@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
-
 import java.time.DayOfWeek;
 import dao.ChangeOfDateReqDao;
 import dao.LectureDao;
-import dao.impl.exception.DataInsertionException;
+import implementazioneDao.exception.DataInsertionException;
 import model.ChangeOfDateReq;
 import model.Lecture;
 
+import implementazioneDao.ChangeOfDateReqPostgresDao;
+
 public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDao> {
 	public ChangeOfDateReqService() {
-		super(ChangeOfDateReqDao.getInstance());
+		super(new ChangeOfDateReqPostgresDao());
 	}
 
 	/**
@@ -54,10 +55,11 @@ public class ChangeOfDateReqService extends AbstractDaoService<ChangeOfDateReqDa
 		if (!isApproved)
 			return;
 
-		ChangeOfDateReq codr = ChangeOfDateReqDao.getInstance().getById(reqId);
+		// TODO:
+		ChangeOfDateReq codr = dao.getById(reqId);
 
 		LectureDao.getInstance().changeLectureDate(codr.getLecture().getId(), codr.getNewDow(),
-					codr.getNewStartTime(), codr.getNewEndTime());
+				codr.getNewStartTime(), codr.getNewEndTime());
 	}
 
 	/**

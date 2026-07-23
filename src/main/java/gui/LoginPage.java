@@ -167,4 +167,3 @@ public class LoginPage {
         return basePanel;
     }
 }
-

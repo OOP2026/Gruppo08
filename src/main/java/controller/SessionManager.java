@@ -90,4 +90,11 @@ public class SessionManager {
 		return session != null;
 	}
 
+	public String getFname() {
+		return this.session.getFname();
+	}
+
+	public String getLname() {
+		return this.session.getLname();
+	}
 }

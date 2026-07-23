@@ -1,16 +1,17 @@
-package dao.impl;
+package implementazioneDao;
 
 import java.sql.*;
 import java.util.NoSuchElementException;
 
-import dao.impl.exception.DataInsertionException;
-import dao.impl.exception.DataRetrievalException;
-import model.Student;
-import model.Teacher;
-import model.User;
+import dao.UserDao;
+import dao.dto.StudentDTO;
+import dao.dto.TeacherDTO;
+import dao.dto.UserDTO;
+import implementazioneDao.exception.DataInsertionException;
+import implementazioneDao.exception.DataRetrievalException;
 
-public class UserPostgresDao extends AbstractSqldao<User, Integer> {
-	private User mapRowToUser(ResultSet rs) throws SQLException {
+public class UserPostgresDao implements UserDao {
+	private UserDTO mapRowToUser(ResultSet rs) throws SQLException {
 		int userId = rs.getInt("user_id");
 		String fname = rs.getString("fname");
 		String lname = rs.getString("lname");
@@ -22,23 +23,24 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		int studentId = rs.getInt("student_id");
 		if (!rs.wasNull()) {
 			int academicYear = rs.getInt("academic_year");
-			return new Student(studentId, academicYear, userId, fname, lname, email, login, password);
+			return new StudentDTO(userId, fname, lname, email, login, password, studentId,
+					academicYear);
 		}
 
 		// analogo per teacher
 		boolean isCoordinator = rs.getBoolean("is_coordinator");
 		if (!rs.wasNull()) {
-			return new Teacher(isCoordinator, userId, fname, lname, email, login, password);
+			return new TeacherDTO(userId, fname, lname, email, login, password, isCoordinator);
 		}
 
 		throw new IllegalStateException("User " + userId + " is neither a student nor a teacher.");
 	}
 
 	@Override
-	public User getById(Integer userId) {
+	public UserDTO getById(Integer userId) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.user_id = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setInt(1, userId);
@@ -56,10 +58,11 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		throw new NoSuchElementException("User with ID " + userId + " not found");
 	}
 
-	public User getUserByLogin(String login) {
+	@Override
+	public UserDTO getUserByLogin(String login) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.login = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, login);
@@ -77,10 +80,11 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		throw new NoSuchElementException("User with login " + login + " not found");
 	}
 
-	public User getUserByEmail(String email) {
+	@Override
+	public UserDTO getUserByEmail(String email) {
 		final String sql = "SELECT u.user_id, u.fname, u.lname, u.email, u.login, u.password, s.student_id, s.academic_year, t.is_coordinator FROM app_user u LEFT JOIN student s ON u.user_id = s.user_id LEFT JOIN teacher t ON u.user_id = t.user_id WHERE u.email = ?";
 
-		try (Connection con = dbconnection.DbConnection.getCon();
+		try (Connection con = database_connection.DbConnection.getCon();
 				PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, email);
@@ -98,13 +102,14 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		throw new NoSuchElementException("User with email " + email + " not found");
 	}
 
-	public Student insertStudent(int academicYear, String fname, String lname, String email,
+	@Override
+	public void insertStudent(int academicYear, String fname, String lname, String email,
 			String login, String password) throws SQLException {
 
 		Connection con;
 
 		try {
-			con = dbconnection.DbConnection.getCon();
+			con = database_connection.DbConnection.getCon();
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unable to establish connection", e);
 		}
@@ -113,7 +118,6 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		final String ssql = "INSERT INTO student(user_id, academic_year) VALUES (?, ?)";
 
 		int newUserId = -1;
-		int newStudentId = -1;
 
 		try {
 			con.setAutoCommit(false);
@@ -127,32 +131,15 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 				psUser.setString(4, login);
 				psUser.setString(5, password);
 				psUser.executeUpdate();
-
-				try (ResultSet rs = psUser.getGeneratedKeys()) {
-					if (rs.next()) {
-						// la prima colonna restituita è la chiave primaria
-						newUserId = rs.getInt(1);
-					} else {
-						throw new DataInsertionException("User insertion failed, no ID found.");
-					}
-				}
 			}
 
 			try (PreparedStatement psStudent = con.prepareStatement(ssql, Statement.RETURN_GENERATED_KEYS)) {
 				psStudent.setInt(1, newUserId);
 				psStudent.setInt(2, academicYear);
 				psStudent.executeUpdate();
-
-				try (ResultSet rs = psStudent.getGeneratedKeys()) {
-					if (rs.next()) {
-						newStudentId = rs.getInt(1);
-					}
-				}
 			}
 
 			con.commit();
-
-			return new Student(newStudentId, academicYear, newUserId, fname, lname, email, login, password);
 
 		} catch (SQLException e) {
 			con.rollback();
@@ -163,13 +150,14 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 		}
 	}
 
-	public Teacher insertTeacher(boolean isCoordinator, String fname, String lname, String email,
+	@Override
+	public void insertTeacher(boolean isCoordinator, String fname, String lname, String email,
 			String login, String password) throws SQLException {
 
 		Connection con;
 
 		try {
-			con = dbconnection.DbConnection.getCon();
+			con = database_connection.DbConnection.getCon();
 		} catch (SQLException e) {
 			throw new DataInsertionException("Unable to establish connection", e);
 		}
@@ -189,15 +177,6 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 				psUser.setString(4, login);
 				psUser.setString(5, password);
 				psUser.executeUpdate();
-
-				try (ResultSet rs = psUser.getGeneratedKeys()) {
-					if (rs.next()) {
-						// la prima colonna restituita è la chiave primaria
-						newUserId = rs.getInt(1);
-					} else {
-						throw new SQLException("User insertion failed, no ID found.");
-					}
-				}
 			}
 
 			try (PreparedStatement psTeacher = con.prepareStatement(tsql, Statement.RETURN_GENERATED_KEYS)) {
@@ -207,8 +186,6 @@ public class UserPostgresDao extends AbstractSqldao<User, Integer> {
 			}
 
 			con.commit();
-
-			return new Teacher(isCoordinator, newUserId, fname, lname, email, login, password);
 
 		} catch (SQLException e) {
 			con.rollback();

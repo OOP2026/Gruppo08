@@ -1,51 +1,21 @@
 package dao;
 
-import dao.impl.exception.DataUpdateException;
-import model.ChangeOfDateReq;
-import model.RequestStatus;
 import java.util.List;
-import controller.exception.DatabaseException;
-import dao.impl.ChangeOfDateReqPostgresDao;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import dao.dto.ChangeOfDateReqDTO;
 
-public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDateReqPostgresDao, Integer> {
-	private static ChangeOfDateReqDao instance;
-
-	private ChangeOfDateReqDao() {
-		super(new ChangeOfDateReqPostgresDao());
-	}
-
-	public static ChangeOfDateReqDao getInstance() {
-		if (instance == null)
-			instance = new ChangeOfDateReqDao();
-		return instance;
-	}
-
+public interface ChangeOfDateReqDao extends GenericDao<ChangeOfDateReqDTO, Integer> {
 	/**
 	 * @return lista di tutte le richieste in attesa
 	 */
-	public List<ChangeOfDateReq> getAllWaiting() {
-		List<ChangeOfDateReq> codrs = sqldao.getAllWaiting();
-
-		for (ChangeOfDateReq c : codrs) {
-			inMem.add(c);
-		}
-
-		return codrs;
-	}
+	public List<ChangeOfDateReqDTO> getAllWaiting();
 
 	/**
-	 * Inserisce una ChangeOfDateReq in memory e nel db
-	 * 
-	 * @throws dao.impl.exception.DataInsertionException
+	 * @throws implementazioneDao.exception.DataInsertionException
 	 */
 	public void insertCodReq(int askingTeacherUid, int lectureId, DayOfWeek newDow,
-			LocalTime newStartTime, LocalTime newEndTime) {
-		ChangeOfDateReq c = sqldao.insertCodReq(askingTeacherUid, lectureId, newDow, newStartTime,
-				newEndTime);
-		inMem.add(c);
-	}
+			LocalTime newStartTime, LocalTime newEndTime);
 
 	/**
 	 * 
@@ -56,18 +26,6 @@ public class ChangeOfDateReqDao extends AbstractDao<ChangeOfDateReq, ChangeOfDat
 	 *                         RequestStatus.REJECTED.
 	 * @throws DatabaseException
 	 */
-	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved) {
-		RequestStatus status = isApproved ? RequestStatus.APPROVED : RequestStatus.REJECTED;
-
-		ChangeOfDateReq c = getById(reqId);
-
-		c.setStatus(status);
-
-		try {
-			sqldao.changeStatusOfCODR(reviewingCoordId, reqId, status);
-		} catch (DataUpdateException e) {
-			throw new DatabaseException("unexpected error occured during call of method: changeStatusOfCODR", e);
-		}
-	}
+	public void changeStatusOfCODR(int reviewingCoordId, int reqId, boolean isApproved);
 
 }
