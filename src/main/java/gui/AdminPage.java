@@ -61,7 +61,7 @@ public class AdminPage {
                     }
                     int cfu = ((Number) cfuFormattedTextField.getValue()).intValue();
                     boolean active = isActivecomboBox.getSelectedIndex() == 0;
-                    cs.makeCourse(teacheruid, courseName, academicYear, cfu, active);
+                    cs.makeCourse(teacheruid, courseName, cfu, academicYear, active);
                     JOptionPane.showMessageDialog(frame, "Corso creato con successo");
                 } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(frame, "Errore nell'inserimento di uno o più dati");

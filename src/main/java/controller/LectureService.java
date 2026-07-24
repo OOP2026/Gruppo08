@@ -162,7 +162,7 @@ public class LectureService extends AbstractDaoService<Lecture, LectureEntity, I
 			}
 
 			if (dayIdx != -1) {
-				currentRow[dayIdx] = lecture.getCourse().getName();
+				currentRow[dayIdx] = lecture.getCourse().getName() + " " + lecture.getClassroom().getName();
 			}
 		}
 

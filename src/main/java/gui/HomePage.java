@@ -3,6 +3,8 @@ package gui;
 import controller.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -185,6 +187,8 @@ public class HomePage {
                 };
                 orarioTable1.setModel(orarioModel1);
                 orarioTable1.getTableHeader().setReorderingAllowed(false);
+                orarioTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                resizeColumnWidth(orarioTable1);
                 break;
             case 2:
                 orarioModel2.setRowCount(0);
@@ -196,6 +200,8 @@ public class HomePage {
                 };
                 orarioTable2.setModel(orarioModel2);
                 orarioTable2.getTableHeader().setReorderingAllowed(false);
+                orarioTable2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                resizeColumnWidth(orarioTable2);
                 break;
             case 3:
                 orarioModel3.setRowCount(0);
@@ -207,9 +213,34 @@ public class HomePage {
                 };
                 orarioTable3.setModel(orarioModel3);
                 orarioTable3.getTableHeader().setReorderingAllowed(false);
+                orarioTable3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                resizeColumnWidth(orarioTable3);
                 break;
             default:
                 break;
+        }
+    }
+
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+            Object headerValue = table.getColumnModel().getColumn(column).getHeaderValue();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(
+                    table, headerValue, false, false, -1, column);
+
+            int width = headerComp.getPreferredSize().width + 10;
+
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width + 10, width);
+            }
+
+            if (width > 400) width = 400;
+
+            columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
 
