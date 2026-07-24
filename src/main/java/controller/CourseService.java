@@ -6,6 +6,7 @@ import controller.exception.UnauthorizedException;
 import dao.CourseDao;
 import implementazioneDao.CoursePostgresDao;
 import implementazioneDao.entity.CourseEntity;
+import implementazioneDao.exception.DataInsertionException;
 import model.Course;
 import model.Teacher;
 
@@ -39,7 +40,11 @@ public class CourseService extends AbstractDaoService<Course, CourseEntity, Inte
 		if (!SessionManager.getInstance().isCoordinator())
 			throw new UnauthorizedException("This operation is restricted to coordinators only");
 
-		dao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
+		try {
+			dao.insertCourse(teacherUid, name, cfu, academicYear, isActive);
+		} catch (DataInsertionException e) {
+			throw new DatabaseException("Inseriti dati non validi", e);
+		}
 	}
 
 	public List<String> getAllCoursesInfo() {

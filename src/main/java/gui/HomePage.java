@@ -2,13 +2,10 @@ package gui;
 
 import controller.*;
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 public class HomePage {
     private JFrame frame;
@@ -49,6 +46,7 @@ public class HomePage {
         scrollPane3.getViewport().setBackground(new Color(49, 49, 49));
         spostamentoButton.setVisible(false);
         manageReqButton.setVisible(false);
+        adminButton.setVisible(false);
         wLabel.setText("Benvenuto, " + SessionManager.getInstance().getFname());
         if (SessionManager.getInstance().isStudent()) {
             mLabel.setVisible(true);
@@ -128,6 +126,14 @@ public class HomePage {
                 new LoginPage().display();
             }
         });
+
+        adminButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AdminPage(frame);
+                frame.setVisible(false);
+            }
+        });
     }
 
     private void initializeTable() {
@@ -171,18 +177,36 @@ public class HomePage {
         switch (year) {
             case 1:
                 orarioModel1.setRowCount(0);
-                orarioModel1 = new DefaultTableModel(mtx, ls.getCols());
+                orarioModel1 = new DefaultTableModel(mtx, ls.getCols()){
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
                 orarioTable1.setModel(orarioModel1);
+                orarioTable1.getTableHeader().setReorderingAllowed(false);
                 break;
             case 2:
                 orarioModel2.setRowCount(0);
-                orarioModel2 = new DefaultTableModel(mtx, ls.getCols());
+                orarioModel2 = new DefaultTableModel(mtx, ls.getCols()){
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
                 orarioTable2.setModel(orarioModel2);
+                orarioTable2.getTableHeader().setReorderingAllowed(false);
                 break;
             case 3:
                 orarioModel3.setRowCount(0);
-                orarioModel3 = new DefaultTableModel(mtx, ls.getCols());
+                orarioModel3 = new DefaultTableModel(mtx, ls.getCols()){
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
                 orarioTable3.setModel(orarioModel3);
+                orarioTable3.getTableHeader().setReorderingAllowed(false);
                 break;
             default:
                 break;

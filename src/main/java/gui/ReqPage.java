@@ -1,16 +1,9 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.text.MaskFormatter;
-import javax.swing.text.StyleContext;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import controller.*;
 import controller.exception.DatabaseException;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -19,7 +12,6 @@ import java.util.List;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 
 public class ReqPage {
     private JFrame frame;
@@ -57,14 +49,12 @@ public class ReqPage {
                     JOptionPane.showMessageDialog(frame, "Richiesta effettuata con successo");
                     callerFrame.setVisible(true);
                     frame.dispose();
-                } catch (DateTimeParseException e0) {
+                } catch (DateTimeParseException dte) {
                     JOptionPane.showMessageDialog(frame, "Inserire un orario valido.");
-                } catch (NumberFormatException e1) {
+                } catch (NumberFormatException  ne) {
                     JOptionPane.showMessageDialog(frame, "Impossibile recuperare l'id della lezione.");
-                } catch (RuntimeException re) {
-                    JOptionPane.showMessageDialog(frame, re.getMessage());
-                } catch (Exception e2) {
-                    JOptionPane.showMessageDialog(frame, "Si é verificato un errore.");
+                } catch (DatabaseException de) {
+                    JOptionPane.showMessageDialog(frame, de.getMessage());
                 }
             }
         });
@@ -91,9 +81,11 @@ public class ReqPage {
                 return;
             }
             lectures = ls.getAllByTeacherToString(SessionManager.getInstance().getUserId());
+            if (lectures == null) {
+                JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle lezioni");
+                return;
+            }
             lezioneComboBox.setModel(new DefaultComboBoxModel<>(lectures.toArray(new String[0])));
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle lezioni");
         } catch (DatabaseException de) {
             JOptionPane.showMessageDialog(frame, de.getMessage());
         }

@@ -1,20 +1,12 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import controller.*;
 import controller.exception.DatabaseException;
 import controller.exception.UnauthorizedException;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Locale;
 
 public class ManagePage {
     private JFrame frame;
@@ -70,6 +62,7 @@ public class ManagePage {
                 try {
                     oldDateLabel.setText("<html>Vecchio orario:<br>" + cs.getCODROldTimeAndDate(selectedId) + "</html>");
                     newDateLabel.setText("<html>Nuovo orario:<br>" + cs.getCODRNewTimeAndDate(selectedId) + "</html>");
+                    frame.pack();
                 } catch (UnauthorizedException ue) {
                     JOptionPane.showMessageDialog(frame, ue.getMessage());
                 }
@@ -85,11 +78,11 @@ public class ManagePage {
 
         try {
             codrs = cs.getWaitingCODRInfo();
+            if (codrs == null) {
+                JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle richieste.");
+                return;
+            }
             reqComboBox.setModel(new DefaultComboBoxModel<>(codrs.toArray(new String[0])));
-        } catch (UnauthorizedException ue) {
-            JOptionPane.showMessageDialog(frame, ue.getMessage());
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(frame, "Si e' verificato un errore nel recupero delle richieste.");
         } catch (DatabaseException e) {
             JOptionPane.showMessageDialog(frame, "impossibile recuperare le richieste di spostamento");
         }
@@ -103,8 +96,6 @@ public class ManagePage {
             populateRequests();
             oldDateLabel.setText("");
             newDateLabel.setText("");
-        } catch (UnauthorizedException ue) {
-            JOptionPane.showMessageDialog(frame, ue.getMessage());
         } catch (DatabaseException de) {
             JOptionPane.showMessageDialog(frame, de.getMessage());
         }
@@ -118,8 +109,6 @@ public class ManagePage {
             populateRequests();
             oldDateLabel.setText("");
             newDateLabel.setText("");
-        } catch (UnauthorizedException ue) {
-            JOptionPane.showMessageDialog(frame, ue.getMessage());
         } catch (DatabaseException de) {
             JOptionPane.showMessageDialog(frame, de.getMessage());
         }

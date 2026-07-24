@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.AdminPage">
   <grid id="27dc6" binding="basePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="500" height="557"/>
+      <xy x="20" y="20" width="500" height="917"/>
     </constraints>
     <properties>
       <background color="-13553359"/>
@@ -27,7 +27,7 @@
             <properties>
               <font size="14" style="1"/>
               <foreground color="-2894893"/>
-              <text value="Registra nuovo utente"/>
+              <text value="Azioni Coordinatore"/>
             </properties>
           </component>
         </children>
@@ -57,6 +57,38 @@
         <rowspec value="center:d:grow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:d:noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:d:grow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:d:grow"/>
+        <rowspec value="top:4dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:4dlu:noGrow"/>
@@ -147,7 +179,7 @@
             </constraints>
             <properties>
               <foreground color="-2894893"/>
-              <text value="Attivo"/>
+              <text value="Attivo:"/>
             </properties>
           </component>
           <hspacer id="59c7e">
@@ -170,7 +202,7 @@
           </vspacer>
           <vspacer id="521e9">
             <constraints>
-              <grid row="24" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="56" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
           </vspacer>
@@ -215,6 +247,8 @@
               <forms/>
             </constraints>
             <properties>
+              <background color="-11579569"/>
+              <foreground color="-2894893"/>
               <text value="Crea Corso"/>
             </properties>
           </component>
@@ -226,6 +260,159 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties/>
+          </component>
+          <component id="e7fb1" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Nome aula:"/>
+            </properties>
+          </component>
+          <component id="67490" class="javax.swing.JTextField" binding="classNameTextField">
+            <constraints>
+              <grid row="28" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="2ef41" class="javax.swing.JButton" binding="creaAulaButton" default-binding="true">
+            <constraints>
+              <grid row="30" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <background color="-11579569"/>
+              <foreground color="-2894893"/>
+              <text value="Crea Aula"/>
+            </properties>
+          </component>
+          <vspacer id="9cf78">
+            <constraints>
+              <grid row="24" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+          </vspacer>
+          <component id="5f163" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="34" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Corso:"/>
+            </properties>
+          </component>
+          <vspacer id="ef3c2">
+            <constraints>
+              <grid row="32" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-vert="false"/>
+            </constraints>
+          </vspacer>
+          <component id="63681" class="javax.swing.JComboBox" binding="courseComboBox">
+            <constraints>
+              <grid row="36" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="b7ff1" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="38" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Aula:"/>
+            </properties>
+          </component>
+          <component id="f5f7" class="javax.swing.JComboBox" binding="classComboBox">
+            <constraints>
+              <grid row="40" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="e742a" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="46" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Orario inizio:"/>
+            </properties>
+          </component>
+          <component id="f7b7c" class="javax.swing.JFormattedTextField" binding="startTimeFormattedTextField" custom-create="true">
+            <constraints>
+              <grid row="48" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="62f03" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="50" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Orario fine:"/>
+            </properties>
+          </component>
+          <component id="96eb4" class="javax.swing.JFormattedTextField" binding="endTimeFormattedTextField" custom-create="true">
+            <constraints>
+              <grid row="52" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="dcf35" class="javax.swing.JButton" binding="creaLezioneButton" default-binding="true">
+            <constraints>
+              <grid row="54" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <background color="-11579569"/>
+              <foreground color="-2894893"/>
+              <text value="Crea Lezione"/>
+            </properties>
+          </component>
+          <component id="7a2c5" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="42" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2894893"/>
+              <text value="Giorno:"/>
+            </properties>
+          </component>
+          <component id="e5666" class="javax.swing.JComboBox" binding="dowComboBox">
+            <constraints>
+              <grid row="44" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="Lunedì"/>
+                <item value="Martedì"/>
+                <item value="Mercoledì"/>
+                <item value="Giovedì"/>
+                <item value="Venerdì"/>
+                <item value="Sabato"/>
+              </model>
+            </properties>
           </component>
         </children>
       </grid>

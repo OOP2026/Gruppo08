@@ -2,17 +2,9 @@ package gui;
 
 import javax.security.sasl.AuthenticationException;
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import controller.UserService;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 public class RegPage {
     private JFrame frame;
@@ -47,28 +39,6 @@ public class RegPage {
                 String email = emailTextField.getText();
                 String pswd = new String(pswdField.getPassword());
                 boolean success = true;
-
-//                try {
-//                    switch (role) {
-//                        case "Studente":
-//                            int academicYear = Integer.parseInt((String) ayComboBox.getSelectedItem());
-//                            ua.register(academicYear, fname, lname, email, username, pswd);
-//                            break;
-//                        case "Docente":
-//                            ua.register(false, fname, lname, email, username, pswd);
-//                            break;
-//                        case "Coordinatore":
-//                            ua.register(true, fname, lname, email, username, pswd);
-//                            break;
-//                        default:
-//                            JOptionPane.showMessageDialog(basePanel, "Ruolo non valido");
-//                            break;
-//                    }
-//                } catch (AuthenticationException ae) {
-//                    JOptionPane.showMessageDialog(basePanel, ae.getMessage());
-//                    success = false;
-//                }
-
                 switch (role) {
                     case "Studente":
                         try {
