@@ -1,3 +1,21 @@
+# Diagrammi delle classi
+
+- [package model](./diagrams_pdf/package_model.pdf)
+
+- [package controller](./diagrams_pdf/package_controller.pdf)
+
+- [package controller.cache](./diagrams_pdf/package_controller_cache.pdf)
+
+- [package dao](./diagrams_pdf/package_dao.pdf)
+
+- [package implementazioneDao](./diagrams_pdf/package_implementazioneDao.pdf)
+
+- [package implementazioneDao.entity](./diagrams_pdf/package_implementazioneDao_entity.pdf)
+
+- [package gui](./diagrams_pdf/package_gui.pdf)
+
+---
+
 # Guida all'Uso dell'Interfaccia Grafica
 
 ## Autenticazione e Registrazione (`LoginPage` e `RegPage`)
@@ -22,7 +40,8 @@ La pagina principale si adatta dinamicamente all'utente loggato:
 
 ### Richiesta Spostamento Lezione (`ReqPage`)
 
-Accessibile ai Docenti e Coordinatori.
+> [!NOTE]
+> Accessibile ai Docenti e Coordinatori.
 
 1. Selezionare dal menu a tendina la lezione da spostare (il sistema mostrerà solo le lezioni del docente in sessione).
 
@@ -34,7 +53,8 @@ Accessibile ai Docenti e Coordinatori.
 
 ### Gestione Richieste Spostamento Lezione (`ManagePage`)
 
-Accessibile solo ai Coordinatori.
+> [!NOTE]
+> Accessibile solo ai Coordinatori.
 
 1. Dal menu a tendina superiore è possibile selezionare una delle richieste attualmente in sospeso.
 
@@ -46,6 +66,13 @@ Accessibile solo ai Coordinatori.
 
 - **Rifiuta:** Lo stato diventa *REJECTED* e l'orario della lezione rimane invariato.
 
+### Gestione del corso di laurea/infrastruttura (`AdminPage`) 
+
+> [!NOTE]
+> Accessibile solo ai Coordinatori
+
+In questa pagina e' possibile aggiungere dinamicamente al database corsi, aule e lezioni inserendo i relativi attributi nelle caselle di testo.
+
 ---
 
 # Architettura del Sistema (Documentazione Tecnica)
@@ -56,13 +83,13 @@ Il progetto è stato sviluppato seguendo l'architettura BCE + DAO:
 
 - **Package DAO (`dao` e `implementazioneDao`):** Gestisce la persistenza dei dati e come questi ultimi vengono ricavati.
 
-  - Le classi in `implementazioneDao` implementano le interfacce presenti in `dao`, interagiscono direttamente con PostgreSQL tramite query SQL (utilizzando i `PreparedStatement` dove opportuno per prevenire SQL injection).
+  - Le classi in `implementazioneDao` implementano le interfacce presenti in `dao` e interagiscono direttamente con PostgreSQL tramite query SQL (utilizzando i `PreparedStatement` dove opportuno per prevenire SQL injection).
 
   - Le classi in `implementazioneDao.entity` sono una mappatura diretta dei dati ricavati dal database in oggetti java.
 
 - **Package Controller:** Contiene la logica di business. Le classi servizio verificano le autorizzazioni prima di effettuare chiamate al DAO. Contiene anche il `SessionManager`, un singleton che memorizza l'utente attualmente autenticato e il suo ruolo, permettendo di gestire l'autorizzazione alle varie funzionalità (es. `isCoordinator()`).
 
-- **Package `controller.cache`:** Contiene un database in-memory gestito tramite `ArrayList<E>`. Le classi del package estendono tutte `AbstractCache<E extends IdentifiableEntity<I>, I, D extends GenericDao<E, I>>` e hanno lo scopo di memorizzare in memoria i risultati delle chiamate `getById()`, che sono quelle più frequenti.
+- **Package `controller.cache`:** Contiene un database in-memory gestito tramite `List<E>`. Le classi del package estendono tutte `AbstractCache<E extends IdentifiableEntity<I>, I, D extends GenericDao<E, I>>` e hanno lo scopo di memorizzare in memoria i risultati delle chiamate `getById()`, che sono quelle più frequenti.
 
 - **Package GUI:** Realizzato con Java Swing.
 
@@ -72,17 +99,3 @@ Nelle operazioni critiche che coinvolgono l'inserimento di record in più tabell
 
 > [!NOTE]
 > Per gli inserimenti nel DB è stata sfruttata la funzionalità `Statement.RETURN_GENERATED_KEYS` del driver JDBC di Postgres, che permette l'immediato recupero degli ID autogenerati, `SERIAL`, dal database senza dover fare query di selezione successive.
-
----
-
-# Diagrammi delle classi
-
-![package model](./diagrams_pdf/package_model.pdf)
-
-![package controller](./diagrams_pdf/package_controller.pdf)
-
-![package controller.cache](./diagrams_pdf/package_controller_cache.pdf)
-
-![package dao](./diagrams_pdf/package_dao.pdf)
-
-![package gui](./diagrams_pdf/package_gui.pdf)
