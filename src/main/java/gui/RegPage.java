@@ -7,7 +7,7 @@ import javax.swing.text.StyleContext;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import controller.UserAuthentication;
+import controller.UserService;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +27,7 @@ public class RegPage {
     private JComboBox<Integer> ayComboBox;
     private JLabel ayLabel;
     private JButton indietroButton;
-    private final UserAuthentication ua = new UserAuthentication();
+    private final UserService ua = new UserService();
 
     public RegPage(JFrame loginPage) {
         frame = new JFrame();

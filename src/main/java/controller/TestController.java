@@ -4,7 +4,7 @@ import java.util.List;
 
 public class TestController {
 	public static void main(String[] args) {
-		UserAuthentication uauth = new UserAuthentication();
+		UserService uauth = new UserService();
 		CourseService cs = new CourseService();
 		ClassroomService classs = new ClassroomService();
 

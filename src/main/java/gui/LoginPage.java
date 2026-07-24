@@ -19,7 +19,7 @@ public class LoginPage {
     private JPasswordField pswdField;
     private JButton loginButton;
     private JButton regButton;
-    private final UserAuthentication ua = new UserAuthentication();
+    private final UserService ua = new UserService();
 
     public static void main(String[] args) {
         new LoginPage().display();

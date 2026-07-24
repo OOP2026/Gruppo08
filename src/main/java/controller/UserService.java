@@ -15,8 +15,8 @@ import implementazioneDao.entity.StudentEntity;
 import implementazioneDao.entity.TeacherEntity;
 import implementazioneDao.entity.UserEntity;
 
-public class UserAuthentication extends AbstractDaoService<User, UserEntity, Integer, UserDao> {
-	public UserAuthentication() {
+public class UserService extends AbstractDaoService<User, UserEntity, Integer, UserDao> {
+	public UserService() {
 		super(new UserPostgresDao());
 	}
 

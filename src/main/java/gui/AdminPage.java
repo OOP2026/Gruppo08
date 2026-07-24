@@ -1,6 +1,7 @@
 package gui;
 
 import controller.CourseService;
+import controller.UserService;
 import controller.exception.DatabaseException;
 
 import javax.swing.*;

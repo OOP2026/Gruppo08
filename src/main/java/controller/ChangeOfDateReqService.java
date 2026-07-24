@@ -25,7 +25,7 @@ public class ChangeOfDateReqService
 
 	@Override
 	protected ChangeOfDateReq mapEntityToModel(ChangeOfDateReqEntity e) {
-		UserAuthentication uauth = new UserAuthentication();
+		UserService uauth = new UserService();
 		Teacher askingTeacher = (Teacher) uauth.getById(e.getAskingTeacherUid());
 		Teacher reviewingCoord = (Teacher) uauth.getById(e.getReviewingCoordUid());
 		LectureService lService = new LectureService();

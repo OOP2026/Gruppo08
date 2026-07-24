@@ -19,7 +19,7 @@ public class CourseService extends AbstractDaoService<Course, CourseEntity, Inte
 
 	@Override
 	protected Course mapEntityToModel(CourseEntity e) {
-		UserAuthentication uauth = new UserAuthentication();
+		UserService uauth = new UserService();
 		Teacher teacher = (Teacher) uauth.getById(e.getTeacherUid());
 		return new Course(e.getId(), teacher, e.getName(), e.getCfu(), e.getAcademicYear(), e.isActive());
 	}
