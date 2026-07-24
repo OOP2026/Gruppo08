@@ -72,3 +72,17 @@ Nelle operazioni critiche che coinvolgono l'inserimento di record in più tabell
 
 > [!NOTE]
 > Per gli inserimenti nel DB è stata sfruttata la funzionalità `Statement.RETURN_GENERATED_KEYS` del driver JDBC di Postgres, che permette l'immediato recupero degli ID autogenerati, `SERIAL`, dal database senza dover fare query di selezione successive.
+
+---
+
+# Diagrammi delle classi
+
+![package model](./diagrams_pdf/package_model.pdf)
+
+![package controller](./diagrams_pdf/package_controller.pdf)
+
+![package controller.cache](./diagrams_pdf/package_controller_cache.pdf)
+
+![package dao](./diagrams_pdf/package_dao.pdf)
+
+![package gui](./diagrams_pdf/package_gui.pdf)
