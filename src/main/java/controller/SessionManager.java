@@ -5,6 +5,9 @@ import controller.exception.UnauthorizedException;
 import model.Student;
 import model.Teacher;
 
+/***
+ * Classe singleton che gestisce la sessione dell'utente loggato nel sistema e i relativi metodi.
+ */
 public class SessionManager {
 	private static SessionManager instance;
 

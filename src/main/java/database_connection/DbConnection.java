@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/***
+ * Classe che gestisce la connessione al database.
+ */
 public class DbConnection {
 	private static final String URL = "jdbc:postgresql://localhost:5432/exam";
 	private static final String UNAME = "exam";

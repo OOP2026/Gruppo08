@@ -1,8 +1,6 @@
 CREATE USER exam WITH PASSWORD 'exam';
 CREATE DATABASE exam OWNER exam;
 
-CREATE DOMAIN year_of_study AS integer CHECK (VALUE IN (1, 2, 3));
-
 CREATE TYPE dow AS ENUM ('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY');
 
 CREATE TABLE app_user (
@@ -11,13 +9,22 @@ CREATE TABLE app_user (
 	lname varchar(64) NOT NULL,
 	email varchar(64) UNIQUE NOT NULL,
 	login varchar(64) UNIQUE NOT NULL,
-	password varchar(64) NOT NULL
+	password varchar(64) NOT NULL,
+	CONSTRAINT chk_valid_email CHECK (email LIKE '%@%'),
+	CONSTRAINT chk_no_special_chars_login CHECK (login ~ '^[A-Za-z0-9 ]+$')
 );
+
+CREATE TABLE academic_year (
+	year integer PRIMARY KEY,
+	CONSTRAINT chk_valid_year CHECK (year IN (1,2,3))
+);
+
+INSERT INTO academic_year(year) VALUES (1), (2), (3);
 
 CREATE TABLE student (
 	user_id integer PRIMARY KEY,
 	student_id serial UNIQUE NOT NULL,
-	academic_year year_of_study NOT NULL,
+	academic_year integer NOT NULL REFERENCES academic_year(year),
 
 	FOREIGN KEY (user_id) REFERENCES app_user(user_id) 
 	ON DELETE CASCADE ON UPDATE CASCADE
@@ -33,11 +40,11 @@ CREATE TABLE teacher (
 
 CREATE TABLE course (
 	course_id serial PRIMARY KEY,
-	teacher_uid integer NOT NULL REFERENCES teacher(user_id),
+	teacher_uid integer REFERENCES teacher(user_id) ON DELETE SET NULL,
 	name varchar(64) NOT NULL,
 	cfu integer NOT NULL,
-	academic_year year_of_study NOT NULL,
-	is_active boolean NOT NULL DEFAULT false,
+	academic_year integer NOT NULL REFERENCES academic_year(year),
+	is_active boolean NOT NULL DEFAULT true,
 	UNIQUE(name, academic_year),
 	CONSTRAINT chk_cfu CHECK (cfu > 0)
 );
@@ -219,3 +226,34 @@ CREATE OR REPLACE TRIGGER trg_check_valid_reviewer
 BEFORE INSERT OR UPDATE OF reviewing_coord_id ON change_of_date_req
 FOR EACH ROW
 	EXECUTE FUNCTION fn_check_valid_reviewer();
+
+-- rimosso un teacher tutti i suoi corsi smettono di essere attivi
+CREATE OR REPLACE FUNCTION fn_deactivate_course_on_teacher_deletion()
+RETURNS TRIGGER AS $$
+BEGIN
+	UPDATE course
+	SET is_active = false
+	WHERE teacher_uid = OLD.user_id;
+
+	RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER trg_deactivate_course_on_teacher_deletion
+BEFORE DELETE ON teacher
+FOR EACH ROW EXECUTE FUNCTION fn_deactivate_course_on_teacher_deletion();
+
+-- cambiato is_active da true a false vengono eliminate tutte le lezioni programmate
+CREATE FUNCTION fn_delete_lectures_on_course_deactivation()
+RETURNS TRIGGER AS $$
+BEGIN
+	DELETE FROM lecture
+	WHERE course_id = OLD.course_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_delete_lectures_on_course_deactivation
+AFTER UPDATE ON course
+FOR EACH ROW
+WHEN (OLD.is_active IS true AND NEW.is_active IS false)
+EXECUTE FUNCTION fn_delete_lectures_on_course_deactivation();

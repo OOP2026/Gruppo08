@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"controller"},{"l":"controller.cache"},{"l":"controller.exception"},{"l":"dao"},{"l":"database_connection"},{"l":"gui"},{"l":"implementazioneDao"},{"l":"implementazioneDao.entity"},{"l":"implementazioneDao.exception"},{"l":"model"},{"l":"project.arch"}];updateSearchResults();

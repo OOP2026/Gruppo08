@@ -16,7 +16,7 @@ La pagina principale si adatta dinamicamente all'utente loggato:
 
 * **Vista Docente:** Viene mostrato l'orario e un bottone aggiuntivo "Richiedi Spostamento".
 
-* **Vista Coordinatore:** Oltre al bottone di spostamento, compare il bottone "Gestisci Richieste".
+* **Vista Coordinatore:** Oltre al bottone di spostamento, compare il bottone "Gestisci Richieste" e "Azioni Coordinatore".
 
 * Sono presenti bottoni "Aggiorna" per ricaricare la tabella dal database e riflettere eventuali cambi d'orario recenti.
 
@@ -54,19 +54,21 @@ Il progetto è stato sviluppato seguendo l'architettura BCE + DAO:
 
 - **Package Model (`model`):** Contiene le classi che rappresentano le entità del dominio (User, Student, Teacher, Course, Lecture, ChangeOfDateReq). Le entità implementano l'interfaccia `Identifiable<I>` per uniformare la gestione delle chiavi primarie.
 
-- **Package DAO (`dao` e `dao.impl`):** Gestisce la persistenza dei dati e come questi ultimi vengono ricavati.
+- **Package DAO (`dao` e `implementazioneDao`):** Gestisce la persistenza dei dati e come questi ultimi vengono ricavati.
 
-  - Le classi in `dao.impl` interagiscono direttamente con PostgreSQL tramite query SQL (utilizzando i `PreparedStatement` dove opportuno per prevenire SQL injection).
+  - Le classi in `implementazioneDao` implementano le interfacce presenti in `dao`, interagiscono direttamente con PostgreSQL tramite query SQL (utilizzando i `PreparedStatement` dove opportuno per prevenire SQL injection).
 
-  - Le classi in `dao` agiscono da wrapper, implementando un sistema di *cache in memoria* (tramite la lista `inMem` definita in `AbstractDao`) per ridurre il numero di accessi al DB e velocizzare la lettura di record già estratti.
+  - Le classi in `implementazioneDao.entity` sono una mappatura diretta dei dati ricavati dal database in oggetti java.
 
-- **Package Controller:** Contiene la logica di business. I servizi verificano le autorizzazioni prima di effettuare chiamate al DAO. Contiene anche il `SessionManager`, un singleton che memorizza l'utente attualmente autenticato e il suo ruolo, permettendo di gestire l'autorizzazione alle varie funzionalità (es. `isCoordinator()`).
+- **Package Controller:** Contiene la logica di business. Le classi servizio verificano le autorizzazioni prima di effettuare chiamate al DAO. Contiene anche il `SessionManager`, un singleton che memorizza l'utente attualmente autenticato e il suo ruolo, permettendo di gestire l'autorizzazione alle varie funzionalità (es. `isCoordinator()`).
+
+- **Package `controller.cache`:** Contiene un database in-memory gestito tramite `ArrayList<E>`. Le classi del package estendono tutte `AbstractCache<E extends IdentifiableEntity<I>, I, D extends GenericDao<E, I>>` e hanno lo scopo di memorizzare in memoria i risultati delle chiamate `getById()`, che sono quelle più frequenti.
 
 - **Package GUI:** Realizzato con Java Swing.
 
 ### Gestione delle Transazioni
 
-Nelle operazioni critiche che coinvolgono l'inserimento di record in più tabelle connesse (ad esempio la registrazione di un utente che scrive sia su `app_user` che su `student`), la consistenza dei dati è garantita attraverso il controllo manuale delle transazioni (`con.setAutoCommit(false)`), effettuando un commit solo se tutte le query hanno successo, o un rollback in caso di eccezione.
+Nelle operazioni critiche che coinvolgono l'inserimento di record in più tabelle connesse, ad esempio la registrazione di un utente che scrive sia su `app_user` che su `student`, la consistenza dei dati è garantita attraverso il controllo manuale delle transazioni (`con.setAutoCommit(false)`), effettuando un commit solo se tutte le query hanno successo, o un rollback in caso di eccezione.
 
 > [!NOTE]
-> Per gli inserimenti nel DB è stata sfruttata la funzionalità `Statement.RETURN_GENERATED_KEYS` del driver JDBC di Postgres, che garantisce l'immediato recupero degli ID autogenerati (`SERIAL`) dal database senza dover fare query di selezione successive.
+> Per gli inserimenti nel DB è stata sfruttata la funzionalità `Statement.RETURN_GENERATED_KEYS` del driver JDBC di Postgres, che permette l'immediato recupero degli ID autogenerati, `SERIAL`, dal database senza dover fare query di selezione successive.
