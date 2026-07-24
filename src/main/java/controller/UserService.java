@@ -49,8 +49,8 @@ public class UserService extends AbstractDaoService<User, UserEntity, Integer, U
 	 * @param identifier puo' essere login o email di un User
 	 * @throws AuthenticationException
 	 */
-	public User login(String identifier, String password) throws AuthenticationException {
-		User u;
+	public void login(String identifier, String password) throws AuthenticationException {
+		User u = null;
 
 		try {
 			if (identifier.contains("@"))
@@ -61,12 +61,11 @@ public class UserService extends AbstractDaoService<User, UserEntity, Integer, U
 			throw new AuthenticationException("incorrect login/pswd");
 		}
 
-		if (!u.checkPswd(password))
+		if (u == null || !u.checkPswd(password))
 			throw new AuthenticationException("incorrect login/pswd");
 
 		SessionManager sm = SessionManager.getInstance();
 		sm.setSession(u);
-		return u;
 	}
 
 	/**

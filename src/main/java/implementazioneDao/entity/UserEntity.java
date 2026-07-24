@@ -2,13 +2,13 @@ package implementazioneDao.entity;
 
 public class UserEntity implements IdentifiableEntity<Integer> {
 	public UserEntity(
-			int user_id,
+			int userId,
 			String fname,
 			String lname,
 			String email,
 			String login,
 			String password) {
-		this.user_id = user_id;
+		this.userId = userId;
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
@@ -16,7 +16,7 @@ public class UserEntity implements IdentifiableEntity<Integer> {
 		this.password = password;
 	}
 
-	private int user_id;
+	private int userId;
 	private String fname;
 	private String lname;
 	private String email;
@@ -25,7 +25,7 @@ public class UserEntity implements IdentifiableEntity<Integer> {
 
 	@Override
 	public Integer getId() {
-		return user_id;
+		return userId;
 	}
 
 	public String getPassword() {
