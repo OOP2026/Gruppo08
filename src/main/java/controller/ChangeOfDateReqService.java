@@ -27,7 +27,9 @@ public class ChangeOfDateReqService
 	protected ChangeOfDateReq mapEntityToModel(ChangeOfDateReqEntity e) {
 		UserService uauth = new UserService();
 		Teacher askingTeacher = (Teacher) uauth.getById(e.getAskingTeacherUid());
-		Teacher reviewingCoord = (Teacher) uauth.getById(e.getReviewingCoordUid());
+		Teacher reviewingCoord = null;
+		if (e.getReviewingCoordUid() != null)
+			reviewingCoord = (Teacher) uauth.getById(e.getReviewingCoordUid());
 		LectureService lService = new LectureService();
 		Lecture lecture = lService.getById(e.getLectureId());
 		return new ChangeOfDateReq(e.getId(), askingTeacher, reviewingCoord, lecture, e.getNewDow(),

@@ -1,15 +1,21 @@
 package gui;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 import controller.CourseService;
 import controller.UserService;
 import controller.exception.DatabaseException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.text.NumberFormatter;
+import javax.swing.text.StyleContext;
 
 public class AdminPage {
     private JFrame frame;
@@ -40,10 +46,10 @@ public class AdminPage {
                     String courseName = courseNameTextField.getText();
                     int academicYear = Integer.parseInt(ayComboBox.getSelectedItem().toString());
                     if (cfuFormattedTextField.getValue() == null) {
-                         JOptionPane.showMessageDialog(frame, "Inserire un valore cfu");
-                         return;
+                        JOptionPane.showMessageDialog(frame, "Inserire un valore cfu");
+                        return;
                     }
-                    int cfu = ((Number)cfuFormattedTextField.getValue()).intValue();
+                    int cfu = ((Number) cfuFormattedTextField.getValue()).intValue();
                     boolean active = isActivecomboBox.getSelectedIndex() == 0;
                     cs.makeCourse(teacheruid, courseName, academicYear, cfu, active);
                     JOptionPane.showMessageDialog(frame, "Corso creato con successo");
@@ -64,12 +70,12 @@ public class AdminPage {
     }
 
     private void populateTeachers() {
-         try {
-             List<String> teachersInfo = us.getAllTeachersInfo();
-             teacherComboBox.setModel(new DefaultComboBoxModel<>(teachersInfo.toArray(new String[0])));
-         } catch (DatabaseException e) {
-             JOptionPane.showMessageDialog(frame, e.getMessage());
-         }
+        try {
+            List<String> teachersInfo = us.getAllTeachersInfo();
+            teacherComboBox.setModel(new DefaultComboBoxModel<>(teachersInfo.toArray(new String[0])));
+        } catch (DatabaseException e) {
+            JOptionPane.showMessageDialog(frame, e.getMessage());
+        }
     }
 
     private JFormattedTextField makeCfuField() {
@@ -86,4 +92,5 @@ public class AdminPage {
     private void createUIComponents() {
         cfuFormattedTextField = makeCfuField();
     }
+
 }

@@ -16,7 +16,9 @@ public class ChangeOfDateReqPostgresDao implements ChangeOfDateReqDao {
 	private ChangeOfDateReqEntity mapRsToCodReq(ResultSet rs) throws SQLException {
 		int reqId = rs.getInt("req_id");
 		int askingTeacherUid = rs.getInt("asking_teacher_id");
-		int reviewingCoordUid = rs.getInt("reviewing_coord_id");
+		Integer reviewingCoordUid = rs.getInt("reviewing_coord_id");
+		if (rs.wasNull())
+			reviewingCoordUid = null;
 		int lectureId = rs.getInt("lecture_id");
 		String unformattedDow = rs.getString("new_dayofweek");
 		DayOfWeek newDow = DayOfWeek.valueOf(unformattedDow);
